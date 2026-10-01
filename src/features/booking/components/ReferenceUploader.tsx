@@ -4,7 +4,6 @@ import { ImagePlus, Trash2, UploadCloud } from 'lucide-react'
 import { Alert, Button } from '@/components/ui'
 import { cn } from '@/lib/utils/cn'
 import {
-  MAX_IMAGE_BYTES,
   MAX_IMAGES,
   formatBytes,
   type DraftImage,

@@ -1,5 +1,6 @@
 import { insert, rpc, rpcOne, select, update } from './db'
 import { getSupabase } from '@/lib/supabase/client'
+import { toDateKey } from '@/lib/utils/format'
 import { ApiError } from '@/lib/supabase/errors'
 import type {
   Appointment,
@@ -99,7 +100,11 @@ export async function getDaysWithAvailability(
   const days: string[] = []
   const cursor = new Date(`${from}T00:00:00`)
   const end = new Date(`${to}T00:00:00`)
-  const iso = (d: Date) => d.toISOString().slice(0, 10)
+
+  // toISOString() converts to UTC, which shifts Lagos (UTC+1) midnight back
+  // into the previous day. toDateKey formats local components, so the key
+  // matches both the date the caller asked for and the one the RPC filters on.
+  const iso = (d: Date) => toDateKey(d)
 
   // Bounded by max_advance_days (60), so a short burst of parallel calls is safe.
   const requests: Promise<void>[] = []
@@ -124,7 +129,12 @@ export async function getDaysWithAvailability(
 // Holds
 // ---------------------------------------------------------------------------
 
-/** Freeze a slot while the customer completes their requirement form. */
+/**
+ * Freeze a slot while the customer completes their requirement form.
+ *
+ * Returns the hold's session_token, which is what fn_create_appointment
+ * matches on when it consumes the hold — not the hold row id.
+ */
 export async function holdSlot(input: {
   staffId: string
   serviceId: string
@@ -170,9 +180,16 @@ const APPOINTMENT_SELECT = `
   )
 `
 
+/**
+ * Create the booking.
+ *
+ * fn_create_appointment returns the bare appointments row, so the joined
+ * relations are not populated here — re-fetch with getAppointment() when the
+ * caller needs the service, stylist, location or requirement.
+ */
 export async function createAppointment(
   input: CreateAppointmentInput,
-): Promise<AppointmentDetail> {
+): Promise<Appointment> {
   const row = await rpcOne<AppointmentDetail & { id: string }>('fn_create_appointment', {
     p_service_id: input.serviceId,
     p_location_id: input.locationId,

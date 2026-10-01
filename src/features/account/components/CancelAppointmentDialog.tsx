@@ -34,12 +34,10 @@ export function CancelAppointmentDialog({
   appointment,
   open,
   onOpenChange,
-  trigger,
 }: {
   appointment: AppointmentDetail
   open: boolean
   onOpenChange: (open: boolean) => void
-  trigger?: React.ReactNode
 }) {
   const queryClient = useQueryClient()
   const [reason, setReason] = useState('')
@@ -72,7 +70,6 @@ export function CancelAppointmentDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      {trigger}
       <DialogContent size="sm">
         <DialogHeader>
           <DialogTitle>Cancel this appointment?</DialogTitle>

@@ -1,6 +1,11 @@
 import { Link } from 'react-router-dom'
 import { ChevronRight, Clock, MapPin, Sparkles } from 'lucide-react'
-import { formatDateTime, formatNaira, formatPriceRange } from '@/lib/utils/format'
+import {
+  formatDateTime,
+  formatDuration,
+  formatNaira,
+  formatPriceRange,
+} from '@/lib/utils/format'
 import { cn } from '@/lib/utils/cn'
 import { site } from '@/config/site'
 import { Badge, Card, Rating } from '@/components/ui'
@@ -450,13 +455,9 @@ export function AppointmentSummary({
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-export function formatDuration(minutes: number): string {
-  if (minutes < 60) return `${minutes} min`
-  const hours = Math.floor(minutes / 60)
-  const rest = minutes % 60
-  if (rest === 0) return `${hours} hr${hours > 1 ? 's' : ''}`
-  return `${hours} hr ${rest} min`
-}
+// Re-exported so existing card consumers keep working; the implementation
+// now lives with the other formatters.
+export { formatDuration } from '@/lib/utils/format'
 
 function humaniseTag(value: string): string {
   return value

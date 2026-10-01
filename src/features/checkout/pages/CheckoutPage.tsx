@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
 import {
   ArrowLeft,
-  CalendarCheck,
   CreditCard,
   Landmark,
   Lock,
@@ -102,7 +101,7 @@ export default function CheckoutPage() {
     staleTime: 60_000,
   })
 
-  const locations = locationsQuery.data ?? []
+  const locations = useMemo(() => locationsQuery.data ?? [], [locationsQuery.data])
 
   const form = useForm<CheckoutValues>({
     resolver: zodResolver(checkoutSchema),
@@ -301,8 +300,7 @@ export default function CheckoutPage() {
             {upcoming && !order && (
               <Alert variant="info" className="mb-6" title="You are in the studio this week">
                 Your appointment is {formatDateTime(upcoming.starts_at)}. We will bag your order and
-                keep it behind the desk — collect both in one trip.{' '}
-                <CalendarCheck className="mt-1 size-4 text-info" aria-hidden />
+                keep it behind the desk — collect both in one trip.
               </Alert>
             )}
 
@@ -408,6 +406,17 @@ export default function CheckoutPage() {
                       register={register}
                       errors={errors as FieldErrors<CheckoutValues>}
                     />
+                    <p className="mt-4 rounded-md border border-line bg-sand/40 p-3.5 text-xs leading-relaxed text-muted">
+                      <Truck className="mr-1.5 inline size-3.5 -translate-y-px text-bronze" aria-hidden />
+                      Delivery on this order:{' '}
+                      <strong className="font-medium text-ink">
+                        {cart.totals.shipping > 0 ? formatNaira(cart.totals.shipping) : 'free'}
+                      </strong>
+                      {cart.totals.free_shipping_threshold
+                        ? ` — free above ${formatNaira(cart.totals.free_shipping_threshold)}.`
+                        : '.'}{' '}
+                      Next working day across Lagos, and the rider calls before leaving the studio.
+                    </p>
                   </div>
                 ) : (
                   <div className="mt-6 space-y-4">
@@ -675,7 +684,9 @@ export default function CheckoutPage() {
                         loadingText="Opening Paystack…"
                       >
                         <Lock className="size-4.5" aria-hidden />
-                        Pay {formatNaira(total)} securely
+                        {values.paymentMethod === 'transfer'
+                          ? `Show transfer details · ${formatNaira(total)}`
+                          : `Pay ${formatNaira(total)} securely`}
                       </Button>
                       {order && (
                         <Button size="xl" variant="outline" onClick={goToSuccess}>
@@ -787,7 +798,7 @@ function CouponStep({
 }: {
   code: string | null
   message: string | null
-  onApply: (code: string) => unknown
+  onApply: (code: string) => void | Promise<unknown>
   onRemove: () => void
 }) {
   // The same field the bag uses, so a code behaves identically in both places.

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ChevronDown, Lock } from 'lucide-react'
+import { Lock } from 'lucide-react'
 
 import { formatNaira } from '@/lib/utils/format'
 import { cn } from '@/lib/utils/cn'
@@ -92,7 +92,7 @@ export function SummaryAccordion({ cart, className }: { cart: CartPayload; class
     <Accordion type="single" collapsible className={cn('rounded-lg border border-line bg-surface', className)}>
       <AccordionItem value="summary">
         <AccordionTrigger className="items-center">
-          <span className="flex flex-1 items-center justify-between gap-4">
+          <span className="flex flex-1 items-center justify-between gap-4 pr-1">
             <span>
               <span className="block text-sm font-semibold text-ink">
                 {cart.totals.item_count} item{cart.totals.item_count === 1 ? '' : 's'}
@@ -101,13 +101,8 @@ export function SummaryAccordion({ cart, className }: { cart: CartPayload; class
                 Show order summary
               </span>
             </span>
-            <span className="flex items-center gap-2">
-              <span className="font-display text-base font-semibold tabular-nums text-ink">
-                {formatNaira(cart.totals.total)}
-              </span>
-              <span className="flex size-6 items-center justify-center rounded-full border border-line-strong text-muted group-data-[state=open]:rotate-45">
-                <ChevronDown className="size-3.5" aria-hidden />
-              </span>
+            <span className="font-display text-base font-semibold tabular-nums text-ink">
+              {formatNaira(cart.totals.total)}
             </span>
           </span>
         </AccordionTrigger>

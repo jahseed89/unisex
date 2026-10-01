@@ -14,6 +14,7 @@ import { sq, STAFF_QUERY_ROOTS } from './staffKeys'
 import {
   APPOINTMENT_STATUS_LABEL,
   OPEN_APPOINTMENT_STATUSES,
+  PENDING_REVIEW_STATUSES,
   type RequirementWithMedia,
   type StaffAppointment,
 } from './staffTypes'
@@ -228,11 +229,6 @@ export function weekDays(startKey: string): string[] {
   return Array.from({ length: 7 }, (_, index) => shiftDay(startKey, index))
 }
 
-/** Local-midnight `Date` for a yyyy-MM-dd key. */
-export function dayDate(key: string): Date {
-  return fromDateKey(key)
-}
-
 export function dayKeyOf(iso: string): string {
   return toDateKey(new Date(iso))
 }
@@ -268,39 +264,44 @@ export function groupByDay(appointments: StaffAppointment[]): DayGroup[] {
 }
 
 export interface NowNext {
+  /** Something is happening in the chair right now, or is due to start. */
   current: StaffAppointment | null
+  /** The first appointment after `current`, when there is a genuine gap. */
   next: StaffAppointment | null
 }
 
 /**
- * The appointment in the chair, or the one that is due next. Anything already
- * finished, missed or cancelled is not "next".
+ * The appointment in the chair, and the one after it.
+ *
+ * `current` is the soonest still-open appointment: an in-progress service, an
+ * appointment whose start/end window contains `now`, or failing both the next
+ * one to begin. `next` is only populated when that first one is already under
+ * way, so the screen can say "now" and "then" without guessing. Finished, missed
+ * and cancelled appointments are never candidates.
  */
 export function pickNowNext(
   appointments: StaffAppointment[],
   now: Date = new Date(),
 ): NowNext {
-  const open = appointments.filter((a) =>
-    OPEN_APPOINTMENT_STATUSES.includes(a.status),
-  )
+  const open = appointments
+    .filter((a) => OPEN_APPOINTMENT_STATUSES.includes(a.status))
+    .sort((a, b) => a.starts_at.localeCompare(b.starts_at))
 
   const inProgress = open.find((a) => a.status === 'in_progress')
-  if (inProgress) return { current: inProgress, next: null }
+  if (inProgress) return { current: inProgress, next: open.find((a) => a.id !== inProgress.id) ?? null }
 
   const nowMs = now.getTime()
   const live = open.find((a) => {
+    // A pending booking is not yet the client's chair.
+    if (a.status === 'pending') return false
     const start = new Date(a.starts_at).getTime()
     const end = new Date(a.ends_at).getTime()
-    return start <= nowMs && end >= nowMs && a.status !== 'pending'
+    return start <= nowMs && end >= nowMs
   })
-  if (live) return { current: live, next: null }
+  if (live) return { current: live, next: open.find((a) => a.id !== live.id) ?? null }
 
-  const upcoming = open
-    .filter((a) => new Date(a.starts_at).getTime() > nowMs)
-    .sort((a, b) => a.starts_at.localeCompare(b.starts_at))
-
-  const next = upcoming[0] ?? null
-  return { current: next, next: null }
+  const current = open.find((a) => new Date(a.starts_at).getTime() > nowMs) ?? null
+  return { current, next: null }
 }
 
 export function totalMinutes(appointments: StaffAppointment[]): number {
@@ -318,10 +319,7 @@ export function expectedRevenue(appointments: StaffAppointment[]): number {
 export function requirementsToReview(
   appointments: StaffAppointment[],
 ): StaffAppointment[] {
-  return appointments.filter((a) => {
-    const status = a.requirement?.status
-    return status === 'submitted' || status === 'under_review'
-  })
+  return appointments.filter((a) => PENDING_REVIEW_STATUSES.includes(a.requirement?.status ?? 'draft'))
 }
 
 export function requirementMedia(requirement: RequirementWithMedia | null | undefined) {

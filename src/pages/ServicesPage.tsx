@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { CalendarSearch, Scissors, Search, X } from 'lucide-react'
@@ -8,7 +8,6 @@ import {
   getServiceCategories,
   getServices,
   qk,
-  type ServiceFilters,
 } from '@/lib/api'
 import { Alert, Button, EmptyState, Input } from '@/components/ui'
 import { CardGridSkeleton } from '@/components/layout/RouteLoader'
@@ -64,8 +63,10 @@ export default function ServicesPage() {
     return () => window.clearTimeout(timer)
   }, [term, activeSearch, setParams])
 
-  const filters = useMemo<ServiceFilters>(() => {
-    const next: ServiceFilters = {}
+  // Typed as an inline object literal rather than `ServiceFilters` so it also
+  // satisfies the `Record<string, unknown>` the query-key factory expects.
+  const filters = useMemo<{ category?: string; search?: string }>(() => {
+    const next: { category?: string; search?: string } = {}
     if (category) next.category = category
     if (activeSearch.trim()) next.search = activeSearch.trim()
     return next

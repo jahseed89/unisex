@@ -1,6 +1,7 @@
-import { select, selectPaginated } from '@/lib/api'
+import { listJobsAdmin, remove, select, selectPaginated } from '@/lib/api'
 import type {
   AppointmentDetail,
+  Job,
   JobApplication,
   OrderDetail,
   Payment,
@@ -8,6 +9,35 @@ import type {
   ProductVariant,
   ServiceVariant,
 } from '@/types'
+
+// ---------------------------------------------------------------------------
+// Appointments
+// ---------------------------------------------------------------------------
+
+/**
+ * `listBookings` and `getAppointment` both embed a `customer` relation, but the
+ * shared `AppointmentDetail` type does not declare it — it is only used by the
+ * customer's own screens, where the profile is already known. Admin screens need
+ * it, so the relation is declared locally rather than patched into `@/types`.
+ */
+export type AppointmentWithCustomer = AppointmentDetail & {
+  customer: {
+    id: string
+    full_name: string | null
+    email: string
+    phone_e164: string | null
+  } | null
+}
+
+export function withCustomer(rows: AppointmentDetail[]): AppointmentWithCustomer[] {
+  return rows as AppointmentWithCustomer[]
+}
+
+export function withCustomerOne(
+  row: AppointmentDetail | null,
+): AppointmentWithCustomer | null {
+  return row as AppointmentWithCustomer | null
+}
 
 /**
  * Administrator reads that are not on the `@/lib/api` barrel.
@@ -67,7 +97,8 @@ export async function listOrdersAdmin(
   filters: AdminOrderFilters = {},
   page = 1,
   pageSize = 25,
-): Promise<{ data: OrderAdmin[]; count: number }> {
+): Promise<{ data: OrderAdmin[]; count: number }
+> {
   let idFilter: string[] | undefined
 
   const search = filters.search?.trim()
@@ -207,6 +238,40 @@ export async function listServiceVariantsAdmin(serviceId: string): Promise<Servi
 }
 
 // ---------------------------------------------------------------------------
+// Deletes
+// ---------------------------------------------------------------------------
+
+/**
+ * `admin.ts` ships save helpers but no delete helpers, so these are built on the
+ * barrel's `remove`. Foreign keys decide the consequence, and every caller states
+ * it in a confirmation dialog before calling:
+ *
+ * - a service takes its variants, staff mappings and bookings with it;
+ * - a variant cannot be removed once an order line references it, because
+ *   `order_items.variant_id` is `on delete set null` and would orphan the SKU.
+ */
+export async function deleteService(id: string): Promise<void> {
+  await remove('services', id)
+}
+
+export async function deleteServiceVariant(id: string): Promise<void> {
+  await remove('service_variants', id)
+}
+
+export async function deleteServiceCategory(id: string): Promise<void> {
+  await remove('service_categories', id)
+}
+
+/**
+ * `order_items.variant_id` is `on delete set null`, so removing a variant that has
+ * been sold detaches the historical line from its SKU. Every caller warns about
+ * exactly that, and deactivating the variant is offered as the reversible path.
+ */
+export async function removeProductVariant(id: string): Promise<void> {
+  await remove('product_variants', id)
+}
+
+// ---------------------------------------------------------------------------
 // Customers
 // ---------------------------------------------------------------------------
 
@@ -228,8 +293,8 @@ const APPOINTMENT_SELECT = `
  */
 export async function listCustomerAppointments(
   customerId: string,
-): Promise<AppointmentDetail[]> {
-  return select<AppointmentDetail>('appointments', {
+): Promise<AppointmentWithCustomer[]> {
+  return select<AppointmentWithCustomer>('appointments', {
     select: APPOINTMENT_SELECT,
     filters: { customer_id: customerId },
     order: { column: 'starts_at', ascending: false },
@@ -239,6 +304,16 @@ export async function listCustomerAppointments(
 // ---------------------------------------------------------------------------
 // Recruitment
 // ---------------------------------------------------------------------------
+
+/**
+ * `jobs.views_count` exists in the schema but not in the shared `Job` type, so the
+ * vacancy table declares it locally.
+ */
+export type JobAdmin = Job & { views_count: number }
+
+export async function listJobsAdminDetailed(status?: string): Promise<JobAdmin[]> {
+  return (await listJobsAdmin(status)) as JobAdmin[]
+}
 
 /**
  * Application counts per status.

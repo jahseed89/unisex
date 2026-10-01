@@ -52,7 +52,7 @@ flowchart TB
   subgraph Supabase["Supabase project (the whole backend)"]
     Auth["GoTrue / Auth<br/>email+password, magic link, Google"]
     PostgREST["PostgREST<br/>/rest/v1 tables and RPCs"]
-    PG["PostgreSQL 15+<br/>47 tables, RLS on all of them<br/>42 public + 18 private functions"]
+    PG["PostgreSQL 15+<br/>47 tables, RLS on all of them<br/>42 public + 20 private functions"]
     Storage["Storage<br/>6 buckets, 7 object policies"]
     Edge["Edge Functions (Deno)<br/>not implemented"]
     Cron["pg_cron<br/>not registered"]
@@ -263,7 +263,7 @@ bundle. Paystack secret keys and WhatsApp tokens belong in Edge Function environ
 | Feature | Used for | Status |
 | --- | --- | --- |
 | **Auth (GoTrue)** | Signup, sign in, magic-link OTP, Google OAuth, password reset, email confirmation, session persistence and refresh. Client: `src/features/auth/AuthProvider.tsx`. | Implemented. Local config in `supabase/config.toml`; Google is disabled there and must be enabled per project. |
-| **PostgreSQL** | The entire domain model and all business logic: 47 tables, 42 public functions, 18 private functions, 22 enums, 152 indexes. | Implemented. |
+| **PostgreSQL** | The entire domain model and all business logic: 47 tables, 42 public functions, 20 private functions, 22 enums, 152 indexes. | Implemented. |
 | **Row Level Security** | The authorisation boundary. Enabled on all 47 tables; 91 public-schema policies plus 7 `storage.objects` policies. | Implemented. |
 | **`SECURITY DEFINER` functions** | Every privileged write path and every cross-owner read. Locked `search_path` on each. | Implemented. |
 | **Public views** | `staff_public`, `service_catalog`, `product_catalog` — narrow, column-filtered reads for anonymous traffic. Created `security_invoker = false`. | Implemented. |

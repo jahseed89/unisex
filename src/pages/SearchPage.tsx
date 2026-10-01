@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Briefcase, Search as SearchIcon, Scissors, ShoppingBag, X } from 'lucide-react'
@@ -22,16 +22,15 @@ const SUGGESTIONS = ['knotless braids', 'locs', 'silk press', 'balayage', 'wig',
 
 export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const paramTerm = (searchParams.get('q') ?? '').trim()
-  const [draft, setDraft] = useState(paramTerm)
+  const term = (searchParams.get('q') ?? '').trim()
+  const [draft, setDraft] = useState(term)
 
-  const term = paramTerm
   const shouldSearch = term.length >= MIN_TERM
 
   // Keep the input in step with the URL when the visitor uses back/forward.
   useEffect(() => {
-    setDraft(paramTerm)
-  }, [paramTerm])
+    setDraft(term)
+  }, [term])
 
   // Report the search once per submitted term.
   useEffect(() => {
@@ -93,7 +92,9 @@ export default function SearchPage() {
   useSeo({
     title: shouldSearch ? `Search results for “${term}”` : 'Search',
     description: shouldSearch
-      ? `${pluraliseResults(total)} on the Unisex Hair Studio site for “${term}” — services, products and open roles.`
+      ? total > 0
+        ? `${pluraliseResults(total)} on the Unisex Hair Studio site for “${term}” — services, products and open roles.`
+        : `No results on the Unisex Hair Studio site for “${term}”. Try a shorter word, or ask us directly.`
       : 'Search the Unisex Hair Studio site for a service, a product or an open role.',
     path: shouldSearch ? `/search?q=${encodeURIComponent(term)}` : '/search',
     noindex: true,

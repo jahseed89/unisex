@@ -35,15 +35,15 @@ export default function CartPage() {
     noindex: true,
   })
 
-  const items = cart?.items ?? []
+  const items = useMemo(() => cart?.items ?? [], [cart])
   const totals = cart?.totals
 
-  // Cross-sell: whatever the customer has not already bagged.
+  // Cross-sell: whatever the customer has not already bagged. Fetched even for
+  // an empty bag, because that is exactly when we want to suggest something.
   const routineQuery = useQuery({
-    queryKey: qk.products({ routine: itemCount, kind: 'hair_care', limit: 4 }),
+    queryKey: qk.products({ crossSell: 'routine', kind: 'hair_care', limit: 4 }),
     queryFn: () => getProducts({ kind: 'hair_care', limit: 4, sort: 'featured' }),
     staleTime: 5 * 60_000,
-    enabled: itemCount > 0,
   })
 
   const suggestions = useMemo(() => {
@@ -97,7 +97,10 @@ export default function CartPage() {
                 </Button>
               }
             />
-            <RoutineRow products={routineQuery.data ?? []} />
+            <RoutineRow
+              products={routineQuery.data ?? []}
+              title="Where most people start"
+            />
           </div>
         )}
 
@@ -276,9 +279,11 @@ function CartLineRow({
 // ---------------------------------------------------------------------------
 function RoutineRow({
   products,
+  title = 'Complete your routine',
   className,
 }: {
   products: ProductCatalogEntry[]
+  title?: string
   className?: string
 }) {
   if (products.length === 0) return null
@@ -287,7 +292,7 @@ function RoutineRow({
     <section className={className} aria-labelledby="routine-heading">
       <div className="mb-5 flex items-baseline justify-between gap-4">
         <h2 id="routine-heading" className="font-display text-lg font-semibold text-ink">
-          Complete your routine
+          {title}
         </h2>
         <Link
           to="/shop?kind=hair_care"

@@ -392,7 +392,8 @@ export const getDashboardStats = (from: string, to: string) =>
 ### Private helpers (`app_private`)
 
 Revoked from `public, anon, authenticated` at the end of migration 0012. Callable only from
-`SECURITY DEFINER` code, cron or `service_role`.
+`SECURITY DEFINER` code, cron or `service_role`. Migration 0017 grants the six the dispatcher and the
+cron jobs need back to `service_role` explicitly.
 
 | Function | Purpose |
 | --- | --- |
@@ -404,6 +405,8 @@ Revoked from `public, anon, authenticated` at the end of migration 0012. Callabl
 | `touch_updated_at()` | Trigger function: `new.updated_at := now()`. |
 | `claim_scheduled_jobs(worker text, limit integer default 25)` | `setof scheduled_jobs`; `for update skip locked` claim. |
 | `complete_scheduled_job(uuid, boolean, text default null)` | Marks `done` / `failed` and releases the lock. |
+| `claim_notification_deliveries(limit integer default 40)` | Migration 0017. `setof (delivery_id, channel, destination, notification_id, recipient_id, title, body, attempt_count)`; `for update of d skip locked` claim over `notification_deliveries`. |
+| `recover_stuck_deliveries()` | Migration 0017. Returns `queued` for deliveries stranded in `processing` for more than 10 minutes; returns the row count. |
 | `purge_expired_holds()` | Deletes unconverted expired holds; returns the count. |
 | `guard_profile_columns()` | Trigger: blocks non-admin edits to `id`, `email`, `status`. |
 | `guard_appointment_columns()` | Trigger: blocks non-admin edits to identity and money; gates slot edits to the assigned stylist. |
@@ -462,7 +465,7 @@ caller's permissions — decide what a row is.
 | `carts`, `cart_items` | select, insert, update, delete | own cart via policy; mutations in practice go through `fn_add_to_cart` / `fn_update_cart_item` / `fn_remove_cart_item` / `fn_checkout` |
 | `orders` | select, admin insert/update/delete | own orders, or all for staff/admin; staff/admin update gated by `guard_order_columns` |
 | `order_items` | select, admin insert/update/delete | via the parent order |
-| `payments` | select, insert, update | own payments or all for staff; staff insert; **admin update** |
+| `payments` | select, update | own payments or all for staff; **admin update**. Migration 0017 revokes the `insert` grant from `anon` and `authenticated`, so a client cannot fabricate a payment row: the webhook, `fn_record_offline_payment` and the initialize function are the only writers. |
 | `payment_events` | none | `service_role` only; no policy exists |
 | `job_applications` | select, update | own (by `applicant_id` or email) or all for staff; staff/admin update; insertion is via `fn_submit_application` |
 | `application_events` | — | no grant; staff read/insert policies exist but there is no table grant |
@@ -479,6 +482,24 @@ caller's permissions — decide what a row is.
 `booking_holds`, `payment_events`, `scheduled_jobs` and `whatsapp_messages` have no client grant at
 all. Everything else is reachable either directly or through a function, never exclusively through
 one.
+
+### The `service_role` surface
+
+`grant all on all tables in schema public to service_role` in migration 0012 is not sufficient on its
+own, and migration 0017 says why: *service_role bypasses RLS but does not bypass table/function
+privileges.* The Edge Function entry points are therefore granted explicitly.
+
+Execute:
+
+```
+fn_notify, fn_order_created, fn_appointment_created, fn_application_submitted,
+fn_set_order_status, fn_set_application_status, fn_service_slots, fn_cart_totals,
+fn_available_stock, fn_next_reference, fn_record_offline_payment, fn_adjust_stock
+```
+
+Table privileges: `select` on `profiles`; `select, update` on `payments`, `orders`, `appointments`;
+`insert` on `payment_events`, `payments`, `notifications`, `notification_deliveries`,
+`whatsapp_messages`; `update` on `notification_deliveries`, `notification_preferences`.
 
 ---
 
@@ -567,14 +588,21 @@ Migration 0011 enqueues `scheduled_jobs` rows with `job_name = 'dispatch_notific
 
 1. `select * from app_private.claim_scheduled_jobs('edge-worker', 50)` — `FOR UPDATE SKIP LOCKED`, so
    two workers never claim the same row.
-2. For `dispatch_notification`, read the `notification_deliveries` rows in `queued` state for that
-   `notification_id`, send each one over its channel, then update the delivery status,
-   `provider_message_id`, `sent_at` / `delivered_at` / `failed_at` and `attempt_count`.
+2. For `dispatch_notification`, call `app_private.claim_notification_deliveries(40)` (migration
+   0017), which returns each due delivery with its `title` and `body` already joined, sends it over
+   its channel, then updates the delivery status, `provider_message_id`, `sent_at` / `delivered_at` /
+   `failed_at` and `error_code` / `error_message`. Rows still `processing` after ten minutes are
+   returned to `queued` by `app_private.recover_stuck_deliveries()`.
 3. `select app_private.complete_scheduled_job(id, true)` on success, or `(id, false, error)` to
-   retry — `housekeeping()` clears `failed` jobs after 5 attempts.
+   retry — `housekeeping()` clears `failed` jobs after 5 attempts, and a delivery is never claimed
+   again once `attempt_count` reaches 4.
 
 Triggering that worker from pg_cron needs `pg_net` to POST to the function, or a database-side
 dispatcher. Neither is written. See [09](./09-notifications-and-integrations.md).
+
+Migration 0017 provides the database side of this: `app_private.claim_notification_deliveries(limit)`
+and `app_private.recover_stuck_deliveries()`, both granted to `service_role`, so the function's query
+layer is complete even though the function itself is not.
 
 ### WhatsApp sender — planned
 

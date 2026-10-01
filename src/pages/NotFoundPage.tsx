@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   Briefcase,
@@ -8,6 +8,7 @@ import {
   Search as SearchIcon,
   Scissors,
   ShoppingBag,
+  Users,
 } from 'lucide-react'
 
 import { site } from '@/config/site'
@@ -42,7 +43,7 @@ const DESTINATIONS = [
   },
   {
     to: '/about',
-    icon: Compass,
+    icon: Users,
     title: 'About the studio',
     body: 'Twelve years on Adeola Odeku, and the team behind the chairs.',
   },

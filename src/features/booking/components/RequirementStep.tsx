@@ -40,7 +40,8 @@ export interface RequirementStepProps {
   isAuthenticated: boolean
   /** `pathname + search` of the wizard, so sign-up can return the customer to it. */
   signUpRedirect: string
-  error?: string
+  /** Set when the customer tried to continue without a desired style. */
+  styleError?: string
 }
 
 /**
@@ -62,10 +63,10 @@ export function RequirementStep({
   onRemoveImage,
   isAuthenticated,
   signUpRedirect,
-  error,
+  styleError,
 }: RequirementStepProps) {
   const desiredStyleError =
-    error && !draft.desired_style?.trim()
+    styleError && !draft.desired_style?.trim()
       ? 'Tell us the style you want — one line is enough.'
       : undefined
 

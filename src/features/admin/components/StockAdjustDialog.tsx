@@ -20,7 +20,8 @@ import {
 } from '@/components/ui'
 import { adjustStock, qk } from '@/lib/api'
 import { errorMessage } from '@/lib/supabase/errors'
-import { SaveStatus, numberOr } from './adminKit'
+import { SaveStatus } from './adminKit'
+import { numberOr } from './adminFormat'
 import type { SaveState } from './adminKit'
 
 /**

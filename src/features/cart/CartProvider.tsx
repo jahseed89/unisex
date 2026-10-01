@@ -15,7 +15,7 @@ import {
   getCart,
   removeCartItem,
   updateCartItem,
-} from '@/lib/api/commerce'
+} from '@/lib/api'
 import { qk } from '@/lib/query/keys'
 import { errorMessage } from '@/lib/supabase/errors'
 import { useAuth } from '@/features/auth/AuthProvider'
@@ -59,18 +59,6 @@ interface CartContextValue {
   applyCouponCode: (code: string) => Promise<boolean>
   clearCoupon: () => Promise<void>
   refresh: () => Promise<void>
-}
-
-const EMPTY_TOTALS = {
-  subtotal: 0,
-  discount: 0,
-  shipping: 0,
-  tax: 0,
-  total: 0,
-  item_count: 0,
-  free_shipping_threshold: null,
-  coupon_code: null,
-  coupon_message: null,
 }
 
 const CartContext = createContext<CartContextValue | null>(null)
@@ -241,4 +229,3 @@ export function useCartCount(): number {
   return useCart().itemCount
 }
 
-export { EMPTY_TOTALS }

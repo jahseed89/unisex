@@ -1,19 +1,24 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { env } from '@/config/env'
 import { configurationNotice } from '@/config/env'
+import { createMockClient } from '@/lib/mocks/supabase-mock'
 
 /**
  * The browser Supabase client.
  *
  * The anon key is designed to be public — every meaningful restriction is
  * enforced by Postgres RLS, not by hiding this key. When credentials are absent
- * we still return a client instance so imports never explode; the data layer
- * short-circuits to fixtures instead.
+ * (or VITE_USE_MOCKS is on) a complete in-memory stand-in is returned instead, so
+ * the app is never a blank screen for a reviewer.
  */
 
 let instance: SupabaseClient | null = null
 
 function build(): SupabaseClient {
+  if (env.useMocks) {
+    return createMockClient() as unknown as SupabaseClient
+  }
+
   return createClient(
     env.supabase.url || 'http://localhost:54321',
     env.supabase.anonKey || 'public-anon-key',
@@ -22,7 +27,6 @@ function build(): SupabaseClient {
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
-        // Avoid the cross-tab "token refreshed" storm on focus.
         flowType: 'implicit',
       },
       global: {

@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import { CheckCheck, ClipboardList, LogIn, PlayCircle } from 'lucide-react'
 
-import { formatDuration, formatNaira, formatTime } from '@/lib/utils/format'
+import { formatNaira, formatTime } from '@/lib/utils/format'
+import { formatDuration } from '@/components/shared/Cards'
 import { cn } from '@/lib/utils/cn'
 import { Badge, Button, Card, statusTone } from '@/components/ui'
 import { Avatar } from '@/components/shared/MediaFrame'
@@ -21,22 +22,23 @@ import {
  */
 export function AppointmentRow({
   appointment,
+  id,
   busy = false,
   onCheckIn,
   onStart,
   onComplete,
   onCancel,
-  showDate = false,
   className,
 }: {
   appointment: StaffAppointment
+  /** Anchor target, so "open this brief" can scroll the row into view. */
+  id?: string
   /** True while any status mutation for this row is in flight. */
   busy?: boolean
   onCheckIn?: (appointment: StaffAppointment) => void
   onStart?: (appointment: StaffAppointment) => void
   onComplete?: (appointment: StaffAppointment) => void
   onCancel?: (appointment: StaffAppointment) => void
-  showDate?: boolean
   className?: string
 }) {
   const actions = statusActions(appointment.status)
@@ -45,7 +47,7 @@ export function AppointmentRow({
   const customerName = appointment.customer?.full_name ?? 'Client'
 
   return (
-    <li className={cn('relative', className)}>
+    <li id={id} className={cn('relative scroll-mt-24', className)}>
       <Card
         className={cn(
           'p-4 transition-colors',
@@ -62,9 +64,6 @@ export function AppointmentRow({
             <p className="text-xs text-muted tabular-nums">
               {formatDuration(appointment.duration_minutes)}
             </p>
-            {showDate && (
-              <p className="text-xs text-muted">{formatTime(appointment.ends_at)} end</p>
-            )}
           </div>
 
           {/* Client + service ---------------------------------------------- */}

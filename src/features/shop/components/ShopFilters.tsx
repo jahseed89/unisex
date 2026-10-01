@@ -138,10 +138,9 @@ export function ShopFilters({
                 key={band.id}
                 active={active}
                 onClick={() =>
-                  onChange(active ? { minPrice: undefined, maxPrice: undefined } : {
-                    minPrice: band.min,
-                    maxPrice: band.max,
-                  })
+                  active
+                    ? onChange({ minPrice: undefined, maxPrice: undefined })
+                    : onChange({ minPrice: band.min, maxPrice: band.max })
                 }
               >
                 {band.label}

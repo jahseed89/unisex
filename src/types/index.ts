@@ -372,6 +372,7 @@ export interface AppointmentDetail extends Appointment {
   service: Pick<Service, 'id' | 'slug' | 'name' | 'summary' | 'duration_minutes' | 'image_url'> | null
   variant: Pick<ServiceVariant, 'id' | 'label' | 'price'> | null
   staff: Pick<PublicStaff, 'user_id' | 'full_name' | 'title' | 'photo_url'> | null
+  customer: Pick<Profile, 'id' | 'full_name' | 'email' | 'phone_e164' | 'avatar_url'> | null
   location: Pick<SalonLocation, 'id' | 'name' | 'slug' | 'address_line1' | 'city' | 'state'> | null
   requirement: Requirement | null
 }
@@ -498,7 +499,6 @@ export interface Product {
   care_instructions: string | null
   base_price: number
   compare_at_price: number | null
-  tax_rate: number
   hair_class: HairClass | null
   hair_texture: HairTexture | null
   length_cm: number | null
@@ -508,6 +508,12 @@ export interface Product {
   is_glueless: boolean
   image_url: string | null
   gallery_urls: string[]
+  video_url: string | null
+  /** Withheld from the browser by column-level grants; server-side only. */
+  cost_price: number | null
+  tax_rate: number
+  meta_title: string | null
+  meta_description: string | null
   status: ProductStatus
   is_featured: boolean
   is_best_seller: boolean
@@ -636,6 +642,8 @@ export interface Order {
   delivery_address: DeliveryAddress | null
   delivery_notes: string | null
   customer_notes: string | null
+  internal_notes: string | null
+  cancel_reason: string | null
   tracking_number: string | null
   courier: string | null
   placed_at: string
@@ -732,6 +740,7 @@ export interface Job {
   published_at: string | null
   closes_at: string | null
   screening_questions: ScreeningQuestion[]
+  views_count: number
 }
 
 export interface ScreeningQuestion {

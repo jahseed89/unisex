@@ -1,4 +1,4 @@
-﻿import { useMemo } from 'react'
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { ArrowRight, CalendarDays, Heart, MapPin, MessageCircle, Scissors, Users } from 'lucide-react'
@@ -74,6 +74,8 @@ export default function AboutPage() {
   })
 
   const page = pageQuery.data ?? null
+  const stylists = stylistsQuery.data
+
   const paragraphs = useMemo(() => {
     const body = page?.body_md?.trim()
     if (body) {
@@ -291,7 +293,7 @@ export default function AboutPage() {
       {/* ------------------------------------------------------------------
           Team
       ------------------------------------------------------------------ */}
-      <Section tone="sand" className="scroll-mt-24">
+      <Section tone="sand">
         <div id="team" className="scroll-mt-24">
           <SectionHeading
             eyebrow="The team"
@@ -324,37 +326,37 @@ export default function AboutPage() {
               </Alert>
             )}
 
-            {!stylistsQuery.isLoading && !stylistsQuery.isError && (
+            {!stylistsQuery.isLoading && !stylistsQuery.isError && stylists && stylists.length > 0 && (
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {(stylistsQuery.data ?? []).map((stylist) => (
+                {stylists.map((stylist) => (
                   <StylistCard key={stylist.user_id} stylist={stylist} />
                 ))}
               </div>
             )}
-          </div>
 
-          {!stylistsQuery.isLoading && !stylistsQuery.isError && (stylistsQuery.data ?? []).length === 0 && (
-            <Card className="mt-10 flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-start gap-3">
-                <Users className="mt-0.5 size-5 shrink-0 text-bronze" aria-hidden />
-                <div>
-                  <p className="text-sm font-semibold text-ink">
-                    Our stylists are between appointments
-                  </p>
-                  <p className="mt-1 text-sm leading-relaxed text-muted">
-                    We are updating artist profiles right now. Tell us the look you want and
-                    we will match you with the right person by name.
-                  </p>
+            {!stylistsQuery.isLoading && !stylistsQuery.isError && !stylists?.length && (
+              <Card className="flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-start gap-3">
+                  <Users className="mt-0.5 size-5 shrink-0 text-bronze" aria-hidden />
+                  <div>
+                    <p className="text-sm font-semibold text-ink">
+                      Our stylists are between appointments
+                    </p>
+                    <p className="mt-1 text-sm leading-relaxed text-muted">
+                      We are updating artist profiles right now. Tell us the look you want and
+                      we will match you with the right person by name.
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <Button asChild size="lg" className="shrink-0">
-                <Link to="/contact">
-                  <MessageCircle aria-hidden />
-                  Match me with a stylist
-                </Link>
-              </Button>
-            </Card>
-          )}
+                <Button asChild size="lg" className="shrink-0">
+                  <Link to="/contact">
+                    <MessageCircle aria-hidden />
+                    Match me with a stylist
+                  </Link>
+                </Button>
+              </Card>
+            )}
+          </div>
         </div>
       </Section>
 

@@ -13,7 +13,7 @@ import {
 
 import { getOrder, listOrders, qk } from '@/lib/api'
 import { errorMessage } from '@/lib/supabase/errors'
-import { formatDateTime, formatNaira, humanise, statusTone, whatsappLink } from '@/lib/utils/format'
+import { formatDateTime, formatNaira, humanise, whatsappLink } from '@/lib/utils/format'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useSeo } from '@/components/seo/Seo'
 import {
@@ -23,6 +23,7 @@ import {
   Card,
   EmptyState,
   Skeleton,
+  statusTone,
 } from '@/components/ui'
 import { MediaFrame } from '@/components/shared/MediaFrame'
 import type { OrderDetail } from '@/types'
@@ -133,6 +134,53 @@ export default function CheckoutSuccessPage() {
   const isPickup = order.fulfilment_type === 'pickup'
   const balance = Math.max(0, order.total - order.paid_total)
 
+  // What happens next, in the customer's words rather than the database's.
+  const pickupSteps = [
+    {
+      icon: <Clock className="size-4" aria-hidden />,
+      title: 'We check and pack',
+      body: 'Usually within a few hours during business days. You get an email and a WhatsApp message the moment it is ready.',
+    },
+    {
+      icon: <Store className="size-4" aria-hidden />,
+      title: 'Collect at the studio',
+      body: order.location
+        ? `${order.location.name}, ${order.location.address_line1}, ${order.location.city}.${
+            order.location.phone ? ` Call ${order.location.phone} on arrival.` : ''
+          }`
+        : 'Come to the studio on Adeola Odeku Street, Victoria Island.',
+    },
+    {
+      icon: <MessageCircle className="size-4" aria-hidden />,
+      title: 'Check before you leave',
+      body: 'Open the bag with a stylist if you would like the density or the grade checked before you go.',
+    },
+  ]
+
+  const deliverySteps = [
+    {
+      icon: <Clock className="size-4" aria-hidden />,
+      title: 'We check and pack',
+      body: 'Orders placed before 4pm on a working day go out the same day.',
+    },
+    {
+      icon: <Truck className="size-4" aria-hidden />,
+      title: 'The rider collects and delivers',
+      body: order.tracking_number
+        ? `Tracking: ${order.tracking_number}${
+            order.courier ? ` (${order.courier})` : ''
+          }. We send the rider's number on WhatsApp too.`
+        : "We share the rider's name and number on WhatsApp as soon as it is dispatched.",
+    },
+    {
+      icon: <MessageCircle className="size-4" aria-hidden />,
+      title: 'Check on arrival',
+      body: 'Please check the pieces in the rider’s presence — damaged parcels are easier to sort out the moment they arrive.',
+    },
+  ]
+
+  const nextSteps = isPickup ? pickupSteps : deliverySteps
+
   return (
     <>
       <div className="border-b border-line bg-sand/50">
@@ -216,51 +264,9 @@ export default function CheckoutSuccessPage() {
                 What happens next
               </h2>
               <ol className="mt-4 space-y-4">
-                {isPickup ? (
-                  <>
-                    <Step
-                      icon={<Clock className="size-4" aria-hidden />}
-                      title="We check and pack"
-                      body="Usually within a few hours during business days. You will get an email and a WhatsApp message when it is ready."
-                    />
-                    <Step
-                      icon={<Store className="size-4" aria-hidden />}
-                      title="Collect at the studio"
-                      body={
-                        order.location
-                          ? `${order.location.name}, ${order.location.address_line1}, ${order.location.city}.${order.location.phone ? ` Call ${order.location.phone} on arrival.` : ''}`
-                          : 'Come to the studio on Adeola Odeku Street, Victoria Island.'
-                      }
-                    />
-                    <Step
-                      icon={<MessageCircle className="size-4" aria-hidden />}
-                      title="Check before you leave"
-                      body="Open the bag with a stylist if you would like the density or the grade checked before you go.'
-                    />
-                  </>
-                ) : (
-                  <>
-                    <Step
-                      icon={<Clock className="size-4" aria-hidden />}
-                      title="We check and pack"
-                      body="Orders placed before 4pm on a working day go out the same day."
-                    />
-                    <Step
-                      icon={<Truck className="size-4" aria-hidden />}
-                      title="The rider collects and delivers"
-                      body={
-                        order.tracking_number
-                          ? `Tracking: ${order.tracking_number}${order.courier ? ` (${order.courier})` : ''}. We send the rider’s number on WhatsApp too.`
-                          : 'We share the rider’s name and number on WhatsApp as soon as it is dispatched.'
-                      }
-                    />
-                    <Step
-                      icon={<MessageCircle className="size-4" aria-hidden />}
-                      title="Check on arrival"
-                      body="Please check the pieces in the rider’s presence. Damaged parcels are easier to sort out the moment they arrive.'
-                    />
-                  </>
-                )}
+                {nextSteps.map((entry) => (
+                  <Step key={entry.title} icon={entry.icon} title={entry.title} body={entry.body} />
+                ))}
               </ol>
             </section>
 

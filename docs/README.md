@@ -17,7 +17,7 @@ callout rather than describing it as done.
 | [01 · System architecture](./01-system-architecture.md) | Context and container diagrams, the four application surfaces, the SPA + Supabase split, request lifecycle, trust boundaries, deployment topology, and a table of every Supabase feature in use. |
 | [02 · Database schema](./02-database-schema.md) | All 47 tables organised by domain, ER diagrams, the invariants the schema enforces, the complete enum list, generated columns, exclusion constraints, and the column-guard triggers. |
 | [03 · User flows](./03-user-flows.md) | Sequence diagrams for browsing, signup, booking with requirements, reschedule/cancel, shopping and paying, job applications, the staff diary, and running the salon — with the permission decision at each step. |
-| [04 · API specification](./04-api-specification.md) | The complete RPC catalogue (42 `public.fn_*` functions plus 18 `app_private` helpers) with signatures, return shapes, callers and errors; the client-side TypeScript wrapper for each; the PostgREST table surface; and the Edge Function contracts. |
+| [04 · API specification](./04-api-specification.md) | The complete RPC catalogue (42 `public.fn_*` functions plus 20 `app_private` helpers) with signatures, return shapes, callers and errors; the client-side TypeScript wrapper for each; the PostgREST table surface; and the Edge Function contracts. |
 | [05 · Authentication model](./05-authentication-model.md) | Signup, session handling, token refresh, the `fn_handle_new_user` trigger, the profile/role model, password reset, OAuth, why roles are a table and not an enum, and why route guards are UX rather than security. |
 | [06 · RLS and permissions](./06-rls-and-permissions.md) | The full permission matrix (customer / staff / supervisor / admin across all 47 tables), the `app_private` schema pattern, `has_role()` / `is_admin()`, why `FORCE ROW LEVEL SECURITY` is deliberately off, the public catalogue views, and the anti-patterns the schema avoids. |
 | [07 · Availability and booking engine](./07-availability-and-booking-engine.md) | The full logic of `fn_service_slots`, timezone handling, buffers, holds, daily caps, the `business_settings` gates, the three-layer double-booking defence, the legal status-transition graph, and the late-cancellation rule. |
@@ -32,7 +32,7 @@ callout rather than describing it as done.
 
 ## Sixty-second orientation
 
-1. **The whole backend is one Postgres database.** Sixteen SQL migrations in `supabase/migrations/`
+1. **The whole backend is one Postgres database.** Seventeen SQL migrations in `supabase/migrations/`
    define 47 tables, 42 public RPCs, 91 RLS policies, 22 enums and 28 triggers. There is no
    application server.
 2. **The browser talks to Postgres directly.** `src/lib/supabase/client.ts` creates a
@@ -58,7 +58,7 @@ callout rather than describing it as done.
 
 ### Verified schema inventory
 
-Produced by `npm run validate:sql`, which executes all sixteen migrations against a real PostgreSQL 16
+Produced by `npm run validate:sql`, which executes all seventeen migrations against a real PostgreSQL 16
 engine (PGlite/WASM) and then counts the catalogue:
 
 ```
@@ -66,7 +66,7 @@ public tables          47
 RLS-enabled tables     47
 RLS policies           91        (+7 storage.objects policies in migration 0014)
 public functions       42
-private functions      18
+private functions      20
 triggers               28
 enums                  22
 indexes                152
@@ -77,6 +77,10 @@ View contracts:   ok staff_public, service_catalog, product_catalog
                   ok every public table has RLS enabled
 PASSED - 0 failures
 ```
+
+Migration 0017 (`20250101000017_edge_function_support.sql`) adds the two delivery-claiming
+functions, the `service_role` grants and `revoke insert on public.payments from anon, authenticated`.
+It adds no tables and no policies, so the counts above are unchanged.
 
 PGlite ships no contrib extensions, so three things cannot be verified locally and are reported
 separately by the script: the `pg_trgm` extension, the three trigram GIN indexes
@@ -224,3 +228,4 @@ Stated here so nobody has to infer it from the code:
 | `supervisor` role | **Seeded but not enforced.** See [06](./06-rls-and-permissions.md#known-gaps). |
 | Mock/fixture mode | **Not implemented.** `env.useMocks` and `configurationNotice()` exist; no data-layer adapter reads them. |
 | Photography | Placeholders only. `MediaFrame` renders a deterministic on-brand surface until real images land. `public/og-image.jpg`, `public/apple-touch-icon.png` and the two manifest PNGs are referenced but absent. |
+| Route components | Partially built. A placeholder page is a four-line module that renders an empty `<div>`. At the time of writing 22 of 50 remained, mostly under `/account`, `/admin`, `/staff/clients` and `/careers/:slug/apply`. The repository `README.md` has the current count and a command to reproduce it. |

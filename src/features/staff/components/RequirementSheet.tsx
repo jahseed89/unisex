@@ -21,6 +21,7 @@ import {
   SheetContent,
   SheetHeader,
   Textarea,
+  Label,
 } from '@/components/ui'
 import { Avatar, MediaFrame } from '@/components/shared/MediaFrame'
 import { requirementMedia } from './staffData'
@@ -52,9 +53,9 @@ export function RequirementSheet({
   const requirement = appointment?.requirement ?? null
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange} side="right" title="Client requirement">
+    <Sheet open={open} onOpenChange={onOpenChange}>
       {appointment && (
-        <>
+        <SheetContent side="right" title="Client requirement">
           <SheetHeader>
             <div className="min-w-0">
               <p className="text-[0.6875rem] font-medium uppercase tracking-[0.14em] text-bronze-dark">
@@ -86,7 +87,7 @@ export function RequirementSheet({
               </Alert>
             )}
           </SheetBody>
-        </>
+        </SheetContent>
       )}
     </Sheet>
   )
@@ -278,9 +279,12 @@ function RequirementBody({
 
       {/* Staff actions ---------------------------------------------------- */}
       <Block title="Your response">
+        <Label htmlFor="staff-response">
+          Private note — visible to staff only
+        </Label>
         <Textarea
-          label="Private note — visible to staff only"
-          htmlFor="staff-response"
+          id="staff-response"
+          className="mt-1.5"
           rows={4}
           value={response}
           placeholder="Formula notes, product choices, what to check at the chair…"

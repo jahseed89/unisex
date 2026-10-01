@@ -182,3 +182,18 @@ export function groupBy<T, K extends string | number>(
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
+
+// ---------------------------------------------------------------------
+// Duration
+
+/**
+ * Humanise a minute count: "45 min", "2 hrs", "5 hr 30 min".
+ * Lives here rather than in a component so any layer can format one.
+ */
+export function formatDuration(minutes: number): string {
+  if (minutes < 60) return `${minutes} min`
+  const hours = Math.floor(minutes / 60)
+  const rest = minutes % 60
+  if (rest === 0) return `${hours} hr${hours > 1 ? 's' : ''}`
+  return `${hours} hr ${rest} min`
+}

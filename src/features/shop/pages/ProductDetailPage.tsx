@@ -112,7 +112,13 @@ export default function ProductDetailPage() {
     null
 
   const stock = selected ? sellableStock(selected) : (product?.available_stock ?? 0)
-  const maxQuantity = Math.max(1, Math.min(stock, 20))
+  // Stock is the only limit the client enforces; checkout re-checks it.
+  const maxQuantity = Math.max(1, stock)
+
+  // If the variant list is empty or still loading, the catalog row's own
+  // variant is still purchasable — `product_catalog` carries it.
+  const purchasableVariantId = selected?.id ?? product?.variant_id ?? null
+  const sku = selected?.sku ?? product?.sku ?? null
   const safeQuantity = Math.min(Math.max(1, quantity), maxQuantity)
 
   const price = selected?.price ?? product?.variant_price ?? product?.base_price ?? 0
@@ -187,11 +193,11 @@ export default function ProductDetailPage() {
   }
 
   const addToBag = async (thenCheckout: boolean) => {
-    if (!product || !selected) return
+    if (!product || !purchasableVariantId) return
     setAddError(null)
     setAdding(true)
     try {
-      await addItem(selected.id, safeQuantity, { slug: product.slug, price })
+      await addItem(purchasableVariantId, safeQuantity, { slug: product.slug, price })
       if (thenCheckout) void navigate('/checkout')
     } catch (error) {
       setAddError(errorMessage(error, 'Could not add that to your bag.'))
@@ -266,26 +272,28 @@ export default function ProductDetailPage() {
               alt={product.name}
               seed={product.slug}
               badge={
-                <>
-                  {off !== null && <Badge variant="solid">−{off}%</Badge>}
-                  {product.is_best_seller && <Badge variant="accent">Best seller</Badge>}
-                  {product.is_featured && <Badge variant="onImage">Studio favourite</Badge>}
-                </>
+                off !== null || product.is_best_seller || product.is_featured ? (
+                  <>
+                    {off !== null && <Badge variant="solid">−{off}%</Badge>}
+                    {product.is_best_seller && <Badge variant="accent">Best seller</Badge>}
+                    {product.is_featured && <Badge variant="onImage">Studio favourite</Badge>}
+                  </>
+                ) : undefined
               }
             />
 
             <ul className="mt-6 grid gap-3 sm:grid-cols-3">
-              <Promise
+              <Assurance
                 icon={<Truck className="size-4" aria-hidden />}
                 title="Free pickup in Lagos"
                 body="Ready the same working day when you order before 4pm."
               />
-              <Promise
+              <Assurance
                 icon={<ShieldCheck className="size-4" aria-hidden />}
                 title="Swap if it is not right"
                 body="Send a photo within 48 hours and we will make it right."
               />
-              <Promise
+              <Assurance
                 icon={<Zap className="size-4" aria-hidden />}
                 title="Install help"
                 body="Book a fitting with a stylist if you want it fitted for you."
@@ -385,9 +393,9 @@ export default function ProductDetailPage() {
                   disabled={stock <= 0}
                   label={`Quantity of ${selected?.name ?? product.name}`}
                 />
-                {selected?.sku && (
+                {sku && (
                   <p className="text-xs text-muted">
-                    SKU <span className="tabular-nums">{selected.sku}</span>
+                    SKU <span className="tabular-nums">{sku}</span>
                   </p>
                 )}
               </div>
@@ -403,7 +411,7 @@ export default function ProductDetailPage() {
                   size="lg"
                   fullWidth
                   loading={adding}
-                  disabled={stock <= 0 || !selected}
+                  disabled={stock <= 0 || !purchasableVariantId}
                   onClick={() => void addToBag(false)}
                 >
                   <ShoppingBag className="size-4.5" aria-hidden />
@@ -413,7 +421,7 @@ export default function ProductDetailPage() {
                   size="lg"
                   fullWidth
                   variant="accent"
-                  disabled={stock <= 0 || !selected}
+                  disabled={stock <= 0 || !purchasableVariantId}
                   onClick={() => void addToBag(true)}
                 >
                   Buy now
@@ -491,7 +499,7 @@ function StockLine({ stock }: { stock: number }) {
   )
 }
 
-function Promise({
+function Assurance({
   icon,
   title,
   body,

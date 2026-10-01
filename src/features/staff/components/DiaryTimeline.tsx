@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useMemo } from 'react'
 
-import { formatTime, humanise } from '@/lib/utils/format'
+import { formatTime } from '@/lib/utils/format'
 import { DAY_SHORT } from '@/config/site'
 import { cn } from '@/lib/utils/cn'
 import { minutesFromMidnight, serviceTone } from './staffData'
@@ -168,9 +168,9 @@ function TimelineBlock({
       {!compact && (
         <p className="truncate text-[0.625rem] leading-tight opacity-70">{name}</p>
       )}
+      {/* The block is colour-coded, so the status is carried in text for AT. */}
       <span className="sr-only">
-        {APPOINTMENT_STATUS_LABEL[appointment.status]} ·{' '}
-        {humanise(appointment.status)}
+        Status: {APPOINTMENT_STATUS_LABEL[appointment.status]}. Opens the brief.
       </span>
     </Link>
   )

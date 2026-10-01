@@ -19,7 +19,11 @@ export interface SeoProps {
   description?: string
   /** Absolute path, e.g. `/services/knotless-braids`. */
   path?: string
-  image?: string
+  /**
+   * Accepts null so a database column can be passed straight through
+   * (`image={page?.hero_image_url}`) without `?? undefined` at every call site.
+   */
+  image?: string | null
   type?: 'website' | 'article' | 'product' | 'profile'
   noindex?: boolean
   nofollow?: boolean

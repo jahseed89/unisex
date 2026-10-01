@@ -99,7 +99,7 @@ export function scorePassword(password: string): PasswordStrength {
     4: { label: 'Strong', tone: 'text-success', bar: 'bg-success' },
   }
 
-  return { score: bounded, ...(table[bounded] ?? table[1]), hints }
+  return { score: bounded, ...(table[bounded] ?? table[1]!), hints }
 }
 
 /** Four-segment meter rendered directly under a password field. */

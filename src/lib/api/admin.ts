@@ -1,4 +1,4 @@
-import { insert, rpc, rpcOne, select, selectPaginated, selectOne, update, upsert } from './db'
+import { insert, remove, rpc, rpcOne, select, selectPaginated, selectOne, update, upsert } from './db'
 import type {
   Appointment,
   AppointmentDetail,
@@ -137,7 +137,11 @@ export async function addBookingInternalNote(appointmentId: string, note: string
 // ---------------------------------------------------------------------------
 // Orders administration
 // ---------------------------------------------------------------------------
-export async function listOrders(
+/**
+ * Paged, filtered order list for staff. Distinct from the customer-scoped
+ * listOrders() in commerce.ts — hence the suffix.
+ */
+export async function listOrdersAdmin(
   filters: Record<string, unknown>,
   page = 1,
   pageSize = 25,
@@ -319,6 +323,60 @@ export async function saveStaffProfile(
 // ---------------------------------------------------------------------------
 // Recruitment administration
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Deletes
+//
+// Each returns a boolean: false means the row was rejected by a database
+// guard (for example a foreign key from an existing booking), which the UI
+// should present as "archive instead of delete".
+// ---------------------------------------------------------------------------
+
+export async function deleteService(id: string): Promise<boolean> {
+  try {
+    await remove('services', id)
+    return true
+  } catch {
+    return false
+  }
+}
+
+export async function deleteServiceVariant(id: string): Promise<boolean> {
+  try {
+    await remove('service_variants', id)
+    return true
+  } catch {
+    return false
+  }
+}
+
+export async function deleteServiceCategory(id: string): Promise<boolean> {
+  try {
+    await remove('service_categories', id)
+    return true
+  } catch {
+    return false
+  }
+}
+
+export async function deleteProductVariant(id: string): Promise<boolean> {
+  try {
+    await remove('product_variants', id)
+    return true
+  } catch {
+    return false
+  }
+}
+
+/** A product with order history must be archived, not deleted. */
+export async function deleteProduct(id: string): Promise<boolean> {
+  try {
+    await remove('products', id)
+    return true
+  } catch {
+    return false
+  }
+}
+
 export async function listJobsAdmin(status?: string): Promise<Job[]> {
   return select<Job>('jobs', {
     filters: status ? { status } : {},

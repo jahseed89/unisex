@@ -5,7 +5,9 @@ import { whatsappLink } from '@/lib/utils/format'
 import { cn } from '@/lib/utils/cn'
 import {
   Accordion,
+  AccordionContent,
   AccordionItem,
+  AccordionTrigger,
   Badge,
   Button,
   Card,
@@ -40,8 +42,11 @@ export function FaqList({
       )}
     >
       {faqs.map((faq) => (
-        <AccordionItem key={faq.id} value={faq.id} title={faq.question}>
-          <p className="text-sm leading-relaxed text-muted">{faq.answer}</p>
+        <AccordionItem key={faq.id} value={faq.id}>
+          <AccordionTrigger>{faq.question}</AccordionTrigger>
+          <AccordionContent>
+            <p className="text-sm leading-relaxed text-muted">{faq.answer}</p>
+          </AccordionContent>
         </AccordionItem>
       ))}
     </Accordion>

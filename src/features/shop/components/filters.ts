@@ -161,11 +161,10 @@ export function activeChips(
     chips.push({ id: PARAM.hairClass, label })
   }
 
+  // A band matches on both bounds; every band sets at least one, so an
+  // untouched price filter never matches one by accident.
   const band = PRICE_BANDS.find(
-    (candidate) =>
-      candidate.min === state.minPrice &&
-      candidate.max === state.maxPrice &&
-      candidate.min !== undefined,
+    (candidate) => candidate.min === state.minPrice && candidate.max === state.maxPrice,
   )
   if (band) {
     chips.push({ id: 'price', label: band.label })

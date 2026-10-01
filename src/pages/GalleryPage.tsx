@@ -1,4 +1,4 @@
-﻿import { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Camera, ImageOff, Images, Maximize2 } from 'lucide-react'
@@ -49,6 +49,9 @@ const CATEGORIES = [
 
 type CategoryValue = (typeof CATEGORIES)[number]['value']
 
+/** Stable empty array, so memoised derivations keep a constant dependency. */
+const NO_ITEMS: GalleryItem[] = []
+
 function whatsappHref(message: string): string {
   return `https://wa.me/${site.contact.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`
 }
@@ -66,7 +69,7 @@ export default function GalleryPage() {
     staleTime: 10 * 60_000,
   })
 
-  const items = galleryQuery.data ?? []
+  const items = galleryQuery.data ?? NO_ITEMS
 
   // Counts drive the chip labels, and hide categories with nothing published.
   const counts = useMemo(() => {

@@ -1,4 +1,4 @@
-﻿import { useMemo } from 'react'
+import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { FileText, Mail, MessageCircle, Phone, ShieldCheck } from 'lucide-react'
@@ -510,8 +510,18 @@ type Block =
 function parseMarkdown(source: string): Block[] {
   const blocks: Block[] = []
   let list: { kind: 'ul' | 'ol'; items: string[] } | null = null
+  // Consecutive plain lines are one soft-wrapped paragraph, as in real markdown.
+  let paragraph: string[] = []
+
+  const flushParagraph = () => {
+    if (paragraph.length > 0) {
+      blocks.push({ kind: 'p', text: paragraph.join(' ') })
+      paragraph = []
+    }
+  }
 
   const flush = () => {
+    flushParagraph()
     if (list) {
       blocks.push(list)
       list = null
@@ -520,9 +530,18 @@ function parseMarkdown(source: string): Block[] {
 
   for (const raw of source.split('\n')) {
     const line = raw.trim()
+    // An indented, non-blank line continues the list item above it.
+    const isContinuation = list !== null && /^\s{2,}\S/.test(raw)
 
     if (!line) {
       flush()
+      continue
+    }
+
+    if (isContinuation && list !== null && !/^[-*+>#]/.test(line) && !/^\d+[.)]\s/.test(line)) {
+      const items = list.items
+      const index = items.length - 1
+      items[index] = `${items[index] ?? ''} ${line}`.trim()
       continue
     }
 
@@ -538,6 +557,7 @@ function parseMarkdown(source: string): Block[] {
 
     const unordered = /^[-*+]\s+(.*)$/.exec(line)
     if (unordered) {
+      flushParagraph()
       if (list?.kind !== 'ul') {
         flush()
         list = { kind: 'ul', items: [] }
@@ -548,6 +568,7 @@ function parseMarkdown(source: string): Block[] {
 
     const ordered = /^\d+[.)]\s+(.*)$/.exec(line)
     if (ordered) {
+      flushParagraph()
       if (list?.kind !== 'ol') {
         flush()
         list = { kind: 'ol', items: [] }
@@ -556,8 +577,8 @@ function parseMarkdown(source: string): Block[] {
       continue
     }
 
-    flush()
-    blocks.push({ kind: 'p', text: line })
+    if (list) flush()
+    paragraph.push(line)
   }
 
   flush()

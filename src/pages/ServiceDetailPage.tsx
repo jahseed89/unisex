@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import {
@@ -22,6 +22,10 @@ import {
   qk,
 } from '@/lib/api'
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
   Alert,
   Badge,
   Button,
@@ -34,12 +38,12 @@ import {
 } from '@/components/ui'
 import { CardGridSkeleton, ContentSkeleton, HeroSkeleton } from '@/components/layout/RouteLoader'
 import { PageHeader, formatDuration } from '@/components/shared/Cards'
-import { ClosingCta, FaqList, Section } from '@/components/shared/Blocks'
+import { ClosingCta, Section } from '@/components/shared/Blocks'
 import { Avatar, MediaFrame } from '@/components/shared/MediaFrame'
 import { breadcrumbSchema, serviceSchema, useSeo } from '@/components/seo/Seo'
 import { analytics } from '@/lib/analytics'
 import { cn } from '@/lib/utils/cn'
-import { formatNaira, formatPriceRange } from '@/lib/utils/format'
+import { formatNaira } from '@/lib/utils/format'
 import { site } from '@/config/site'
 import type { ServiceVariant } from '@/types'
 
@@ -91,7 +95,9 @@ export default function ServiceDetailPage() {
   }, [variants, variantId])
 
   const priceFrom = activeVariant?.price ?? service?.price_from ?? 0
-  const priceTo = activeVariant ? activeVariant.price : (service?.price_to ?? null)
+  // The variant narrows the price, but the range is still the honest headline for
+  // a length-driven service — so the top of the range never disappears.
+  const priceCeiling = service?.price_to ?? null
   const duration = activeVariant?.duration_minutes ?? service?.duration_minutes ?? 0
 
   const jsonLd = useMemo(() => {
@@ -118,7 +124,7 @@ export default function ServiceDetailPage() {
     title: service ? `${service.name} — ${service.category_name ?? 'Salon service'}` : 'Service',
     description: service?.summary ?? 'Hair, braids, locs, colour and styling at Unisex Hair Studio, Lagos.',
     path: service ? `/services/${service.slug}` : '/services',
-    image: service?.image_url,
+    image: service?.image_url ?? undefined,
     type: 'website',
     jsonLd,
   })
@@ -177,8 +183,11 @@ export default function ServiceDetailPage() {
         action={
           <div className="flex flex-col items-start gap-1 lg:items-end">
             <p className="font-display text-2xl font-semibold text-ink">
-              {formatPriceRange(priceFrom, priceTo)}
+              {formatNaira(priceFrom)}
             </p>
+            {priceCeiling && priceCeiling !== priceFrom && (
+              <p className="text-sm text-muted">up to {formatNaira(priceCeiling)}</p>
+            )}
             <p className="text-sm text-muted">{formatDuration(duration)}</p>
           </div>
         }
@@ -324,9 +333,9 @@ export default function ServiceDetailPage() {
               <p className="mt-2 font-display text-3xl font-semibold text-ink">
                 {formatNaira(priceFrom)}
               </p>
-              {priceTo && priceTo !== priceFrom && (
+              {priceCeiling && priceCeiling !== priceFrom && (
                 <p className="mt-1 text-sm text-muted">
-                  Up to {formatNaira(priceTo)} depending on length and density
+                  Up to {formatNaira(priceCeiling)} depending on length and density
                 </p>
               )}
               <p className="mt-3 flex items-center gap-2 text-sm text-muted">
@@ -502,6 +511,11 @@ function BookingFaqs() {
 
   if (faqs.length === 0) return null
 
+  // NOTE: `FaqList` in components/shared/Blocks passes the question as a `title`
+  // prop to `AccordionItem`, which Radix renders as an HTML tooltip attribute
+  // rather than a trigger — so no question header appears. Rendering the
+  // accordion here keeps this page correct; the shared component should be fixed
+  // to wrap the title in `AccordionTrigger`.
   return (
     <Section tone="canvas">
       <SectionHeading
@@ -510,7 +524,20 @@ function BookingFaqs() {
         eyebrow="Good to know"
         description="Cancellations, deposits and what happens if you are running late."
       />
-      <FaqList faqs={faqs} className="mt-8 max-w-3xl" />
+      <Accordion
+        type="single"
+        collapsible
+        className="mt-8 max-w-3xl rounded-lg border border-line bg-surface"
+      >
+        {faqs.map((faq) => (
+          <AccordionItem key={faq.id} value={faq.id}>
+            <AccordionTrigger>{faq.question}</AccordionTrigger>
+            <AccordionContent>
+              <p className="text-sm leading-relaxed text-muted">{faq.answer}</p>
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
     </Section>
   )
 }
@@ -559,12 +586,14 @@ function BulletList({
 const INLINE_PATTERN = /(\*\*[^*\n]+\*\*|__[^_\n]+__|\*[^*\n]+\*|_[^_\n]+_|`[^`\n]+`|\[[^\]\n]+\]\([^)\s]+\))/g
 
 function renderInline(text: string, key: string): React.ReactNode[] {
+  // A fresh regex per call: the pattern is global, and sharing `lastIndex`
+  // between nested calls (bold inside a link, say) makes the outer loop restart.
+  const pattern = new RegExp(INLINE_PATTERN.source, 'g')
   const nodes: React.ReactNode[] = []
   let cursor = 0
   let match: RegExpExecArray | null
 
-  INLINE_PATTERN.lastIndex = 0
-  while ((match = INLINE_PATTERN.exec(text)) !== null) {
+  while ((match = pattern.exec(text)) !== null) {
     if (match.index > cursor) nodes.push(text.slice(cursor, match.index))
     nodes.push(renderToken(match[0], `${key}-${match.index}`))
     cursor = match.index + match[0].length

@@ -65,7 +65,7 @@ export default function ShopPage() {
     staleTime: 5 * 60_000,
   })
 
-  const categories = categoriesQuery.data ?? []
+  const categories = useMemo(() => categoriesQuery.data ?? [], [categoriesQuery.data])
   const products = productsQuery.data ?? []
   const chips = useMemo(() => activeChips(state, categories), [state, categories])
   const kind = state.kind

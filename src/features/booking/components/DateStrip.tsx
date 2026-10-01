@@ -1,7 +1,7 @@
 import { Skeleton } from '@/components/ui'
 import { DAY_SHORT } from '@/config/site'
 import { cn } from '@/lib/utils/cn'
-import { formatDate, fromDateKey, toDateKey } from '@/lib/utils/format'
+import { formatDate, fromDateKey } from '@/lib/utils/format'
 
 export interface DayCell {
   /** yyyy-MM-dd, local. */
@@ -62,7 +62,7 @@ export function DateStrip({ days, selectedKey, onSelect, isLoading, degraded }: 
                   onClick={() => onSelect(day.key)}
                   disabled={disabled}
                   aria-pressed={isSelected}
-                  aria-label={`${formatDate(day.key, 'EEEE d MMMM')}${unavailableReason}`}
+                  aria-label={`${formatDate(date, 'EEEE d MMMM')}${unavailableReason}`}
                   className={cn(
                     'flex w-[4.25rem] shrink-0 flex-col items-center justify-center gap-0.5 rounded-md border px-1 py-2 transition-colors duration-200',
                     isSelected
@@ -103,18 +103,4 @@ export function DateStrip({ days, selectedKey, onSelect, isLoading, degraded }: 
       </p>
     </div>
   )
-}
-
-/** Builds the rail's cells for the next `count` days, starting today. */
-export function buildDayCells(count: number): { key: string; date: Date }[] {
-  const cells: { key: string; date: Date }[] = []
-  const start = new Date()
-  start.setHours(0, 0, 0, 0)
-
-  for (let offset = 0; offset < count; offset++) {
-    const date = new Date(start)
-    date.setDate(date.getDate() + offset)
-    cells.push({ key: toDateKey(date), date })
-  }
-  return cells
 }

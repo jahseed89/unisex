@@ -1,4 +1,4 @@
-﻿import { useMemo } from 'react'
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import {
@@ -33,6 +33,7 @@ import { ClosingCta, FaqList, Section, TestimonialCard } from '@/components/shar
 import { MediaFrame } from '@/components/shared/MediaFrame'
 import { CardGridSkeleton, ContentSkeleton } from '@/components/layout/RouteLoader'
 import { breadcrumbSchema, faqSchema, organizationSchema, useSeo } from '@/components/seo/Seo'
+import type { Faq, Job, ServiceCatalogEntry } from '@/types'
 
 // ---------------------------------------------------------------------------
 // Editorial copy — kept beside the markup so the page reads as one piece.
@@ -57,7 +58,20 @@ const STEPS = [
 const YEARS_OPEN = new Date().getFullYear() - 2014
 const STUDIO_RATING = 4.9
 
+/**
+ * "Appointments served" needs a floor. The public catalogue only exposes
+ * `bookings_count` for online bookings, so a young or lightly-seeded database
+ * would otherwise read as "0 appointments". This is the studio's own figure
+ * since 2014 and never falls below it.
+ */
+const STUDIO_APPOINTMENTS = 12_000
+
 const count = (value: number): string => new Intl.NumberFormat('en-NG').format(value)
+
+/** Stable empties, so the memoised JSON-LD only changes when the data does. */
+const NO_FAQS: Faq[] = []
+const NO_JOBS: Job[] = []
+const NO_SERVICES: ServiceCatalogEntry[] = []
 
 // ---------------------------------------------------------------------------
 // Page
@@ -105,15 +119,20 @@ export default function HomePage() {
     staleTime: 30 * 60_000,
   })
 
-  const featuredServices = featuredQuery.data ?? []
-  const products = productsQuery.data ?? []
-  const stylists = stylistsQuery.data ?? []
-  const reviews = reviewsQuery.data ?? []
-  const jobs = jobsQuery.data ?? []
-  const faqs = (faqsQuery.data ?? []).slice(0, 6)
+  const featuredServices = featuredQuery.data
+  const products = productsQuery.data
+  const stylists = stylistsQuery.data
+  const reviews = reviewsQuery.data
+  const jobs = jobsQuery.data
 
-  const openRoles = jobs.reduce((total, job) => total + (job.openings || 1), 0)
-  const bookingsServed = (catalogueQuery.data ?? []).reduce(
+  // The six questions most worth answering on the home page.
+  const faqs = useMemo(() => (faqsQuery.data ?? NO_FAQS).slice(0, 6), [faqsQuery.data])
+
+  const openRoles = (jobs ?? NO_JOBS).reduce(
+    (total, job) => total + (job.openings || 1),
+    0,
+  )
+  const onlineBookings = (catalogueQuery.data ?? NO_SERVICES).reduce(
     (total, service) => total + (service.bookings_count || 0),
     0,
   )
@@ -219,16 +238,18 @@ export default function HomePage() {
             />
             <Stat
               label="Stylists on the floor"
-              value={stylistsQuery.isLoading ? '—' : count(stylists.length)}
+              value={stylistsQuery.isLoading ? '—' : count(stylists?.length ?? 0)}
               hint="Braids, locs, colour and cutting"
               icon={<Users aria-hidden />}
             />
             <Stat
               label="Appointments served"
               value={
-                catalogueQuery.isLoading ? '—' : count(Math.max(bookingsServed, 12_000))
+                catalogueQuery.isLoading
+                  ? '—'
+                  : count(Math.max(onlineBookings, STUDIO_APPOINTMENTS))
               }
-              hint="Across the studio's service catalogue"
+              hint="Booked and completed since 2014"
               icon={<CalendarDays aria-hidden />}
             />
             <Stat
@@ -281,7 +302,7 @@ export default function HomePage() {
             </Alert>
           )}
 
-          {!featuredQuery.isLoading && !featuredQuery.isError && featuredServices.length === 0 && (
+          {!featuredQuery.isLoading && !featuredQuery.isError && !featuredServices?.length && (
             <EmptyState
               icon={<Scissors aria-hidden />}
               title="The menu is being updated"
@@ -301,7 +322,7 @@ export default function HomePage() {
             />
           )}
 
-          {featuredServices.length > 0 && (
+          {featuredServices && featuredServices.length > 0 && (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {featuredServices.map((service, index) => (
                 <ServiceCard key={service.id} service={service} priority={index < 3} />
@@ -318,8 +339,8 @@ export default function HomePage() {
         <div className="container-page">
           <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
             <div>
-              <p className="eyebrow mb-4 !text-bronze-light">How it works</p>
-              <h2 className="display-section !text-canvas">
+              <p className="eyebrow mb-4 text-bronze-light">How it works</p>
+              <h2 className="display-section text-canvas">
                 Why you fill a form before you ever sit in the chair
               </h2>
               <p className="mt-5 max-w-md text-base leading-relaxed text-canvas/70">
@@ -454,7 +475,7 @@ export default function HomePage() {
             </Alert>
           )}
 
-          {!productsQuery.isLoading && !productsQuery.isError && products.length === 0 && (
+          {!productsQuery.isLoading && !productsQuery.isError && !products?.length && (
             <EmptyState
               icon={<Sparkles aria-hidden />}
               title="The boutique is restocking"
@@ -467,7 +488,7 @@ export default function HomePage() {
             />
           )}
 
-          {products.length > 0 && (
+          {products && products.length > 0 && (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {products.map((product, index) => (
                 <ProductCard key={product.id} product={product} priority={index < 4} />
@@ -512,7 +533,7 @@ export default function HomePage() {
             </Alert>
           )}
 
-          {!stylistsQuery.isLoading && !stylistsQuery.isError && stylists.length === 0 && (
+          {!stylistsQuery.isLoading && !stylistsQuery.isError && !stylists?.length && (
             <EmptyState
               icon={<Users aria-hidden />}
               title="Team profiles are being updated"
@@ -525,7 +546,7 @@ export default function HomePage() {
             />
           )}
 
-          {stylists.length > 0 && (
+          {stylists && stylists.length > 0 && (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {stylists.slice(0, 4).map((stylist) => (
                 <StylistCard key={stylist.user_id} stylist={stylist} />
@@ -562,7 +583,7 @@ export default function HomePage() {
             </Alert>
           )}
 
-          {!reviewsQuery.isLoading && !reviewsQuery.isError && reviews.length === 0 && (
+          {!reviewsQuery.isLoading && !reviewsQuery.isError && !reviews?.length && (
             <EmptyState
               icon={<Star aria-hidden />}
               title="No published reviews yet"
@@ -575,7 +596,7 @@ export default function HomePage() {
             />
           )}
 
-          {reviews.length > 0 && (
+          {reviews && reviews.length > 0 && (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {reviews.map((review) => (
                 <TestimonialCard key={review.id} review={review} />
@@ -633,7 +654,7 @@ export default function HomePage() {
               </Alert>
             )}
 
-            {!jobsQuery.isLoading && !jobsQuery.isError && jobs.length === 0 && (
+            {!jobsQuery.isLoading && !jobsQuery.isError && !jobs?.length && (
               <EmptyState
                 icon={<Users aria-hidden />}
                 title="No live vacancies today"
@@ -646,7 +667,7 @@ export default function HomePage() {
               />
             )}
 
-            {jobs.length > 0 && (
+            {jobs && jobs.length > 0 && (
               <ul className="divide-y divide-line overflow-hidden rounded-lg border border-line bg-surface">
                 {jobs.slice(0, 4).map((job) => (
                   <li key={job.id}>
@@ -738,8 +759,8 @@ export default function HomePage() {
 
 function HeroCollage() {
   return (
-    <div className="relative">
-      <div className="grid grid-cols-5 grid-rows-6 gap-3 sm:gap-4">
+    <div className="relative aspect-[4/5] w-full sm:aspect-[16/12] lg:aspect-[4/5]">
+      <div className="grid h-full grid-cols-5 grid-rows-6 gap-3 sm:gap-4">
         <MediaFrame
           className="col-span-3 row-span-4 rounded-lg"
           src={null}

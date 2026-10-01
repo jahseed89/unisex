@@ -1,6 +1,6 @@
 # 02 · Database schema
 
-Sixteen migrations, 5,795 lines, 47 tables, 22 enums, 152 indexes, 42 public functions, 18 private
+Seventeen migrations, 5,930 lines, 47 tables, 22 enums, 152 indexes, 42 public functions, 20 private
 functions, 28 triggers and 91 public-schema RLS policies. This document organises the tables by
 domain, then explains the design decisions and the invariants each domain enforces.
 
@@ -22,6 +22,7 @@ domain, then explains the design decisions and the invariants each domain enforc
 | 0014 | `20250101000014_triggers_storage.sql` | Triggers, column guards, storage buckets and object policies, housekeeping. |
 | 0015 | `20250101000015_seed.sql` | Idempotent reference content: roles, location, 7 categories, 17 services, variants, 10 products, coupons, 3 vacancies, 9 FAQs, 6 templates. |
 | 0016 | `20250101000016_candidate_selfservice.sql` | `fn_withdraw_application`. |
+| 0017 | `20250101000017_edge_function_support.sql` | `claim_notification_deliveries`, `recover_stuck_deliveries`, `service_role` grants, `revoke insert on payments`. |
 
 ---
 

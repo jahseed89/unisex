@@ -10,6 +10,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardHeader,
   Dialog,
   DialogBody,
   DialogClose,
@@ -22,7 +23,6 @@ import {
   Input,
   Label,
   Skeleton,
-  Textarea,
   statusTone,
 } from '@/components/ui'
 import { Breadcrumbs } from '@/components/shared/Cards'
@@ -218,27 +218,6 @@ export function AsyncSection({
   }
 
   return <div className={className}>{children}</div>
-}
-
-export function NoResults({
-  title,
-  description,
-  action,
-}: {
-  title: string
-  description?: string
-  action?: ReactNode
-}) {
-  return <EmptyState icon={<SearchIcon />} title={title} description={description} action={action} />
-}
-
-function SearchIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} aria-hidden>
-      <circle cx="11" cy="11" r="7" />
-      <path d="m20 20-3.5-3.5" strokeLinecap="round" />
-    </svg>
-  )
 }
 
 // ---------------------------------------------------------------------------
@@ -460,6 +439,8 @@ export interface ConfirmDialogProps {
   onOpenChange: (open: boolean) => void
   title: string
   description?: ReactNode
+  /** Extra controls rendered above the consequence (e.g. a reason textarea). */
+  body?: ReactNode
   /** States plainly what will happen, in the user's terms. */
   consequence: ReactNode
   confirmLabel: string
@@ -475,6 +456,7 @@ export function ConfirmDialog({
   onOpenChange,
   title,
   description,
+  body,
   consequence,
   confirmLabel,
   cancelLabel = 'Keep it',
@@ -489,7 +471,8 @@ export function ConfirmDialog({
           <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
-        <DialogBody>
+        <DialogBody className="space-y-4">
+          {body}
           <Alert variant={tone === 'danger' ? 'warning' : 'info'}>{consequence}</Alert>
         </DialogBody>
         <DialogFooter>
@@ -520,6 +503,8 @@ export function ConfirmDialog({
  * Blocks in-app navigation and the browser unload while a form is dirty.
  * Pair with {@link UnsavedChangesDialog}.
  */
+// A hook is safe for Fast Refresh — the rule cannot tell a hook from a constant.
+// eslint-disable-next-line react-refresh/only-export-components
 export function useUnsavedChanges(isDirty: boolean) {
   const blocker = useBlocker(
     ({ currentLocation, nextLocation }) =>
@@ -650,102 +635,8 @@ export function StringListEditor({
 }
 
 // ---------------------------------------------------------------------------
-// CSV export
+// Re-export — every admin view needs an empty state, and pulling it from the
+// design-system barrel at a dozen call sites adds nothing.
 // ---------------------------------------------------------------------------
 
-function csvCell(value: string | number | null | undefined): string {
-  const text = value === null || value === undefined ? '' : String(value)
-  return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
-}
-
-/**
- * Builds a CSV from the rows currently held in memory and downloads it. The
- * export is deliberately page-scoped — the admin readers page server-side and
- * expose no streaming endpoint, and the button says so.
- */
-export function exportCsv(
-  filename: string,
-  header: string[],
-  rows: (string | number | null | undefined)[][],
-): number {
-  const csv = [header, ...rows].map((row) => row.map(csvCell).join(',')).join('\r\n')
-  // BOM so Excel opens the ₦ sign correctly.
-  const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' })
-  const url = URL.createObjectURL(blob)
-  const anchor = document.createElement('a')
-  anchor.href = url
-  anchor.download = filename
-  document.body.appendChild(anchor)
-  anchor.click()
-  anchor.remove()
-  URL.revokeObjectURL(url)
-  return rows.length
-}
-
-// ---------------------------------------------------------------------------
-// Form value coercion
-// ---------------------------------------------------------------------------
-
-/** '' → null, otherwise a finite number. Keeps nullable numerics honest. */
-export function numberOrNull(value: string): number | null {
-  const trimmed = value.trim()
-  if (!trimmed) return null
-  const parsed = Number(trimmed)
-  return Number.isFinite(parsed) ? parsed : null
-}
-
-export function numberOr(value: string, fallback: number): number {
-  return numberOrNull(value) ?? fallback
-}
-
-/** number | null → controlled-input string. */
-export function toInputValue(value: number | null | undefined): string {
-  return value === null || value === undefined ? '' : String(value)
-}
-
-/** ISO timestamp → `datetime-local` value, in the browser's own timezone. */
-export function toDateTimeLocal(iso: string | null | undefined): string {
-  if (!iso) return ''
-  const date = new Date(iso)
-  if (Number.isNaN(date.getTime())) return ''
-  const pad = (n: number) => String(n).padStart(2, '0')
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(
-    date.getHours(),
-  )}:${pad(date.getMinutes())}`
-}
-
-/** `datetime-local` value → ISO, or null when the field is empty. */
-export function fromDateTimeLocal(value: string): string | null {
-  if (!value.trim()) return null
-  const date = new Date(value)
-  return Number.isNaN(date.getTime()) ? null : date.toISOString()
-}
-
-/** Long-form text area → trimmed array, dropping blank lines. */
-export function linesToList(value: string): string[] {
-  return value
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-}
-
-export function listToLines(values: string[]): string {
-  return values.join('\n')
-}
-
-// ---------------------------------------------------------------------------
-// Misc
-// ---------------------------------------------------------------------------
-
-/** Read-only text area used for the generated artefacts (CSV/JSON previews). */
-export function CodePreview({ value, rows = 6 }: { value: string; rows?: number }) {
-  return (
-    <Textarea
-      readOnly
-      rows={rows}
-      value={value}
-      aria-label="Generated output preview"
-      className="font-mono text-xs"
-    />
-  )
-}
+export { EmptyState }

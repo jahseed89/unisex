@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useQuery } from '@tanstack/react-query'
@@ -328,13 +328,15 @@ export default function ContactPage() {
                       </Link>
                       .
                     </p>
-                    <Button type="submit" size="xl" loading={isSubmitting} className="shrink-0">
-                      {isSubmitting ? 'Sending…' : (
-                        <>
-                          <Send aria-hidden />
-                          Send message
-                        </>
-                      )}
+                    <Button
+                      type="submit"
+                      size="xl"
+                      loading={isSubmitting}
+                      loadingText="Sending…"
+                      className="shrink-0"
+                    >
+                      <Send aria-hidden />
+                      Send message
                     </Button>
                   </div>
                 </form>

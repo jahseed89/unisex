@@ -1,5 +1,5 @@
-﻿import { useEffect, useRef, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -14,7 +14,7 @@ import { Alert, Button, Input } from '@/components/ui'
 import { AuthLayout, GoogleMark } from '@/features/auth/components/AuthLayout'
 import { FormField } from '@/features/auth/components/FormField'
 import { PasswordInput } from '@/features/auth/components/PasswordField'
-import { destinationFor, isGoogleAuthEnabled, returnPath } from '@/features/auth/components/authNavigation'
+import { isGoogleAuthEnabled, returnPath } from '@/features/auth/components/authNavigation'
 
 /**
  * Sign in.
@@ -41,11 +41,16 @@ export default function SignInPage() {
   const { signIn, signInWithGoogle, isAuthenticated, isLoading } = auth
   const location = useLocation()
   const navigate = useNavigate()
+  const [params] = useSearchParams()
   const [formError, setFormError] = useState<string | null>(null)
   const [googleError, setGoogleError] = useState<string | null>(null)
   const [googlePending, setGooglePending] = useState(false)
 
   const state = location.state
+
+  // `/auth/confirm` bounces here with `?error=…` when a callback link cannot be
+  // used. Surface why rather than presenting a bare form.
+  const bounceReason = params.get('error')
 
   // Read the freshest session inside the redirect effect without making it a
   // dependency (the provider object is a new reference on every state change).
@@ -126,6 +131,14 @@ export default function SignInPage() {
       <div aria-live="polite" className="sr-only">
         {formError ? 'Sign in failed.' : isSubmitting ? 'Signing you in.' : ''}
       </div>
+
+      {bounceReason && (
+        <Alert variant="warning" title="That link could not be used" className="mb-5">
+          {bounceReason === 'access_denied'
+            ? 'That sign-in was declined, so nothing was connected to your account.'
+            : 'The confirmation link has expired or was already used. Sign in below, or request a fresh one.'}
+        </Alert>
+      )}
 
       {formError && (
         <Alert variant="danger" title="We could not sign you in" className="mb-5">

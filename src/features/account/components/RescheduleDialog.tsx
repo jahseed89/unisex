@@ -46,12 +46,10 @@ export function RescheduleDialog({
   appointment,
   open,
   onOpenChange,
-  trigger,
 }: {
   appointment: AppointmentDetail
   open: boolean
   onOpenChange: (open: boolean) => void
-  trigger?: React.ReactNode
 }) {
   const queryClient = useQueryClient()
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
@@ -139,7 +137,6 @@ export function RescheduleDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      {trigger}
       <DialogContent size="lg">
         <DialogHeader>
           <DialogTitle>Reschedule this appointment</DialogTitle>
