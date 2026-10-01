@@ -47,3 +47,7 @@ Desktop.ini
 *.pem
 coverage
 .vite
+# Supabase function secrets
+supabase/functions/.env.local
+supabase/.temp
+supabase/.branches

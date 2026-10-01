@@ -17,11 +17,9 @@ import {
   Input,
   Select,
   Textarea,
-  qk,
-  adjustStock,
 } from '@/components/ui'
+import { adjustStock, qk } from '@/lib/api'
 import { errorMessage } from '@/lib/supabase/errors'
-import { Button as ButtonPrimitive } from '@/components/ui'
 import { SaveStatus, numberOr } from './adminKit'
 import type { SaveState } from './adminKit'
 
@@ -52,18 +50,19 @@ export interface StockAdjustTarget {
   name: string
   productName: string
   stockOnHand: number
-  /** Existing variants must move through the ledger; new ones are seeded on save. */
-  isNew?: boolean
 }
 
 export function StockAdjustDialog({
   open,
   onOpenChange,
   target,
+  onAdjusted,
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
   target: StockAdjustTarget | null
+  /** Lets the host page refresh the figures it derives from stock. */
+  onAdjusted?: () => void
 }) {
   const queryClient = useQueryClient()
   const [delta, setDelta] = useState('0')
@@ -94,10 +93,10 @@ export function StockAdjustDialog({
       setState('saved')
       toast.success(`Stock updated — ${variant.sku} is now ${variant.stock_on_hand} on hand.`)
       void queryClient.invalidateQueries({ queryKey: qk.inventory() })
+      void queryClient.invalidateQueries({ queryKey: qk.inventory(variant.id) })
       void queryClient.invalidateQueries({ queryKey: qk.adminVariants(variant.product_id) })
       void queryClient.invalidateQueries({ queryKey: qk.adminProducts() })
-      void queryClient.invalidateQueries({ queryKey: qk.dashboard('', '') })
-      void queryClient.invalidateQueries({ queryKey: qk.staffDiary('', '') })
+      onAdjusted?.()
       onOpenChange(false)
     },
     onError: (error) => {
@@ -112,8 +111,7 @@ export function StockAdjustDialog({
   const resulting = target.stockOnHand + amount
   const wouldGoNegative = resulting < 0
 
-  const bump = (by: number) =>
-    setDelta((current) => String(numberOr(current, 0) + by))
+  const bump = (by: number) => setDelta((current) => String(numberOr(current, 0) + by))
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -127,8 +125,8 @@ export function StockAdjustDialog({
 
         <DialogBody className="space-y-4">
           <Alert variant="info" title="Stock moves through the ledger">
-            Every adjustment writes an inventory movement, so the balance below is
-            what will be recorded. Editing the absolute figure directly is not
+            Every adjustment writes an inventory movement, so the balance shown below is
+            exactly what gets recorded. Editing the absolute figure directly is not
             possible — the database rejects it.
           </Alert>
 
@@ -146,7 +144,7 @@ export function StockAdjustDialog({
             hint="Use a minus sign to remove stock. The resulting balance must not fall below zero."
           >
             <div className="flex gap-2">
-              <ButtonPrimitive
+              <Button
                 type="button"
                 variant="outline"
                 size="icon"
@@ -154,7 +152,7 @@ export function StockAdjustDialog({
                 onClick={() => bump(-1)}
               >
                 <Minus aria-hidden />
-              </ButtonPrimitive>
+              </Button>
               <Input
                 id="stock-delta"
                 type="number"
@@ -163,7 +161,7 @@ export function StockAdjustDialog({
                 invalid={wouldGoNegative}
                 onChange={(event) => setDelta(event.target.value)}
               />
-              <ButtonPrimitive
+              <Button
                 type="button"
                 variant="outline"
                 size="icon"
@@ -171,21 +169,15 @@ export function StockAdjustDialog({
                 onClick={() => bump(1)}
               >
                 <Plus aria-hidden />
-              </ButtonPrimitive>
+              </Button>
             </div>
           </Field>
 
           <div className="flex flex-wrap gap-2">
             {[-10, -1, 1, 10].map((step) => (
-              <ButtonPrimitive
-                key={step}
-                type="button"
-                variant="subtle"
-                size="sm"
-                onClick={() => bump(step)}
-              >
+              <Button key={step} type="button" variant="subtle" size="sm" onClick={() => bump(step)}>
                 {step > 0 ? `+${step}` : step}
-              </ButtonPrimitive>
+              </Button>
             ))}
           </div>
 
@@ -198,7 +190,11 @@ export function StockAdjustDialog({
             />
           </Field>
 
-          <Field label="Note" htmlFor="stock-note" hint="Optional. Helps the next person understand the movement.">
+          <Field
+            label="Note"
+            htmlFor="stock-note"
+            hint="Optional. Helps the next person understand the movement."
+          >
             <Textarea
               id="stock-note"
               rows={3}

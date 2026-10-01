@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react'
+﻿import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -14,19 +14,15 @@ import { Alert, Button, Input } from '@/components/ui'
 import { AuthLayout, GoogleMark } from '@/features/auth/components/AuthLayout'
 import { FormField } from '@/features/auth/components/FormField'
 import { PasswordInput } from '@/features/auth/components/PasswordField'
-import {
-  destinationFor,
-  isGoogleAuthEnabled,
-  returnPath,
-} from '@/features/auth/components/authNavigation'
+import { destinationFor, isGoogleAuthEnabled, returnPath } from '@/features/auth/components/authNavigation'
 
 /**
  * Sign in.
  *
- * The session is established asynchronously: `signIn` resolves before
- * `AuthProvider` has finished hydrating the profile, so the redirect is driven by
- * `isAuthenticated` rather than by the promise resolving. That also covers the
- * case where the visitor is already signed in when they land here.
+ * The session settles asynchronously: `signIn` resolves before `AuthProvider`
+ * has hydrated the profile and roles, so the redirect is driven by
+ * `isAuthenticated` rather than by the promise. That also covers a visitor who
+ * is already signed in when they land here — the effect fires on mount.
  */
 
 const schema = z.object({
@@ -41,7 +37,8 @@ const schema = z.object({
 type SignInValues = z.infer<typeof schema>
 
 export default function SignInPage() {
-  const { signIn, signInWithGoogle, isAuthenticated, isLoading } = useAuth()
+  const auth = useAuth()
+  const { signIn, signInWithGoogle, isAuthenticated, isLoading } = auth
   const location = useLocation()
   const navigate = useNavigate()
   const [formError, setFormError] = useState<string | null>(null)
@@ -49,6 +46,11 @@ export default function SignInPage() {
   const [googlePending, setGooglePending] = useState(false)
 
   const state = location.state
+
+  // Read the freshest session inside the redirect effect without making it a
+  // dependency (the provider object is a new reference on every state change).
+  const latest = useRef(auth)
+  latest.current = auth
 
   useSeo({
     title: 'Sign in',
@@ -67,16 +69,11 @@ export default function SignInPage() {
     mode: 'onSubmit',
   })
 
-  // Already signed in (or just became so) — send them where they were going.
   useEffect(() => {
     if (!isAuthenticated) return
-    navigate(returnPath(state) ?? postSignInPath({ user: null, profile: null, roles: [], isAuthenticated: true, isStaff: false, isAdmin: false, isLoading: false }), {
-      replace: true,
-    })
-    // `destinationFor` needs the live session; isAuthenticated flipping is the
-    // signal that the role fields have settled too.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated])
+    const session = latest.current
+    navigate(returnPath(state) ?? postSignInPath(session), { replace: true })
+  }, [isAuthenticated, navigate, state])
 
   const onSubmit = handleSubmit(async (values) => {
     setFormError(null)
@@ -142,7 +139,6 @@ export default function SignInPage() {
             type="email"
             inputMode="email"
             autoComplete="email"
-            autoFocus
             placeholder="you@example.com"
             leadingIcon={<Mail className="size-4" aria-hidden />}
             invalid={Boolean(errors.email)}

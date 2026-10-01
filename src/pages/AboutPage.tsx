@@ -104,7 +104,7 @@ export default function AboutPage() {
       page?.excerpt ??
       'Unisex Hair Studio is a premium unisex salon on Adeola Odeku, Victoria Island. Meet the team behind our braids, locs, colour and cutting.',
     path: '/about',
-    image: page?.hero_image_url,
+    image: page?.hero_image_url ?? undefined,
     jsonLd,
   })
 

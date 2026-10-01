@@ -53,33 +53,6 @@ const STEPS = [
   },
 ] as const
 
-const PILLARS = [
-  {
-    title: 'Unisex by design',
-    body: 'No separate "men\'s" and "women\'s" floors. The same chair, the same standards, the same price list — whether you are booking a taper or a waist-length knotless install.',
-  },
-  {
-    title: 'Texture first',
-    body: 'Coily hair is not an afterthought here. Every service is planned around your actual density, strand pattern and growth, not a one-size-fits-all formula.',
-  },
-  {
-    title: 'Priced in the open',
-    body: 'Price ranges on the page, not a surprise at the desk. You see the range before you book and you agree the final figure with your stylist before any work starts.',
-  },
-  {
-    title: 'Trained, not guessed',
-    body: 'Colourists who read colour theory, braids artists who can hold a tension, loc specialists who understand your loc pattern. Ongoing training is funded, not begged for.',
-  },
-  {
-    title: 'Prepared for you',
-    body: 'Requirements are read before you arrive, references are opened, products are laid out. That is the difference between a good result and the one you keep talking about.',
-  },
-  {
-    title: 'Aftercare that works',
-    body: 'You leave with a written aftercare plan, the products that suit your hair, and a direct line to your stylist if something needs settling. Care is when the result actually lasts.',
-  },
-] as const
-
 /** Warm, specific brand claims used by the trust bar. */
 const YEARS_OPEN = new Date().getFullYear() - 2014
 const STUDIO_RATING = 4.9
