@@ -1,0 +1,104 @@
+# Supabase local development configuration
+#
+# Requires the Supabase CLI and Docker:
+#   npm i -g supabase
+#   supabase start
+#
+# Docker was not available in the environment this project was built in, so
+# these migrations were verified against a real PostgreSQL 16 engine instead:
+#   npm run validate:sql
+
+project_id = "unisex-hair-studio"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[db.pooler]
+enabled = false
+port = 54329
+pool_mode = "transaction"
+default_pool_size = 20
+max_client_conn = 100
+
+[realtime]
+enabled = true
+
+[studio]
+enabled = true
+port = 54323
+api_url = "http://127.0.0.1"
+
+[inbucket]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
+# Buckets and their policies are created by migration 20250101000014_triggers_storage.sql
+# so that they exist identically in local and hosted environments.
+
+[auth]
+enabled = true
+site_url = "http://localhost:5173"
+additional_redirect_urls = ["http://localhost:5173/auth/confirm", "http://127.0.0.1:5173/auth/confirm"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+refresh_token_reuse_interval = 10
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+# Confirmed automatically locally so the seeded accounts are usable at once.
+enable_confirmations = false
+secure_password_change = true
+max_frequency = "1s"
+otp_length = 6
+otp_expiry = 3600
+
+[auth.sms]
+enable_signup = false
+enable_confirmations = false
+
+[auth.external.google]
+enabled = false
+client_id = "env(SUPABASE_AUTH_GOOGLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_GOOGLE_SECRET)"
+skip_nonce_check = false
+
+[edge_runtime]
+enabled = true
+policy = "per_worker"
+inspector_port = 8083
+
+# ---------------------------------------------------------------------------
+# Scheduled jobs.
+#
+# Registered by the operator against a hosted project (Database → Cron), or via
+# pg_cron locally. `app_private.housekeeping()` and
+# `app_private.claim_scheduled_jobs()` are the two entry points.
+# ---------------------------------------------------------------------------
+# select cron.schedule(
+#   'uhs-housekeeping',
+#   '*/10 * * * *',
+#   $$select app_private.housekeeping();$$
+# );
+#
+# select cron.schedule(
+#   'uhs-dispatch-notifications',
+#   '* * * * *',
+#   $$select app_private.claim_scheduled_jobs('pg_cron', 50);$$
+# );
+
+[analytics]
+enabled = false
