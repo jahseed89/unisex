@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query'
 import { AlertCircle, ArrowRight, Lock, ShoppingBag, Trash2 } from 'lucide-react'
 
 import { getProducts, qk } from '@/lib/api'
-import { errorMessage } from '@/lib/supabase/errors'
 import { formatNaira, humanise } from '@/lib/utils/format'
 import { useAuth } from '@/features/auth/AuthProvider'
 import { useCart } from '@/features/cart/CartProvider'

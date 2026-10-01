@@ -545,4 +545,6 @@ function ProductSkeleton() {
           <Skeleton className="h-3 w-4/5" />
         </div>
       </Card>
-    
+    </div>
+  )
+}

@@ -59,7 +59,8 @@ export default function ShopPage() {
   })
 
   const productsQuery = useQuery({
-    queryKey: qk.products(filters),
+    // Spreading satisfies `qk`'s Record signature without weakening the filter type.
+    queryKey: qk.products({ ...filters }),
     queryFn: () => getProducts(filters),
     staleTime: 5 * 60_000,
   })

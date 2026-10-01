@@ -8,7 +8,7 @@ import { errorMessage } from '@/lib/supabase/errors'
 import { analytics } from '@/lib/analytics'
 import { formatNaira, humanise } from '@/lib/utils/format'
 import { Alert, Badge, Button, Card, EmptyState, Input } from '@/components/ui'
-import { PageHeader } from '@/components/shared/Cards'
+import { formatDuration, PageHeader } from '@/components/shared/Cards'
 import { ClosingCta, Section } from '@/components/shared/Blocks'
 import { MediaFrame } from '@/components/shared/MediaFrame'
 import { ContentSkeleton } from '@/components/layout/RouteLoader'
@@ -417,7 +417,7 @@ function ProductResult({ product }: { product: ProductCatalogEntry }) {
               {product.name}
             </h3>
             <p className="mt-auto pt-3 text-sm font-semibold text-ink">
-              {formatShortPrice(price)}
+              {formatNaira(price)}
               {product.available_stock <= 0 && (
                 <span className="ml-2 text-xs font-normal text-muted">Out of stock</span>
               )}
