@@ -66,6 +66,12 @@ export default function SearchPage() {
   const jobs = jobsQuery.data ?? []
   const total = services.length + products.length + jobs.length
 
+  const groupLinks = [
+    { id: 'services', label: 'Services', count: services.length },
+    { id: 'products', label: 'Shop', count: products.length },
+    { id: 'jobs', label: 'Open roles', count: jobs.length },
+  ].filter((group) => group.count > 0)
+
   const isLoading = shouldSearch && (servicesQuery.isLoading || productsQuery.isLoading || jobsQuery.isLoading)
   const firstError = [servicesQuery, productsQuery, jobsQuery].find((query) => query.isError)
   const errorQuery = firstError as
@@ -238,6 +244,22 @@ export default function SearchPage() {
 
         {shouldSearch && !isLoading && !errorQuery?.isError && total > 0 && (
           <div className="space-y-14">
+            <nav aria-label="Result sections">
+              <ul className="flex flex-wrap items-center gap-2">
+                {groupLinks.map((group) => (
+                  <li key={group.id}>
+                    <a
+                      href={`#${group.id}`}
+                      className="inline-flex h-11 items-center gap-2 rounded-pill border border-line-strong bg-surface px-4 text-sm text-ink-soft transition-colors hover:border-ink hover:bg-sand"
+                    >
+                      {group.label}
+                      <span className="text-xs tabular-nums text-faint">{group.count}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
             {services.length > 0 && (
               <ResultGroup
                 id="services"
@@ -318,22 +340,14 @@ function ResultGroup({
 }) {
   return (
     <section id={id} aria-labelledby={`${id}-heading`} className="scroll-mt-24">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h2 id={`${id}-heading`} className="font-display text-2xl font-semibold text-ink">
-            {title}
-            <Badge variant="accent" size="md" className="ml-2.5 align-middle">
-              {count}
-            </Badge>
-          </h2>
-          <p className="mt-1.5 text-sm text-muted">{description}</p>
-        </div>
-        <a
-          href={`#${id}-heading`}
-          className="text-sm font-medium text-bronze-dark underline underline-offset-4"
-        >
-          Jump to section
-        </a>
+      <div>
+        <h2 id={`${id}-heading`} className="font-display text-2xl font-semibold text-ink">
+          {title}
+          <Badge variant="accent" size="md" className="ml-2.5 align-middle">
+            {count}
+          </Badge>
+        </h2>
+        <p className="mt-1.5 text-sm text-muted">{description}</p>
       </div>
       <div className="mt-6">{children}</div>
     </section>
