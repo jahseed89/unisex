@@ -3,6 +3,7 @@ import { Outlet, ScrollRestoration, useLocation } from 'react-router-dom'
 import { SiteHeader } from './SiteHeader'
 import { SiteFooter } from './SiteFooter'
 import { RouteLoader } from './RouteLoader'
+import { RouteChangeTracker } from './RouteChangeTracker'
 
 /**
  * Public site shell: header, main landmark, footer.
@@ -21,6 +22,7 @@ export function SiteLayout() {
 
   return (
     <div className="flex min-h-dvh flex-col bg-canvas">
+      <RouteChangeTracker />
       <SiteHeader />
 
       <main id="main" className="flex-1" tabIndex={-1}>

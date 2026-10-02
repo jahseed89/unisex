@@ -23,6 +23,7 @@ import { useCartCount } from '@/features/cart/CartProvider'
 import { useUnreadCount } from '@/features/notifications/useNotifications'
 import { Button } from '@/components/ui'
 import { RouteLoader } from './RouteLoader'
+import { RouteChangeTracker } from './RouteChangeTracker'
 
 /**
  * Shell for every signed-in surface: /account, /staff and /admin.
@@ -85,6 +86,8 @@ export function DashboardLayout() {
 
   return (
     <div className="min-h-dvh bg-canvas">
+      <RouteChangeTracker />
+
       {/* Top bar */}
       <header className="sticky top-0 z-40 border-b border-line bg-canvas/92 backdrop-blur-md">
         <div className="container-page">
