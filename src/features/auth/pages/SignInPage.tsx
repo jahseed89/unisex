@@ -59,7 +59,7 @@ export default function SignInPage() {
 
   useSeo({
     title: 'Sign in',
-    description: 'Sign in to manage your appointments, orders and saved hair at Unisex Hair Studio.',
+    description: 'Sign in to manage your appointments, orders and saved hair at Black Chery Unisex Studio.',
     path: '/auth/sign-in',
     noindex: true,
   })
@@ -113,7 +113,7 @@ export default function SignInPage() {
       }
       footer={
         <>
-          New to Unisex Hair Studio?{' '}
+          New to Black Chery Unisex Studio?{' '}
           <Link
             to="/auth/sign-up"
             state={state}

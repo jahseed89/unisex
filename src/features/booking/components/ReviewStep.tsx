@@ -89,7 +89,7 @@ export function ReviewStep({
       stylistName,
       locationLine: location
         ? `${location.name}, ${location.address_line1}, ${location.city}`
-        : 'Unisex Hair Studio, 12 Adeola Odeku Street, Victoria Island, Lagos',
+        : 'Black Chery Unisex Studio, 12 Adeola Odeku Street, Victoria Island, Lagos',
     })
 
   return (

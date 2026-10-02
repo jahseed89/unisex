@@ -31,7 +31,7 @@ function build(): SupabaseClient {
       },
       global: {
         headers: {
-          'x-application-name': 'unisex-hair-studio',
+          'x-application-name': 'black-chery-unisex-studio',
         },
       },
       db: {

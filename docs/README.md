@@ -1,6 +1,6 @@
-# Unisex Hair Studio — Technical Documentation
+# Black Chery Unisex Studio — Technical Documentation
 
-Documentation for the Unisex Hair Studio platform: a premium unisex salon in Lagos, Nigeria, covering
+Documentation for the Black Chery Unisex Studio platform: a premium unisex salon in Lagos, Nigeria, covering
 service discovery, appointment booking with client requirement capture, an online boutique
 (wigs, extensions, hair care), recruitment, and staff/administrator operations.
 

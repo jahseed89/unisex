@@ -229,7 +229,7 @@ export default function JobDetailPage() {
 
   useSeo({
     title: job ? `${job.title} at ${site.name}` : `Role not found | ${site.name}`,
-    description: job?.summary ?? 'This role is no longer open at Unisex Hair Studio.',
+    description: job?.summary ?? 'This role is no longer open at Black Chery Unisex Studio.',
     path: `/careers/${slug}`,
     jsonLd,
     noindex: !job,

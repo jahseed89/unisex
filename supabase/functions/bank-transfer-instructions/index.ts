@@ -46,7 +46,7 @@ Deno.serve(async (request) => {
     return jsonResponse(fail('This order is already paid', 409), 409, origin)
   }
 
-  const accountName = Deno.env.get('BANK_ACCOUNT_NAME') ?? 'Unisex Hair Studio'
+  const accountName = Deno.env.get('BANK_ACCOUNT_NAME') ?? 'Black Chery Unisex Studio'
   const accountNumber = Deno.env.get('BANK_ACCOUNT_NUMBER') ?? ''
   const bankName = Deno.env.get('BANK_NAME') ?? ''
 

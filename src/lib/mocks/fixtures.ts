@@ -12,8 +12,8 @@ const img = (seed: string) => `https://picsum.photos/seed/${encodeURIComponent(s
 // Business configuration
 // ---------------------------------------------------------------------------
 export const business_settings = {
-  business_name: 'Unisex Hair Studio',
-  legal_name: 'Unisex Hair Studio',
+  business_name: 'Black Chery Unisex Studio',
+  legal_name: 'Black Chery Unisex Studio',
   tagline: 'Premium hair, braids, locs and colour for everyone.',
   currency: 'NGN',
   tax_pct: 7.5,
@@ -28,13 +28,13 @@ export const business_settings = {
   standard_delivery_fee: 2500,
   accepts_delivery: true,
   accepts_pickup: true,
-  support_email: 'hello@unisexhairstudio.com',
+  support_email: 'hello@blackcheryunisexstudio.com',
   support_phone: '+2348000000000',
   whatsapp_number: '2348000000000',
-  instagram: 'unisexhairstudio',
+  instagram: 'blackcheryunisexstudio',
   facebook: 'unitexhairstudio',
-  tiktok: 'unisexhairstudio',
-  x_twitter: 'unisexhairstudio',
+  tiktok: 'blackcheryunisexstudio',
+  x_twitter: 'blackcheryunisexstudio',
 }
 
 // ---------------------------------------------------------------------------
@@ -43,7 +43,7 @@ export const business_settings = {
 export const salon_locations = [
   {
     id: 'a1000000-0000-4000-8000-000000000001',
-    name: 'Unisex Hair Studio — Victoria Island',
+    name: 'Black Chery Unisex Studio — Victoria Island',
     slug: 'victoria-island',
     address_line1: '12 Adeola Odeku Street',
     address_line2: null,
@@ -55,7 +55,7 @@ export const salon_locations = [
     longitude: '3.4219',
     phone: '+2348000000000',
     whatsapp: '2348000000000',
-    email: 'hello@unisexhairstudio.com',
+    email: 'hello@blackcheryunisexstudio.com',
     timezone: 'Africa/Lagos',
     is_primary: true,
     is_active: true,
@@ -378,7 +378,7 @@ const STAFF_SEEDS = [
 export const profiles: Record<string, unknown>[] = [
   ...STAFF_SEEDS.map((s, i) => ({
     id: STAFF_IDS[i],
-    email: `${s.full_name.toLowerCase().split(' ')[0]}@unisexhairstudio.com`,
+    email: `${s.full_name.toLowerCase().split(' ')[0]}@blackcheryunisexstudio.com`,
     full_name: s.full_name,
     slug: s.full_name.toLowerCase().replace(/\s+/g, '-'),
     phone_e164: `+23480000000${i + 1}`,
@@ -440,7 +440,7 @@ export const staff_profiles = STAFF_SEEDS.map((s, i) => ({
   slug: s.full_name.toLowerCase().replace(/\s+/g, '-'),
   title: s.title,
   headline: s.headline,
-  bio: `${s.headline} ${s.full_name.split(' ')[0]} has been with Unisex Hair Studio since 2021 and specialises in ${s.title.toLowerCase()}.`,
+  bio: `${s.headline} ${s.full_name.split(' ')[0]} has been with Black Chery Unisex Studio since 2021 and specialises in ${s.title.toLowerCase()}.`,
   photo_url: img(`staff-${s.full_name}`),
   portfolio_urls: [img(`portfolio-${s.full_name}-1`)],
   specialities: i === 0 ? ['braids'] : i === 1 ? ['colour'] : i === 2 ? ['locs'] : ['styling'],
@@ -654,7 +654,7 @@ export const faqs = [
   { id: 'q6', question: 'How do I pay?', answer: 'We accept card, bank transfer and USSD through Paystack, which works with all major Nigerian banks. You can pay a deposit when booking and settle the balance at the salon.', category: 'shop', display_order: 6, is_published: true, helpful_count: 24 },
   { id: 'q7', question: 'Do you deliver products?', answer: 'Yes, within Lagos. Delivery is free on orders over ₦75,000 and ₦2,500 otherwise. You can also collect from any of our branches at no charge.', category: 'shop', display_order: 7, is_published: true, helpful_count: 18 },
   { id: 'q8', question: 'Can I reschedule my appointment?', answer: 'Yes, from your account under Appointments. Pick a new time from the live diary and it is confirmed instantly, subject to availability.', category: 'booking', display_order: 8, is_published: true, helpful_count: 31 },
-  { id: 'q9', question: 'Do you train or take on apprentices?', answer: 'We do. Post openings on our Careers page and watch for apprenticeship and internship roles, or send a portfolio to hello@unisexhairstudio.com.', category: 'careers', display_order: 9, is_published: true, helpful_count: 15 },
+  { id: 'q9', question: 'Do you train or take on apprentices?', answer: 'We do. Post openings on our Careers page and watch for apprenticeship and internship roles, or send a portfolio to hello@blackcheryunisexstudio.com.', category: 'careers', display_order: 9, is_published: true, helpful_count: 15 },
 ]
 
 const REVIEW_COPY = [
@@ -749,7 +749,7 @@ export const jobs: Record<string, unknown>[] = [
     display_order: 1,
     published_at: '2025-03-01T09:00:00Z',
     closes_at: null,
-    apply_email: 'careers@unisexhairstudio.com',
+    apply_email: 'careers@blackcheryunisexstudio.com',
     screening_questions: [
       { key: 'portfolio', label: 'Share a portfolio link', type: 'url', required: true },
       { key: 'speciality', label: 'Which styles are you strongest at?', type: 'text', required: true },
@@ -788,7 +788,7 @@ export const jobs: Record<string, unknown>[] = [
     display_order: 2,
     published_at: '2025-02-10T09:00:00Z',
     closes_at: null,
-    apply_email: 'careers@unisexhairstudio.com',
+    apply_email: 'careers@blackcheryunisexstudio.com',
     screening_questions: [
       { key: 'portfolio', label: 'Colour portfolio link', type: 'url', required: true },
       { key: 'start', label: 'Earliest start date', type: 'date', required: true },
@@ -826,7 +826,7 @@ export const jobs: Record<string, unknown>[] = [
     display_order: 3,
     published_at: '2025-03-20T09:00:00Z',
     closes_at: null,
-    apply_email: 'careers@unisexhairstudio.com',
+    apply_email: 'careers@blackcheryunisexstudio.com',
     screening_questions: [
       { key: 'experience', label: 'Relevant experience', type: 'textarea', required: true },
       { key: 'start', label: 'Earliest start date', type: 'date', required: true },
@@ -1032,7 +1032,7 @@ export const DEMO_ACCOUNT = {
 
 export const DEMO_ADMIN = {
   id: STAFF_IDS[1],
-  email: 'tunde@unisexhairstudio.com',
+  email: 'tunde@blackcheryunisexstudio.com',
   password: 'demo1234',
   full_name: 'Tunde Bakare',
   roles: ['staff', 'admin'],
@@ -1040,7 +1040,7 @@ export const DEMO_ADMIN = {
 
 export const DEMO_STAFF = {
   id: STAFF_IDS[0],
-  email: 'adaeze@unisexhairstudio.com',
+  email: 'adaeze@blackcheryunisexstudio.com',
   password: 'demo1234',
   full_name: 'Adaeze Okonkwo',
   roles: ['staff'],

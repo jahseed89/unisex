@@ -84,7 +84,7 @@ export const env = {
   },
 
   support: {
-    email: read('VITE_SUPPORT_EMAIL', 'hello@unisexhairstudio.com'),
+    email: read('VITE_SUPPORT_EMAIL', 'hello@blackcheryunisexstudio.com'),
     phone: read('VITE_SUPPORT_PHONE', '+2348000000000'),
   },
 } as const

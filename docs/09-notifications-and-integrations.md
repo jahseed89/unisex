@@ -364,7 +364,7 @@ is_active, updated_at)`. Six rows are seeded:
 
 | key | channel | subject |
 | --- | --- | --- |
-| `appointment.confirmation` | email | `Your booking at Unisex Hair Studio is confirmed ({{reference}})` |
+| `appointment.confirmation` | email | `Your booking at Black Chery Unisex Studio is confirmed ({{reference}})` |
 | `appointment.reminder_24h` | email | `See you tomorrow, {{first_name}}` |
 | `appointment.reminder_2h` | sms | null |
 | `order.confirmation` | email | `Order {{order_number}} received` |

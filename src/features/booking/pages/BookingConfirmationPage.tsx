@@ -57,7 +57,7 @@ export default function BookingConfirmationPage() {
 
   useSeo({
     title: 'Booking confirmed',
-    description: 'Your appointment at Unisex Hair Studio.',
+    description: 'Your appointment at Black Chery Unisex Studio.',
     noindex: true,
   })
 
@@ -192,7 +192,7 @@ export default function BookingConfirmationPage() {
       locationLine: appointment.location
         ? `${appointment.location.name}, ${appointment.location.address_line1}, ${appointment.location.city}`
         : `${site.address.street}, ${site.address.locality}, ${site.address.region}`,
-      description: `Booking ${appointment.reference} at Unisex Hair Studio with ${stylistName}.`,
+      description: `Booking ${appointment.reference} at Black Chery Unisex Studio with ${stylistName}.`,
     })
 
   return (
@@ -409,7 +409,7 @@ export default function BookingConfirmationPage() {
               <Button asChild variant="ghost" size="lg" fullWidth>
                 <a
                   href={whatsappLink(
-                    `Hi! I have a booking ${appointment.reference} at Unisex Hair Studio on ${formatDateTime(appointment.starts_at)}.`,
+                    `Hi! I have a booking ${appointment.reference} at Black Chery Unisex Studio on ${formatDateTime(appointment.starts_at)}.`,
                   )}
                   target="_blank"
                   rel="noopener noreferrer"

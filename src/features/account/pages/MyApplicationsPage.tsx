@@ -51,7 +51,7 @@ export default function MyApplicationsPage() {
 
   useSeo({
     title: 'Your applications',
-    description: 'Track the roles you have applied for at Unisex Hair Studio.',
+    description: 'Track the roles you have applied for at Black Chery Unisex Studio.',
     path: '/account/applications',
     noindex: true,
   })

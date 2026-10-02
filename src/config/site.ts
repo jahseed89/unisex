@@ -7,26 +7,31 @@
  */
 
 export const site = {
-  name: 'Unisex Hair Studio',
-  legalName: 'Unisex Hair Studio',
+  name: 'Black Chery Unisex Studio',
+  legalName: 'Black Chery Unisex Studio',
+  /** Proprietor. Used in founder credit, JSON-LD and legal copy. */
+  owner: {
+    name: 'Wisdom Ocran',
+    role: 'Founder & Head Stylist',
+  },
   wordmark: {
-    primary: 'UNISEX',
-    accent: 'HAIR',
+    primary: 'BLACK CHERY',
+    accent: 'UNISEX',
     suffix: 'STUDIO',
   },
   tagline: 'Premium hair, braids, locs and colour for everyone.',
   description:
-    'Unisex Hair Studio is a premium unisex salon in Lagos, Nigeria. Browse and book hair, braids, locs, colour and styling services, shop wigs, extensions and hair care, and join our team.',
+    'Black Chery Unisex Studio is a premium unisex salon in Lagos, Nigeria. Browse and book hair, braids, locs, colour and styling services, shop wigs, extensions and hair care, and join our team.',
   shortDescription:
     'A premium unisex salon for braids, locs, hair, colour and styling — with an online boutique.',
 
-  url: import.meta.env.VITE_APP_URL || 'https://unisexhairstudio.com',
+  url: import.meta.env.VITE_APP_URL || 'https://blackcheryunisexstudio.com',
   locale: 'en-NG',
   currency: 'NGN',
   timezone: 'Africa/Lagos',
 
   contact: {
-    email: import.meta.env.VITE_SUPPORT_EMAIL || 'hello@unisexhairstudio.com',
+    email: import.meta.env.VITE_SUPPORT_EMAIL || 'hello@blackcheryunisexstudio.com',
     phone: import.meta.env.VITE_SUPPORT_PHONE || '+2348000000000',
     whatsapp: import.meta.env.VITE_WHATSAPP_PHONE_NUMBER || '2348000000000',
   },
@@ -50,10 +55,10 @@ export const site = {
   },
 
   social: {
-    instagram: 'https://instagram.com/unisexhairstudio',
-    facebook: 'https://facebook.com/unisexhairstudio',
-    tiktok: 'https://tiktok.com/@unisexhairstudio',
-    x: 'https://x.com/unisexhairstudio',
+    instagram: 'https://instagram.com/blackcheryunisexstudio',
+    facebook: 'https://facebook.com/blackcheryunisexstudio',
+    tiktok: 'https://tiktok.com/@blackcheryunisexstudio',
+    x: 'https://x.com/blackcheryunisexstudio',
   },
 
   /** Booking policy mirrored from business_settings; the database is authoritative. */

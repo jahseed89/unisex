@@ -41,7 +41,7 @@ export default function AccountOverviewPage() {
 
   useSeo({
     title: 'Your account',
-    description: 'Manage your appointments, orders and saved hair at Unisex Hair Studio.',
+    description: 'Manage your appointments, orders and saved hair at Black Chery Unisex Studio.',
     path: '/account',
     noindex: true,
   })

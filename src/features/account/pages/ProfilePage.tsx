@@ -458,7 +458,7 @@ export default function ProfilePage() {
       <Dialog open={signOutOpen} onOpenChange={setSignOutOpen}>
         <DialogContent size="sm">
           <DialogHeader>
-            <DialogTitle>Sign out of Unisex Hair Studio?</DialogTitle>
+            <DialogTitle>Sign out of Black Chery Unisex Studio?</DialogTitle>
             <DialogDescription>
               You will need your email and password to come back.
             </DialogDescription>
@@ -515,7 +515,7 @@ export default function ProfilePage() {
               Keep my account
             </Button>
             <Button asChild variant="danger">
-              <a href="mailto:hello@unisexhairstudio.com?subject=Account%20deletion%20request">
+              <a href="mailto:hello@blackcheryunisexstudio.com?subject=Account%20deletion%20request">
                 Email us
               </a>
             </Button>

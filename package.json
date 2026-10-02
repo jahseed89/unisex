@@ -1,9 +1,9 @@
 {
-  "name": "unisex-hair-studio",
+  "name": "black-chery-unisex-studio",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Unisex Hair Studio — premium unisex salon platform: service discovery, appointment booking, client requirements, commerce and recruitment.",
+  "description": "Black Chery Unisex Studio — premium unisex salon platform: service discovery, appointment booking, client requirements, commerce and recruitment.",
   "engines": {
     "node": ">=20.11.0"
   },

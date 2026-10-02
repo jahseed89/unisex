@@ -37,12 +37,17 @@ const outDir = join(root, outIndex !== -1 ? args[outIndex + 1] : 'dist')
 // Site constants — kept in step with src/config/site.ts
 // ---------------------------------------------------------------------------
 const SITE = {
-  url: (process.env.VITE_APP_URL || 'https://unisexhairstudio.com').replace(/\/$/, ''),
-  name: 'Unisex Hair Studio',
+  url: (process.env.VITE_APP_URL || 'https://blackcheryunisexstudio.com').replace(/\/$/, ''),
+  name: 'Black Chery Unisex Studio',
   description:
-    'Unisex Hair Studio is a premium unisex salon in Lagos, Nigeria. Book hair, braids, locs, colour and styling appointments, shop wigs, extensions and hair care, and join our team.',
+    'Black Chery Unisex Studio is a premium unisex salon in Lagos, Nigeria. Book hair, braids, locs, colour and styling appointments, shop wigs, extensions and hair care, and join our team.',
   locale: 'en_NG',
-  twitter: '@unisexhairstudio',
+  twitter: '@blackcheryunisexstudio',
+  // Mirrors site.owner in src/config/site.ts.
+  owner: {
+    name: 'Wisdom Ocran',
+    role: 'Founder & Head Stylist',
+  },
 }
 
 /** Routes that must never be indexed. */
@@ -61,15 +66,15 @@ const BLOCKED = [
 // ---------------------------------------------------------------------------
 const STATIC_ROUTES = [
   { path: '/', priority: 1.0, changefreq: 'weekly', title: `${SITE.name} | Premium Unisex Salon, Bookings & Products`, description: SITE.description },
-  { path: '/about', priority: 0.8, changefreq: 'monthly', title: `About Us | ${SITE.name}`, description: 'The story, the team and the values behind Unisex Hair Studio — a premium unisex salon in Lagos for braids, locs, hair, colour and styling.' },
+  { path: '/about', priority: 0.8, changefreq: 'monthly', title: `About Us | ${SITE.name}`, description: 'The story, the team and the values behind Black Chery Unisex Studio — a premium unisex salon in Lagos for braids, locs, hair, colour and styling.' },
   { path: '/services', priority: 0.95, changefreq: 'weekly', title: `Salon Services & Prices | ${SITE.name}`, description: 'Browse knotless braids, box braids, locs, silk press, balayage, haircuts and treatments. See prices, durations and aftercare advice, then book online.' },
   { path: '/book', priority: 0.95, changefreq: 'weekly', title: `Book an Appointment | ${SITE.name}`, description: 'Pick your service, stylist and time. Share your hair details and reference images so your stylist is ready before you arrive.' },
   { path: '/shop', priority: 0.9, changefreq: 'daily', title: `Shop Wigs, Extensions & Hair Care | ${SITE.name}`, description: 'Buy the exact hair we install. Human hair wigs, bundles, frontals, protein treatments, oils and accessories.' },
   { path: '/gallery', priority: 0.7, changefreq: 'weekly', title: `Hair Gallery | ${SITE.name}`, description: 'Real work from our chairs — braids, locs, colour, cuts and styling, photographed in the studio.' },
   { path: '/careers', priority: 0.8, changefreq: 'weekly', title: `Careers at ${SITE.name} — Join Our Team`, description: 'Open roles for stylists, colourists and front desk. Apply online with your CV and portfolio.' },
   { path: '/contact', priority: 0.7, changefreq: 'monthly', title: `Contact & Directions | ${SITE.name}`, description: 'Visit us in Victoria Island, Lagos. Opening hours, phone, WhatsApp and directions.' },
-  { path: '/policies/privacy', priority: 0.3, changefreq: 'yearly', title: `Privacy Policy | ${SITE.name}`, description: 'How Unisex Hair Studio collects, uses and protects your personal data.' },
-  { path: '/policies/terms', priority: 0.3, changefreq: 'yearly', title: `Terms of Service | ${SITE.name}`, description: 'The terms that apply when you book an appointment or buy from Unisex Hair Studio.' },
+  { path: '/policies/privacy', priority: 0.3, changefreq: 'yearly', title: `Privacy Policy | ${SITE.name}`, description: 'How Black Chery Unisex Studio collects, uses and protects your personal data.' },
+  { path: '/policies/terms', priority: 0.3, changefreq: 'yearly', title: `Terms of Service | ${SITE.name}`, description: 'The terms that apply when you book an appointment or buy from Black Chery Unisex Studio.' },
   { path: '/policies/bookings', priority: 0.4, changefreq: 'monthly', title: `Booking & Cancellation Policy | ${SITE.name}`, description: 'Booking windows, notice periods, deposits and our 24-hour cancellation policy.' },
 ]
 
@@ -100,8 +105,19 @@ function organizationNode() {
     url: SITE.url,
     description: SITE.description,
     telephone: '+234-800-000-0000',
-    email: 'hello@unisexhairstudio.com',
+    email: 'hello@blackcheryunisexstudio.com',
     priceRange: '₦₦',
+    // Matches the runtime organizationSchema() in src/components/seo/Seo.tsx.
+    founder: {
+      '@type': 'Person',
+      name: SITE.owner.name,
+      jobTitle: SITE.owner.role,
+    },
+    employee: {
+      '@type': 'Person',
+      name: SITE.owner.name,
+      jobTitle: SITE.owner.role,
+    },
     currenciesAccepted: 'NGN',
     address: {
       '@type': 'PostalAddress',
@@ -117,9 +133,9 @@ function organizationNode() {
       { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Saturday'], opens: '10:00', closes: '20:00' },
     ],
     sameAs: [
-      'https://instagram.com/unisexhairstudio',
-      'https://facebook.com/unisexhairstudio',
-      'https://tiktok.com/@unisexhairstudio',
+      'https://instagram.com/blackcheryunisexstudio',
+      'https://facebook.com/blackcheryunisexstudio',
+      'https://tiktok.com/@blackcheryunisexstudio',
     ],
   }
 }

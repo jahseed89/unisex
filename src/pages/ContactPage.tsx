@@ -145,7 +145,7 @@ export default function ContactPage() {
 
   useSeo({
     title: 'Contact the studio',
-    description: `Reach Unisex Hair Studio on ${site.contact.phone} or ${site.contact.email}. WhatsApp is fastest. Find us at ${site.address.street}, ${site.address.locality}, Lagos.`,
+    description: `Reach Black Chery Unisex Studio on ${site.contact.phone} or ${site.contact.email}. WhatsApp is fastest. Find us at ${site.address.street}, ${site.address.locality}, Lagos.`,
     path: '/contact',
     jsonLd,
   })

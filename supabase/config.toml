@@ -8,7 +8,7 @@
 # these migrations were verified against a real PostgreSQL 16 engine instead:
 #   npm run validate:sql
 
-project_id = "unisex-hair-studio"
+project_id = "black-chery-unisex-studio"
 
 [api]
 enabled = true

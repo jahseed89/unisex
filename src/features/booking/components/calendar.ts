@@ -54,11 +54,11 @@ export function buildIcs(input: IcsEventInput): string {
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Unisex Hair Studio//Booking//EN',
+    'PRODID:-//Black Chery Unisex Studio//Booking//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     'BEGIN:VEVENT',
-    `UID:${escapeText(input.id)}@unisexhairstudio.com`,
+    `UID:${escapeText(input.id)}@blackcheryunisexstudio.com`,
     `DTSTAMP:${icsStamp(new Date())}`,
     `DTSTART:${icsStamp(start)}`,
     `DTEND:${icsStamp(end)}`,
@@ -91,6 +91,6 @@ export function downloadAppointmentIcs(input: IcsEventInput): void {
 export function directionsUrl(location: Pick<SalonLocation, 'address_line1' | 'city' | 'state'> | null): string {
   const query = location
     ? `${location.address_line1}, ${location.city}, ${location.state}`
-    : 'Unisex Hair Studio, 12 Adeola Odeku Street, Victoria Island, Lagos'
+    : 'Black Chery Unisex Studio, 12 Adeola Odeku Street, Victoria Island, Lagos'
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
 }

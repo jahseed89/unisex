@@ -167,7 +167,7 @@ export default function ProductDetailPage() {
 
   useSeo({
     title: product?.name ?? 'Product',
-    description: product?.summary ?? 'Shop hair at Unisex Hair Studio, Lagos.',
+    description: product?.summary ?? 'Shop hair at Black Chery Unisex Studio, Lagos.',
     path: product ? `/shop/${product.slug}` : `/shop/${slug}`,
     image: images[0] ?? product?.image_url ?? undefined,
     type: 'product',

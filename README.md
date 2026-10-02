@@ -1,4 +1,4 @@
-# Unisex Hair Studio
+# Black Chery Unisex Studio
 
 A premium unisex salon platform for Lagos, Nigeria: service discovery, appointment booking with a
 client requirement form, an online boutique for wigs, extensions and hair care, a recruitment
@@ -205,7 +205,7 @@ tokens belong in Supabase Edge Function environment variables.
 | `VITE_GA_MEASUREMENT_ID` | — | GA4 measurement id. |
 | `VITE_PLAUSIBLE_DOMAIN` | — | Plausible site domain. |
 | `VITE_ENABLE_ANALYTICS` | `false` | Requires at least one analytics id. |
-| `VITE_SUPPORT_EMAIL` | `hello@unisexhairstudio.com` | Contact details for the footer and JSON-LD. |
+| `VITE_SUPPORT_EMAIL` | `hello@blackcheryunisexstudio.com` | Contact details for the footer and JSON-LD. |
 | `VITE_SUPPORT_PHONE` | `+2348000000000` | As above. |
 
 Server-side secrets, deliberately absent from `.env.example` because they must never reach the

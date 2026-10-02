@@ -198,7 +198,7 @@ export function orderWhatsappLink(orderNumber: string): string {
 
 /** Pre-filled WhatsApp conversation from the “need help” CTA. */
 export function helpWhatsappLink(): string {
-  return whatsappLink("Hi! I need some help with my order at Unisex Hair Studio.")
+  return whatsappLink("Hi! I need some help with my order at Black Chery Unisex Studio.")
 }
 
 /** Localised address lines for a salon location row. */

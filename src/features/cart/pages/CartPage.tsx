@@ -30,7 +30,7 @@ export default function CartPage() {
   useSeo({
     title: 'Your bag',
     description:
-      'Review the wigs, extensions and hair care in your Unisex Hair Studio bag, apply a promo code and check out with card or bank transfer.',
+      'Review the wigs, extensions and hair care in your Black Chery Unisex Studio bag, apply a promo code and check out with card or bank transfer.',
     path: '/cart',
     noindex: true,
   })

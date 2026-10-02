@@ -526,7 +526,7 @@ export default function AdminOrderDetailPage() {
                     </a>
                     <a
                       href={whatsappLink(
-                        `Hello ${order.contact_name.split(' ')[0] ?? ''} — this is Unisex Hair Studio about your order ${order.order_number}.`,
+                        `Hello ${order.contact_name.split(' ')[0] ?? ''} — this is Black Chery Unisex Studio about your order ${order.order_number}.`,
                         order.contact_phone,
                       )}
                       target="_blank"

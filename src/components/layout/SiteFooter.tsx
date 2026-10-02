@@ -35,7 +35,7 @@ export function SiteFooter() {
                 onClick={() =>
                   window.open(
                     whatsappLink(
-                      "Hi! I'd like to ask about an appointment at Unisex Hair Studio.",
+                      "Hi! I'd like to ask about an appointment at Black Chery Unisex Studio.",
                     ),
                     '_blank',
                     'noopener,noreferrer',

@@ -75,7 +75,7 @@ npm run supabase:stop
 
 | Section | Setting | Note |
 | --- | --- | --- |
-| `project_id` | `unisex-hair-studio` | |
+| `project_id` | `black-chery-unisex-studio` | |
 | `[api]` | port 54321, `max_rows = 1000`, `extra_search_path = ["public","extensions"]` | |
 | `[db]` | port 54322, **major_version 15** | Supabase currently runs Postgres 15; PGlite verification uses 16. Nothing in the migrations is version-specific beyond `gen_random_uuid()` being core since 13. |
 | `[realtime]` | enabled | The app subscribes to no channel. |
@@ -191,7 +191,7 @@ Migration `20250101000015_seed.sql` is idempotent and runs with the migrations. 
 | Content | Detail |
 | --- | --- |
 | Roles | `customer`, `staff`, `supervisor`, `admin` with capabilities and ranks |
-| Location | Unisex Hair Studio — Victoria Island, `12 Adeola Odeku Street`, `Africa/Lagos`, primary |
+| Location | Black Chery Unisex Studio — Victoria Island, `12 Adeola Odeku Street`, `Africa/Lagos`, primary |
 | Opening hours | Mon–Thu 09:00–19:00, Fri 09:00–20:00, Sat 10:00–20:00, Sunday closed |
 | Business settings | Naira, 7.5% tax (inclusive), 4h lead time, 60-day horizon, 24h cancellation, 2.5k delivery fee over a 75k free threshold |
 | 7 service categories | braids, locs, haircuts, colour, styling, treatments, wig services |
@@ -281,8 +281,8 @@ select '<uuid>', d, '09:00', '19:00' from generate_series(1, 6) d;
 
 | Setting | Where | Value |
 | --- | --- | --- |
-| Site URL | Authentication → URL Configuration | `https://unisexhairstudio.com` |
-| Redirect URLs | Authentication → URL Configuration | `https://unisexhairstudio.com/auth/confirm`, `https://unisexhairstudio.com/auth/reset-password`, plus `http://localhost:5173/…` for development |
+| Site URL | Authentication → URL Configuration | `https://blackcheryunisexstudio.com` |
+| Redirect URLs | Authentication → URL Configuration | `https://blackcheryunisexstudio.com/auth/confirm`, `https://blackcheryunisexstudio.com/auth/reset-password`, plus `http://localhost:5173/…` for development |
 | Email confirmations | Authentication → Providers → Email | Enable for production. `supabase/config.toml` disables it locally. |
 | Password policy | Authentication → Providers → Email | `AuthProvider.mapAuthMessage` already handles the "at least N characters" message. |
 | Google OAuth | Authentication → Providers → Google | Add client id and secret; set the callback to `https://<project-ref>.supabase.co/auth/v1/callback`. `AuthProvider.signInWithGoogle` already redirects to `/auth/confirm`. |

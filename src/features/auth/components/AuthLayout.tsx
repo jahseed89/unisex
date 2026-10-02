@@ -83,7 +83,7 @@ function BrandPanel() {
   return (
     <aside
       className="relative hidden overflow-hidden bg-ink lg:block"
-      aria-label="About Unisex Hair Studio"
+      aria-label="About Black Chery Unisex Studio"
     >
       <div
         className="absolute inset-0"
@@ -126,7 +126,7 @@ function BrandPanel() {
             {site.address.street} · {site.address.locality}, {site.address.region}
           </p>
           <a
-            href={whatsappLink("Hi! I'd like to ask about an appointment at Unisex Hair Studio.")}
+            href={whatsappLink("Hi! I'd like to ask about an appointment at Black Chery Unisex Studio.")}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-bronze-light transition-colors hover:text-white"

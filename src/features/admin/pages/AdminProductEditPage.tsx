@@ -900,7 +900,7 @@ function SerpPreview({
     <div className="rounded-md border border-line bg-white p-5">
       <p className="text-xs text-[#202124]">
         <span className="text-[#5f6368]">https://</span>
-        unisexhairstudio.com
+        blackcheryunisexstudio.com
         <span className="text-[#5f6368]">/shop/{slug || 'product-slug'}</span>
       </p>
       <p className="mt-1 truncate text-lg leading-snug text-[#1a0dab]">{shownTitle}</p>

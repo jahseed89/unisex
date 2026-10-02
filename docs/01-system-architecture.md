@@ -2,7 +2,7 @@
 
 ## Context
 
-Unisex Hair Studio is a single-platform salon business: a marketing and discovery site, a booking
+Black Chery Unisex Studio is a single-platform salon business: a marketing and discovery site, a booking
 engine with a client requirement form, a small commerce operation selling the hair it installs, a
 recruitment pipeline, and the internal tools staff and administrators use to run the day. All of it
 is served by one static single-page application talking to one Supabase project.
@@ -16,7 +16,7 @@ flowchart LR
   Admin["Administrator"]
   Applicant["Job applicant (may be anonymous)"]
 
-  Studio["Unisex Hair Studio<br/>React SPA + Supabase"]
+  Studio["Black Chery Unisex Studio<br/>React SPA + Supabase"]
 
   Paystack["Paystack<br/>card, bank, USSD"]
   WhatsApp["WhatsApp Cloud API"]

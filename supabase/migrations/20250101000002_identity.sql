@@ -141,7 +141,7 @@ create unique index salon_single_primary_idx
 -- ---------------------------------------------------------------------------
 create table public.business_settings (
   id                       boolean primary key default true check (id),
-  business_name            text not null default 'Unisex Hair Studio',
+  business_name            text not null default 'Black Chery Unisex Studio',
   legal_name               text,
   tagline                  text,
   currency                 char(3) not null default 'NGN',

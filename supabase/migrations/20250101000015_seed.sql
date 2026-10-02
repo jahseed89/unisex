@@ -33,9 +33,9 @@ insert into public.salon_locations (
   email, timezone, is_primary, display_order
 )
 values (
-  'Unisex Hair Studio — Victoria Island', 'victoria-island',
+  'Black Chery Unisex Studio — Victoria Island', 'victoria-island',
   '12 Adeola Odeku Street', 'Victoria Island', 'Lagos', 'NG',
-  '+2348000000000', '2348000000000', 'hello@unisexhairstudio.com',
+  '+2348000000000', '2348000000000', 'hello@blackcheryunisexstudio.com',
   'Africa/Lagos', true, 1
 )
 on conflict (slug) do nothing;
@@ -61,12 +61,12 @@ where l.slug = 'victoria-island'
 on conflict (location_id, weekday) do nothing;
 
 update public.business_settings
-set business_name = 'Unisex Hair Studio',
+set business_name = 'Black Chery Unisex Studio',
     tagline        = 'Premium hair, braids, locs and colour for everyone.',
-    support_email  = 'hello@unisexhairstudio.com',
+    support_email  = 'hello@blackcheryunisexstudio.com',
     support_phone  = '+2348000000000',
     whatsapp_number= '2348000000000',
-    instagram      = 'unisexhairstudio',
+    instagram      = 'blackcheryunisexstudio',
     facebook       = 'unitexhairstudio',
     free_delivery_threshold = 75000,
     standard_delivery_fee   = 2500
@@ -464,7 +464,7 @@ select * from (values
   ('Can I reschedule my appointment?',
    'Yes, from your account under Appointments. Pick a new time from the live diary and it is confirmed instantly, subject to availability.', 'booking', 8),
   ('Do you train or take on apprentices?',
-   'We do. Post openings on our Careers page and watch for apprenticeship and internship roles, or send a portfolio to hello@unisexhairstudio.com.', 'careers', 9)
+   'We do. Post openings on our Careers page and watch for apprenticeship and internship roles, or send a portfolio to hello@blackcheryunisexstudio.com.', 'careers', 9)
 ) as v(question, answer, category, display_order)
 where not exists (select 1 from public.faqs f where f.question = v.question);
 
@@ -473,16 +473,16 @@ where not exists (select 1 from public.faqs f where f.question = v.question);
 -- ---------------------------------------------------------------------------
 insert into public.message_templates (key, channel, subject, body, variables)
 values
-  ('appointment.confirmation', 'email', 'Your booking at Unisex Hair Studio is confirmed ({{reference}})',
+  ('appointment.confirmation', 'email', 'Your booking at Black Chery Unisex Studio is confirmed ({{reference}})',
    'Hi {{first_name}}, your {{service_name}} appointment is confirmed for {{starts_at}} with {{staff_name}}. Reference {{reference}}. Address: {{location_address}}. Please arrive 10 minutes early and bring any reference images you have saved.', array['first_name','reference','service_name','starts_at','staff_name','location_address']),
   ('appointment.reminder_24h', 'email', 'See you tomorrow, {{first_name}}',
    'A quick reminder that your {{service_name}} appointment is on {{starts_at}} with {{staff_name}}. Reply or WhatsApp us if anything has changed.', array['first_name','service_name','starts_at','staff_name']),
   ('appointment.reminder_2h', 'sms', NULL,
-   'Unisex Hair Studio: your {{service_name}} appointment is at {{starts_at}}. Ref {{reference}}.', array['service_name','starts_at','reference']),
+   'Black Chery Unisex Studio: your {{service_name}} appointment is at {{starts_at}}. Ref {{reference}}.', array['service_name','starts_at','reference']),
   ('order.confirmation', 'email', 'Order {{order_number}} received',
    'Hi {{first_name}}, thanks for your order of {{item_count}} item(s) totalling {{total}}. We will let you know as soon as it is ready for {{fulfilment}}.', array['first_name','order_number','item_count','total','fulfilment']),
   ('order.ready', 'whatsapp', NULL,
-   'Hi {{first_name}}, your order {{order_number}} is ready for pickup at Unisex Hair Studio, {{location_name}}. Bring your reference.', array['first_name','order_number','location_name']),
+   'Hi {{first_name}}, your order {{order_number}} is ready for pickup at Black Chery Unisex Studio, {{location_name}}. Bring your reference.', array['first_name','order_number','location_name']),
   ('application.received', 'email', 'We received your application for {{job_title}}',
-   'Hi {{full_name}}, thanks for applying to Unisex Hair Studio for {{job_title}}. Your reference is {{reference}}. Our team reviews every application and will be in touch.', array['full_name','job_title','reference'])
+   'Hi {{full_name}}, thanks for applying to Black Chery Unisex Studio for {{job_title}}. Your reference is {{reference}}. Our team reviews every application and will be in touch.', array['full_name','job_title','reference'])
 on conflict (key) do nothing;

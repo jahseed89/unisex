@@ -85,6 +85,10 @@ Do it from your account under Appointments, or send us the reference from your c
 
 We collect the minimum we need to cut your hair well and keep your appointments in order. This page explains exactly what that means, in plain language.
 
+## Who is responsible for your data
+
+${site.name}, proprietor ${site.owner.name} (${site.owner.role}), is the data controller for everything on this site. Contact details for the controller are on the [contact page](/contact); write to us there and a request about your data will reach the proprietor.
+
 ## What we collect
 
 - **Account details** — your name, email address and phone number, which you give us when you create an account.
@@ -155,11 +159,13 @@ If we make a material change, we will update the date at the top of this page an
     updated: '1 September 2025',
     body: `# Terms of use
 
-These terms cover the Unisex Hair Studio website, online booking and online shop. By using the site or placing an order, you accept them.
+These terms cover the ${site.name} website, online booking and online shop. By using the site or placing an order, you accept them.
+
+These terms are between you and ${site.name}, operated by ${site.owner.name} (${site.owner.role}). Booking an appointment or placing an order is an agreement with ${site.name}, not with any individual stylist — a stylist named on a booking is delivering the service on our behalf.
 
 ## Using this website
 
-- Content on this site — service descriptions, prices, images and articles — belongs to Unisex Hair Studio or is used with permission. You may read it, share links to it, and quote short extracts with credit. You may not copy it commercially or republish it wholesale.
+- Content on this site — service descriptions, prices, images and articles — belongs to ${site.name} or is used with permission. You may read it, share links to it, and quote short extracts with credit. You may not copy it commercially or republish it wholesale.
 - Prices shown are in **Nigerian Naira (₦)** and include VAT where applicable. Prices can change; the price on your booking or order confirmation is the price that applies.
 - We try hard to keep information accurate, but occasionally something is wrong or out of date. If a price is materially wrong, tell us and we will sort it out before you pay.
 
@@ -195,7 +201,7 @@ Appointments, deposits, cancellations and refunds are covered in full by our [bo
 
 ## Intellectual property
 
-The Unisex Hair Studio name, wordmark, site design, photography and written content are our property. Product names and brand names belong to their respective owners.
+The ${site.name} name, wordmark, site design, photography and written content are our property. Product names and brand names belong to their respective owners.
 
 ## Liability
 

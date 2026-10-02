@@ -29,7 +29,7 @@ export interface SeoProps {
   nofollow?: boolean
   /** JSON-LD graph nodes. Objects are serialised to `application/ld+json`. */
   jsonLd?: Record<string, unknown> | Record<string, unknown>[]
-  /** Suppress the "| Unisex Hair Studio" suffix for the home page. */
+  /** Suppress the "| Black Chery Unisex Studio" suffix for the home page. */
   bareTitle?: boolean
 }
 
@@ -137,6 +137,18 @@ export function organizationSchema() {
     '@id': `${site.url}/#studio`,
     name: site.name,
     legalName: site.legalName,
+    // Proprietor is machine-readable here rather than only in visible copy, so
+    // search engines can attribute the business to a person.
+    founder: {
+      '@type': 'Person',
+      name: site.owner.name,
+      jobTitle: site.owner.role,
+    },
+    employee: {
+      '@type': 'Person',
+      name: site.owner.name,
+      jobTitle: site.owner.role,
+    },
     description: site.shortDescription,
     url: site.url,
     telephone: site.contact.phone,
@@ -220,7 +232,7 @@ export function productSchema(input: {
     url: absoluteUrl(`/shop/${input.slug}`),
     image: input.image ? [absoluteUrl(input.image)] : undefined,
     sku: input.sku ?? undefined,
-    brand: { '@type': 'Brand', name: 'Unisex Hair Studio' },
+    brand: { '@type': 'Brand', name: 'Black Chery Unisex Studio' },
     offers: {
       '@type': 'Offer',
       url: absoluteUrl(`/shop/${input.slug}`),
@@ -326,7 +338,7 @@ export function reviewSchema(reviews: {
       },
       name: review.body.slice(0, 60),
       reviewBody: review.body,
-      author: { '@type': 'Person', name: review.author ?? 'Unisex Hair Studio client' },
+      author: { '@type': 'Person', name: review.author ?? 'Black Chery Unisex Studio client' },
       datePublished: review.date,
     })),
   }

@@ -21,7 +21,7 @@ export interface SeoProps {
   noindex?: boolean
   nofollow?: boolean
   jsonLd?: Record<string, unknown> | Record<string, unknown>[]
-  bareTitle?: boolean            // suppress the "| Unisex Hair Studio" suffix
+  bareTitle?: boolean            // suppress the "| Black Chery Unisex Studio" suffix
 }
 ```
 
@@ -111,13 +111,13 @@ The local-business node every other builder references by `@id`.
 {
   "@context": "https://schema.org",
   "@type": "HairSalon",
-  "@id": "https://unisexhairstudio.com/#studio",
-  "name": "Unisex Hair Studio",
-  "legalName": "Unisex Hair Studio",
+  "@id": "https://blackcheryunisexstudio.com/#studio",
+  "name": "Black Chery Unisex Studio",
+  "legalName": "Black Chery Unisex Studio",
   "description": "A premium unisex salon for braids, locs, hair, colour and styling — with an online boutique.",
-  "url": "https://unisexhairstudio.com",
+  "url": "https://blackcheryunisexstudio.com",
   "telephone": "+2348000000000",
-  "email": "hello@unisexhairstudio.com",
+  "email": "hello@blackcheryunisexstudio.com",
   "priceRange": "₦₦",
   "currenciesAccepted": "NGN",
   "paymentAccepted": "Credit Card, Bank Transfer, USSD, Mobile Money, Cash",
@@ -129,7 +129,7 @@ The local-business node every other builder references by `@id`.
     "postalCode": "106104",
     "addressCountry": "NG"
   },
-  "sameAs": ["https://instagram.com/unisexhairstudio", "…/facebook", "…/tiktok", "…/x"]
+  "sameAs": ["https://instagram.com/blackcheryunisexstudio", "…/facebook", "…/tiktok", "…/x"]
 }
 ```
 
@@ -159,9 +159,9 @@ calls `absoluteUrl` itself, so call sites cannot produce a relative URL.
   "@type": "Service",
   "name": "Knotless Braids",
   "description": "Long-lasting knotless braids with a seamless, natural finish.",
-  "url": "https://unisexhairstudio.com/services/knotless-braids",
+  "url": "https://blackcheryunisexstudio.com/services/knotless-braids",
   "serviceType": "Hair salon",
-  "provider": { "@type": "HairSalon", "@id": "https://unisexhairstudio.com/#studio" },
+  "provider": { "@type": "HairSalon", "@id": "https://blackcheryunisexstudio.com/#studio" },
   "areaServed": { "@type": "City", "name": "Lagos" },
   "offers": {
     "@type": "AggregateOffer",
@@ -186,9 +186,9 @@ business entity.
 {
   "@type": "Product",
   "name": "Glueless Bob Wig",
-  "url": "https://unisexhairstudio.com/shop/glueless-bob-wig",
+  "url": "https://blackcheryunisexstudio.com/shop/glueless-bob-wig",
   "sku": "UHS-GLUELESS-STD",
-  "brand": { "@type": "Brand", "name": "Unisex Hair Studio" },
+  "brand": { "@type": "Brand", "name": "Black Chery Unisex Studio" },
   "offers": {
     "@type": "Offer",
     "url": "…/shop/glueless-bob-wig",
@@ -214,10 +214,10 @@ review count is invalid and risks a manual action. Optional fields are `undefine
   "@type": "JobPosting",
   "title": "Senior Braids Artist",
   "description": "Lead our braids book across knotless, box and stitch work.",
-  "url": "https://unisexhairstudio.com/careers/senior-braids-artist",
+  "url": "https://blackcheryunisexstudio.com/careers/senior-braids-artist",
   "datePosted": "2026-09-28",
   "employmentType": "FULL TIME",
-  "hiringOrganization": { "@type": "Organization", "name": "Unisex Hair Studio", "sameAs": "…" },
+  "hiringOrganization": { "@type": "Organization", "name": "Black Chery Unisex Studio", "sameAs": "…" },
   "jobLocation": { "@type": "Place", "address": { "@type": "PostalAddress", "addressLocality": "Victoria Island", "addressRegion": "Lagos", "addressCountry": "NG" } },
   "baseSalary": {
     "@type": "MonetaryAmount", "currency": "NGN",
@@ -265,7 +265,7 @@ the same strings, which is the requirement that matters for a FAQ rich result.
 ```
 
 `name` is the first 60 characters of the body, because a `Review` without a headline is incomplete and
-Google expects one. Anonymous authors fall back to `"Unisex Hair Studio client"` rather than being
+Google expects one. Anonymous authors fall back to `"Black Chery Unisex Studio client"` rather than being
 omitted, since a `Person` with no name is not valid. Only `status = 'published'` reviews are visible to
 the page at all, because that is the RLS filter.
 

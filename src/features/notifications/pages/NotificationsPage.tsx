@@ -67,7 +67,7 @@ export default function NotificationsPage() {
 
   useSeo({
     title: 'Notifications',
-    description: 'Booking updates, order tracking and studio news from Unisex Hair Studio.',
+    description: 'Booking updates, order tracking and studio news from Black Chery Unisex Studio.',
     path: '/account/notifications',
     noindex: true,
   })

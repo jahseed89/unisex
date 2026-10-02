@@ -29,7 +29,7 @@ export default function ForgotPasswordPage() {
 
   useSeo({
     title: 'Reset your password',
-    description: 'Send yourself a password reset link for your Unisex Hair Studio account.',
+    description: 'Send yourself a password reset link for your Black Chery Unisex Studio account.',
     path: '/auth/forgot-password',
     noindex: true,
   })

@@ -588,7 +588,7 @@ function CustomerPanel({ appointment }: { appointment: AppointmentWithCustomer }
     )
   }
 
-  const message = `Hello ${customer.full_name ?? 'there'} — this is Unisex Hair Studio about your appointment on ${formatDate(appointment.starts_at)}.`
+  const message = `Hello ${customer.full_name ?? 'there'} — this is Black Chery Unisex Studio about your appointment on ${formatDate(appointment.starts_at)}.`
 
   return (
     <Panel title="Customer">

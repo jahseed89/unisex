@@ -314,7 +314,7 @@ export default function AdminApplicationDetailPage() {
                         </a>
                         <a
                           href={whatsappLink(
-                            `Hello ${application.full_name.split(' ')[0] ?? ''} — thank you for applying to Unisex Hair Studio.`,
+                            `Hello ${application.full_name.split(' ')[0] ?? ''} — thank you for applying to Black Chery Unisex Studio.`,
                             application.phone_e164,
                           )}
                           target="_blank"

@@ -40,7 +40,7 @@ export default function OrderDetailPage() {
 
   useSeo({
     title: 'Order',
-    description: 'Items, payments and delivery details for your Unisex Hair Studio order.',
+    description: 'Items, payments and delivery details for your Black Chery Unisex Studio order.',
     path: `/account/orders/${id}`,
     noindex: true,
   })

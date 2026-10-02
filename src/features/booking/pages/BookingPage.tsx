@@ -356,7 +356,7 @@ export default function BookingPage() {
   useSeo({
     title: 'Book an appointment',
     description:
-      'Book hair, braids, locs, colour and styling at Unisex Hair Studio, Lagos. Pick your stylist, choose a time, and tell your stylist exactly what you want.',
+      'Book hair, braids, locs, colour and styling at Black Chery Unisex Studio, Lagos. Pick your stylist, choose a time, and tell your stylist exactly what you want.',
     path: '/book',
     noindex: true,
   })

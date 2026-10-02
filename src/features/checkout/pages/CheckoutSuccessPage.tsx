@@ -46,7 +46,7 @@ export default function CheckoutSuccessPage() {
 
   useSeo({
     title: 'Order received',
-    description: 'Your Unisex Hair Studio order.',
+    description: 'Your Black Chery Unisex Studio order.',
     path: '/checkout/success',
     noindex: true,
   })

@@ -72,7 +72,7 @@ export default function AccountOrdersPage() {
 
   useSeo({
     title: 'Your orders',
-    description: 'Track deliveries and pickups from Unisex Hair Studio.',
+    description: 'Track deliveries and pickups from Black Chery Unisex Studio.',
     path: '/account/orders',
     noindex: true,
   })

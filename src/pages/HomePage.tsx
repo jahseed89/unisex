@@ -228,7 +228,7 @@ export default function HomePage() {
       ------------------------------------------------------------------ */}
       <section className="border-b border-line bg-canvas py-10" aria-label="Studio at a glance">
         <div className="container-page">
-          <h2 className="sr-only">Unisex Hair Studio at a glance</h2>
+          <h2 className="sr-only">Black Chery Unisex Studio at a glance</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Stat
               label="Years on Adeola Odeku"
@@ -625,7 +625,7 @@ export default function HomePage() {
               </Button>
               <Button asChild variant="outline" size="lg">
                 <a
-                  href={`mailto:${site.contact.email}?subject=${encodeURIComponent('Portfolio submission — Unisex Hair Studio')}`}
+                  href={`mailto:${site.contact.email}?subject=${encodeURIComponent('Portfolio submission — Black Chery Unisex Studio')}`}
                 >
                   Send your portfolio
                 </a>
@@ -764,7 +764,7 @@ function HeroCollage() {
         <MediaFrame
           className="col-span-3 row-span-4 rounded-lg"
           src={null}
-          alt="Client braids finished at Unisex Hair Studio, mid-length knotless parting visible from the top"
+          alt="Client braids finished at Black Chery Unisex Studio, mid-length knotless parting visible from the top"
           seed="hero-primary-knotless"
           aspect="auto"
           priority

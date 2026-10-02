@@ -174,7 +174,7 @@ async function deliverEmail(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: Deno.env.get('EMAIL_FROM') ?? 'Unisex Hair Studio <no-reply@unisexhairstudio.com>',
+      from: Deno.env.get('EMAIL_FROM') ?? 'Black Chery Unisex Studio <no-reply@blackcheryunisexstudio.com>',
       to: [to],
       subject: payload.title,
       text: payload.body,

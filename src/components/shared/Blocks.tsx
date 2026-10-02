@@ -78,7 +78,7 @@ export function TestimonialCard({
         <Avatar name={review.author_name ?? 'Client'} size="sm" />
         <div className="min-w-0">
           <p className="truncate text-sm font-medium text-ink">
-            {review.author_name ?? 'Unisex Hair Studio client'}
+            {review.author_name ?? 'Black Chery Unisex Studio client'}
           </p>
           {review.service_name && (
             <p className="truncate text-xs text-muted">{review.service_name}</p>
@@ -179,7 +179,7 @@ export function ContactCard({ className }: { className?: string }) {
 
       <div className="mt-5 space-y-3">
         <a
-          href={whatsappLink("Hi! I'd like to ask about an appointment at Unisex Hair Studio.")}
+          href={whatsappLink("Hi! I'd like to ask about an appointment at Black Chery Unisex Studio.")}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-3 rounded-md border border-line px-3.5 py-3 text-sm text-ink transition-colors hover:border-bronze hover:bg-sand/50"

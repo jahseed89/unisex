@@ -120,7 +120,7 @@ const RECRUITMENT_FAQS: Faq[] = [
     id: 'faq-roles-gender',
     question: 'Do I need to be a woman to work here?',
     answer:
-      'No. Unisex Hair Studio hires across genders, and every role is open to every stylist who can do the work well. Braids, locs, colour, cuts and scalp services are served to everyone, so the team behind them is mixed by design — not because it looks modern, but because it is the only way the studio actually works.',
+      'No. Black Chery Unisex Studio hires across genders, and every role is open to every stylist who can do the work well. Braids, locs, colour, cuts and scalp services are served to everyone, so the team behind them is mixed by design — not because it looks modern, but because it is the only way the studio actually works.',
     category: 'careers',
     display_order: 1,
     is_published: true,
@@ -306,7 +306,7 @@ export default function CareersPage() {
               </h1>
 
               <p className="lede mt-7 max-w-xl">
-                Unisex Hair Studio is a unisex salon, so our team is unisex too.
+                Black Chery Unisex Studio is a unisex salon, so our team is unisex too.
                 We hire braids artists, colourists, locs specialists, front of
                 house and apprentices — across genders, across hair textures,
                 with the salary band published before you ever apply.
@@ -498,7 +498,7 @@ export default function CareersPage() {
                 action={
                   jobs.length === 0 ? (
                     <Button asChild size="lg" variant="accent">
-                      <a href={`mailto:${site.contact.email}?subject=${encodeURIComponent('Work at Unisex Hair Studio')}`}>
+                      <a href={`mailto:${site.contact.email}?subject=${encodeURIComponent('Work at Black Chery Unisex Studio')}`}>
                         Send your portfolio
                       </a>
                     </Button>
@@ -593,7 +593,7 @@ export default function CareersPage() {
               <div key={photo.id} className={cn(index === 0 && 'sm:col-span-2 lg:col-span-2')}>
                 <MediaFrame
                   src={photo.image_url}
-                  alt={photo.alt_text ?? photo.title ?? `The Unisex Hair Studio team, photo ${index + 1}`}
+                  alt={photo.alt_text ?? photo.title ?? `The Black Chery Unisex Studio team, photo ${index + 1}`}
                   seed={photo.slug ?? photo.id}
                   aspect={index === 0 ? '4/3' : 'square'}
                   rounded
@@ -656,7 +656,7 @@ export default function CareersPage() {
                 decision, not a poster.
               </p>
               <Button asChild size="xl" variant="outline-light" className="mt-8">
-                <a href={`mailto:${site.contact.email}?subject=${encodeURIComponent('Work at Unisex Hair Studio')}`}>
+                <a href={`mailto:${site.contact.email}?subject=${encodeURIComponent('Work at Black Chery Unisex Studio')}`}>
                   <Mail className="size-4.5" aria-hidden />
                   Email the studio
                 </a>
@@ -687,7 +687,7 @@ export default function CareersPage() {
             action={
               <Button asChild variant="outline" size="lg">
                 <a
-                  href={`https://wa.me/${site.contact.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent("Hi! I have a question about working at Unisex Hair Studio.")}`}
+                  href={`https://wa.me/${site.contact.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent("Hi! I have a question about working at Black Chery Unisex Studio.")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -721,7 +721,7 @@ export default function CareersPage() {
 
               <div className="mt-8 flex flex-col gap-2.5 sm:flex-row">
                 <Button asChild size="xl" variant="accent">
-                  <a href={`mailto:${site.contact.email}?subject=${encodeURIComponent('Portfolio — work at Unisex Hair Studio')}`}>
+                  <a href={`mailto:${site.contact.email}?subject=${encodeURIComponent('Portfolio — work at Black Chery Unisex Studio')}`}>
                     <Mail className="size-5" aria-hidden />
                     Email your portfolio
                   </a>
@@ -808,7 +808,7 @@ function StudioCollage({
         <div className="overflow-hidden rounded-xl border border-line bg-sand">
           <MediaFrame
             src={null}
-            alt="The Unisex Hair Studio floor on Adeola Odeku Street"
+            alt="The Black Chery Unisex Studio floor on Adeola Odeku Street"
             seed="careers-hero"
             aspect="4/5"
           />
@@ -822,7 +822,7 @@ function StudioCollage({
       <div className="col-span-3 overflow-hidden rounded-xl border border-line bg-sand shadow-sm">
         <MediaFrame
           src={lead.image_url}
-          alt={lead.alt_text ?? lead.title ?? 'The Unisex Hair Studio team at work'}
+          alt={lead.alt_text ?? lead.title ?? 'The Black Chery Unisex Studio team at work'}
           seed={lead.slug ?? lead.id}
           aspect="4/5"
           priority
@@ -836,7 +836,7 @@ function StudioCollage({
           >
             <MediaFrame
               src={photo.image_url}
-              alt={photo.alt_text ?? photo.title ?? 'Studio life at Unisex Hair Studio'}
+              alt={photo.alt_text ?? photo.title ?? 'Studio life at Black Chery Unisex Studio'}
               seed={photo.slug ?? `${photo.id}-${index}`}
               aspect="square"
             />

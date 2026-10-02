@@ -9,7 +9,7 @@ import { site } from '@/config/site'
 import { Alert, Badge, Button, Card, SectionHeading, Stat } from '@/components/ui'
 import { PageHeader, StylistCard } from '@/components/shared/Cards'
 import { ClosingCta, OpeningHoursCard, Section } from '@/components/shared/Blocks'
-import { MediaFrame } from '@/components/shared/MediaFrame'
+import { MediaFrame, Avatar } from '@/components/shared/MediaFrame'
 import { CardGridSkeleton, ContentSkeleton } from '@/components/layout/RouteLoader'
 import { breadcrumbSchema, organizationSchema, useSeo } from '@/components/seo/Seo'
 
@@ -18,10 +18,20 @@ import { breadcrumbSchema, organizationSchema, useSeo } from '@/components/seo/S
 // ---------------------------------------------------------------------------
 
 const STORY = [
-  'Unisex Hair Studio started in 2014 with two chairs, one braids artist and a stubborn belief: that the same quality of work should be available to everyone, not split into a "men\'s" and a "women\'s" side of the salon.',
-  'We grew into a full studio on Adeola Odeku because our clients kept asking for two things at once — a braids artist who understood their texture, and a colourist who could read a formula. Nobody else in the neighbourhood was doing both, so we built the team ourselves.',
-  'Today we are a team of braids artists, loc specialists, colourists and cutters who work the same diary, share the same price list and eat lunch at the same table. What has not changed is the rule we started with: understand the hair before you touch it, and write down what you did so the next appointment is better than the last one.',
+  'Black Chery Unisex Studio was founded by Wisdom Ocran in 2014 with two chairs, one braids artist and a stubborn belief: that the same quality of work should be available to everyone, not split into a "men\'s" and a "women\'s" side of the salon.',
+  'We grew into a full studio on Adeola Odeku because our clients kept asking for two things at once — a braids artist who understood their texture, and a colourist who could read a formula. Nobody else in the neighbourhood was doing both, so Wisdom built the team from scratch, starting with apprentices and keeping the ones who took the craft seriously.',
+  'Today we are a team of braids artists, loc specialists, colourists and cutters who work the same diary, share the same price list and eat lunch at the same table. What has not changed is the rule Wisdom started with: understand the hair before you touch it, and write down what you did so the next appointment is better than the last one.',
 ] as const
+
+/**
+ * Founder credit. Rendered under the studio story and reused as JSON-LD so the
+ * proprietor is machine-readable rather than only visible.
+ */
+const FOUNDER = {
+  name: site.owner.name,
+  role: site.owner.role,
+  line: `${site.owner.name} still keeps a chair. If you want a second opinion on a colour correction or a plan for growing out a cut, book with ${site.owner.name.split(' ')[0]} directly — it is the longest wait in the diary, and most clients say it is the appointment that fixed everything else.`,
+} as const
 
 const VALUES = [
   {
@@ -104,7 +114,7 @@ export default function AboutPage() {
     description:
       page?.meta_description ??
       page?.excerpt ??
-      'Unisex Hair Studio is a premium unisex salon on Adeola Odeku, Victoria Island. Meet the team behind our braids, locs, colour and cutting.',
+      'Black Chery Unisex Studio is a premium unisex salon on Adeola Odeku, Victoria Island. Meet the team behind our braids, locs, colour and cutting.',
     path: '/about',
     image: page?.hero_image_url ?? undefined,
     jsonLd,
@@ -171,12 +181,32 @@ export default function AboutPage() {
                       {paragraph}
                     </p>
                   ))}
+
+                  {/* Founder credit — only meaningful with the built-in copy,
+                      since a CMS page would carry its own attribution. */}
+                  {!pageQuery.data && (
+                    <div className="mt-8 flex items-start gap-4 rounded-lg border border-line bg-sand/50 p-5">
+                      <Avatar name={FOUNDER.name} size="lg" />
+                      <div className="min-w-0">
+                        <p className="text-[0.6875rem] font-medium uppercase tracking-[0.14em] text-bronze-dark">
+                          {FOUNDER.role}
+                        </p>
+                        <p className="mt-1 font-display text-lg font-semibold text-ink">
+                          {FOUNDER.name}
+                        </p>
+                        <p className="mt-2 text-sm leading-relaxed text-muted">
+                          {FOUNDER.line}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
 
             <dl className="mt-9 grid max-w-2xl gap-6 border-t border-line pt-8 sm:grid-cols-2">
               {[
+                { term: 'Founder', detail: `${FOUNDER.name} — ${FOUNDER.role}` },
                 { term: 'Where we are', detail: `${site.address.street}, ${site.address.locality}` },
                 { term: 'Who we serve', detail: 'Everyone — every texture, every length, every gender' },
                 { term: 'How you book', detail: 'Online, in under a minute, up to 60 days ahead' },
@@ -196,7 +226,7 @@ export default function AboutPage() {
             <MediaFrame
               className="rounded-lg"
               src={page?.hero_image_url}
-              alt="The Unisex Hair Studio floor on Adeola Odeku, with styling chairs, mirrors and warm afternoon light"
+              alt="The Black Chery Unisex Studio floor on Adeola Odeku, with styling chairs, mirrors and warm afternoon light"
               seed="about-studio-floor"
               aspect="4/5"
               priority
@@ -251,7 +281,7 @@ export default function AboutPage() {
       ------------------------------------------------------------------ */}
       <section className="border-y border-line bg-sand py-12" aria-label="Studio facts">
         <div className="container-page">
-          <h2 className="sr-only">Unisex Hair Studio by the numbers</h2>
+          <h2 className="sr-only">Black Chery Unisex Studio by the numbers</h2>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {PILLARS.map((pillar) => (
               <Stat

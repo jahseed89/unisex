@@ -91,7 +91,7 @@ export default function SignUpPage() {
   useSeo({
     title: 'Create an account',
     description:
-      'Create a Unisex Hair Studio account to book appointments, track orders and keep your hair profile on file.',
+      'Create a Black Chery Unisex Studio account to book appointments, track orders and keep your hair profile on file.',
     path: '/auth/sign-up',
     noindex: true,
   })
@@ -198,7 +198,7 @@ export default function SignUpPage() {
           </div>
 
           <Alert variant="neutral" title="Nothing arrived?">
-            Confirmations can land in promotions or spam. Search for “Unisex Hair Studio”, then check
+            Confirmations can land in promotions or spam. Search for “Black Chery Unisex Studio”, then check
             that folder. The link stays valid for 24 hours.
           </Alert>
 

@@ -38,7 +38,7 @@ export default function ServicesPage() {
   useSeo({
     title: 'Services & pricing',
     description:
-      'Every hair, braids, locs, colour and styling service at Unisex Hair Studio Lagos — transparent pricing, honest durations, bookable online.',
+      'Every hair, braids, locs, colour and styling service at Black Chery Unisex Studio Lagos — transparent pricing, honest durations, bookable online.',
     path: '/services',
   })
 

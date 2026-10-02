@@ -93,9 +93,9 @@ export default function SearchPage() {
     title: shouldSearch ? `Search results for “${term}”` : 'Search',
     description: shouldSearch
       ? total > 0
-        ? `${pluraliseResults(total)} on the Unisex Hair Studio site for “${term}” — services, products and open roles.`
-        : `No results on the Unisex Hair Studio site for “${term}”. Try a shorter word, or ask us directly.`
-      : 'Search the Unisex Hair Studio site for a service, a product or an open role.',
+        ? `${pluraliseResults(total)} on the Black Chery Unisex Studio site for “${term}” — services, products and open roles.`
+        : `No results on the Black Chery Unisex Studio site for “${term}”. Try a shorter word, or ask us directly.`
+      : 'Search the Black Chery Unisex Studio site for a service, a product or an open role.',
     path: shouldSearch ? `/search?q=${encodeURIComponent(term)}` : '/search',
     noindex: true,
   })

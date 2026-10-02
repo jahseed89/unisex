@@ -73,7 +73,7 @@ export default function ShopPage() {
   useSeo({
     title: kind ? `${KIND_LABELS[kind]} — shop hair online` : 'Shop wigs, extensions & hair care',
     description:
-      'Shop raw bundles, wigs, lace fronts, clip-in extensions and salon-grade hair care at Unisex Hair Studio, Lagos. Filter by hair class, length and price, then pay by card or bank transfer.',
+      'Shop raw bundles, wigs, lace fronts, clip-in extensions and salon-grade hair care at Black Chery Unisex Studio, Lagos. Filter by hair class, length and price, then pay by card or bank transfer.',
     path: kind ? `/shop?kind=${kind}` : '/shop',
     jsonLd: [breadcrumbSchema([{ name: 'Shop', path: '/shop' }])],
   })

@@ -81,7 +81,7 @@ export default function CheckoutPage() {
 
   useSeo({
     title: 'Checkout',
-    description: 'Complete your Unisex Hair Studio order — collect in Lagos or get it delivered.',
+    description: 'Complete your Black Chery Unisex Studio order — collect in Lagos or get it delivered.',
     path: '/checkout',
     noindex: true,
   })
@@ -279,8 +279,8 @@ export default function CheckoutPage() {
   const upcoming = upcomingQuery.data?.[0]
   const whatsappHref = whatsappLink(
     order
-      ? `Hi! I placed order ${order.order_number} on the Unisex Hair Studio site but I am having trouble paying. Can you help me complete it?`
-      : 'Hi! I am trying to pay for my Unisex Hair Studio order but the payment page will not open. Can you help?',
+      ? `Hi! I placed order ${order.order_number} on the Black Chery Unisex Studio site but I am having trouble paying. Can you help me complete it?`
+      : 'Hi! I am trying to pay for my Black Chery Unisex Studio order but the payment page will not open. Can you help?',
   )
 
   return (
@@ -726,7 +726,7 @@ export default function CheckoutPage() {
               <p className="mt-3 px-1 text-xs text-muted">
                 Need help?{' '}
                 <a
-                  href={whatsappLink('Hi! I need help checking out on the Unisex Hair Studio site.')}
+                  href={whatsappLink('Hi! I need help checking out on the Black Chery Unisex Studio site.')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-bronze-dark underline underline-offset-4"

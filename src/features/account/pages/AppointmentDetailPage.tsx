@@ -65,7 +65,7 @@ export default function AppointmentDetailPage() {
 
   useSeo({
     title: 'Appointment',
-    description: 'Details, requirements and payments for your Unisex Hair Studio appointment.',
+    description: 'Details, requirements and payments for your Black Chery Unisex Studio appointment.',
     path: `/account/appointments/${id}`,
     noindex: true,
   })

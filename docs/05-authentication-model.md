@@ -117,7 +117,7 @@ auth: {
 ```
 
 `db.schema` is pinned to `public`, so PostgREST never searches another schema. A custom
-`x-application-name: unisex-hair-studio` header rides on every request, which makes the function's
+`x-application-name: black-chery-unisex-studio` header rides on every request, which makes the function's
 requests identifiable in the Supabase logs.
 
 `getSupabase()` is a memoised singleton; `supabase` is a `Proxy` over it so modules can import a

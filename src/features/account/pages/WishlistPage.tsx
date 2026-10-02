@@ -27,7 +27,7 @@ export default function WishlistPage() {
 
   useSeo({
     title: 'Your wishlist',
-    description: 'The wigs, extensions and hair care you have saved at Unisex Hair Studio.',
+    description: 'The wigs, extensions and hair care you have saved at Black Chery Unisex Studio.',
     path: '/account/wishlist',
     noindex: true,
   })

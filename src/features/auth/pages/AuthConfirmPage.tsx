@@ -45,7 +45,7 @@ export default function AuthConfirmPage() {
 
   useSeo({
     title: 'Signing you in',
-    description: 'Completing your Unisex Hair Studio sign-in.',
+    description: 'Completing your Black Chery Unisex Studio sign-in.',
     path: '/auth/confirm',
     noindex: true,
   })

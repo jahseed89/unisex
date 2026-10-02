@@ -71,7 +71,7 @@ export function ClientSheet({
             <div className="space-y-2">
               {client.phone && (
                 <a
-                  href={whatsappLink(`Hi ${client.fullName.split(' ')[0]}, it's from Unisex Hair Studio.`)}
+                  href={whatsappLink(`Hi ${client.fullName.split(' ')[0]}, it's from Black Chery Unisex Studio.`)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex min-h-11 items-center gap-3 rounded-md border border-line px-3.5 py-2.5 text-sm text-ink transition-colors hover:border-bronze hover:bg-sand/50"

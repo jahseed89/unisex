@@ -122,7 +122,7 @@ export default function ServiceDetailPage() {
 
   useSeo({
     title: service ? `${service.name} — ${service.category_name ?? 'Salon service'}` : 'Service',
-    description: service?.summary ?? 'Hair, braids, locs, colour and styling at Unisex Hair Studio, Lagos.',
+    description: service?.summary ?? 'Hair, braids, locs, colour and styling at Black Chery Unisex Studio, Lagos.',
     path: service ? `/services/${service.slug}` : '/services',
     image: service?.image_url ?? undefined,
     type: 'website',
@@ -252,7 +252,7 @@ export default function ServiceDetailPage() {
           <div className="order-1 lg:order-2">
             <MediaFrame
               src={service.image_url}
-              alt={`${service.name} at Unisex Hair Studio`}
+              alt={`${service.name} at Black Chery Unisex Studio`}
               seed={service.slug}
               aspect="4/5"
               priority

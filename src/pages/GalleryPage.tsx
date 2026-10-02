@@ -111,7 +111,7 @@ export default function GalleryPage() {
   useSeo({
     title: 'Gallery — braids, locs, colour and styling',
     description:
-      'Real work from the Unisex Hair Studio floor: knotless and box braids, sculpted locs, silk presses, balayage and before-and-after results from clients in Lagos.',
+      'Real work from the Black Chery Unisex Studio floor: knotless and box braids, sculpted locs, silk presses, balayage and before-and-after results from clients in Lagos.',
     path: '/gallery',
     jsonLd,
   })
@@ -273,7 +273,7 @@ export default function GalleryPage() {
                 <DialogTitle>{lightboxItem.title ?? humanise(lightboxItem.category)}</DialogTitle>
                 <DialogDescription>
                   {lightboxItem.alt_text ??
-                    `Salon work from Unisex Hair Studio — ${humanise(lightboxItem.category)}.`}
+                    `Salon work from Black Chery Unisex Studio — ${humanise(lightboxItem.category)}.`}
                 </DialogDescription>
               </DialogHeader>
 
@@ -357,7 +357,7 @@ function GalleryTile({
         <div className="relative">
           <MediaFrame
             src={item.image_url}
-            alt={item.alt_text ?? item.title ?? 'Salon work at Unisex Hair Studio'}
+            alt={item.alt_text ?? item.title ?? 'Salon work at Black Chery Unisex Studio'}
             seed={item.slug ?? item.id}
             aspect="4/5"
             priority={priority}
@@ -440,7 +440,7 @@ function LightboxBody({ item }: { item: GalleryItem }) {
     <MediaFrame
       className="rounded-lg"
       src={item.image_url}
-      alt={item.alt_text ?? item.title ?? 'Salon work at Unisex Hair Studio'}
+      alt={item.alt_text ?? item.title ?? 'Salon work at Black Chery Unisex Studio'}
       seed={item.slug ?? item.id}
       aspect="4/3"
       priority

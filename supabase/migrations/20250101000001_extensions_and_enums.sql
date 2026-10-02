@@ -1,6 +1,6 @@
 -- =============================================================================
 -- 0001 · Extensions & Enumerated Types
--- Unisex Hair Studio — Salon & Commerce Platform
+-- Black Chery Unisex Studio — Salon & Commerce Platform
 -- =============================================================================
 
 -- pgcrypto is deliberately NOT required: gen_random_uuid() is core since

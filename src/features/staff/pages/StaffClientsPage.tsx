@@ -396,7 +396,7 @@ function ClientRow({
           {client.phone && (
             <a
               href={whatsappLink(
-                `Hi ${client.fullName.split(' ')[0]}, it's from Unisex Hair Studio.`,
+                `Hi ${client.fullName.split(' ')[0]}, it's from Black Chery Unisex Studio.`,
                 client.phone.replace(/^\+/, ''),
               )}
               target="_blank"

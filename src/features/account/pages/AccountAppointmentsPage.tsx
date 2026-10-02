@@ -42,7 +42,7 @@ export default function AccountAppointmentsPage() {
 
   useSeo({
     title: 'Your appointments',
-    description: 'Review, reschedule or cancel your Unisex Hair Studio appointments.',
+    description: 'Review, reschedule or cancel your Black Chery Unisex Studio appointments.',
     path: '/account/appointments',
     noindex: true,
   })

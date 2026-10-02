@@ -131,8 +131,8 @@ export default function JobApplyPage() {
   useSeo({
     title: job ? `Apply — ${job.title}` : 'Apply',
     description: job
-      ? `Apply for the ${job.title} role at Unisex Hair Studio, Lagos. Takes about five minutes and no account is required.`
-      : 'Apply for a role at Unisex Hair Studio, Lagos.',
+      ? `Apply for the ${job.title} role at Black Chery Unisex Studio, Lagos. Takes about five minutes and no account is required.`
+      : 'Apply for a role at Black Chery Unisex Studio, Lagos.',
     path: `/careers/${slug}/apply`,
     jsonLd: job
       ? [

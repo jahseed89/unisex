@@ -285,7 +285,7 @@ function CustomerSheet({
                 </a>
                 <a
                   href={whatsappLink(
-                    `Hello ${firstName} — this is Unisex Hair Studio. How can we help?`,
+                    `Hello ${firstName} — this is Black Chery Unisex Studio. How can we help?`,
                     customer.phone_e164,
                   )}
                   target="_blank"

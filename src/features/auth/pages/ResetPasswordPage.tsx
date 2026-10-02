@@ -57,7 +57,7 @@ export default function ResetPasswordPage() {
 
   useSeo({
     title: 'Choose a new password',
-    description: 'Set a new password for your Unisex Hair Studio account.',
+    description: 'Set a new password for your Black Chery Unisex Studio account.',
     path: '/auth/reset-password',
     noindex: true,
   })
