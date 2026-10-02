@@ -372,7 +372,7 @@ const STAFF_SEEDS = [
   { full_name: 'Adaeze Okonkwo', title: 'Senior Braids Artist', headline: 'Knotless braids specialist with nine years on the chair.' },
   { full_name: 'Tunde Bakare', title: 'Master Colourist', headline: 'Balayage, correction and colour that grows out beautifully.' },
   { full_name: 'Ngozi Eze', title: 'Loc Specialist', headline: 'Starter locs, sculpting and colour for locked hair.' },
-  { full_name: 'Ife Adeyemi', title: 'Stylist', headline: 'Precision cuts, silk presses and event styling.' },
+  { full_name: 'Wisdom Ocran', title: 'Stylist', headline: 'Precision cuts, silk presses and event styling.' },
 ]
 
 export const profiles: Record<string, unknown>[] = [
