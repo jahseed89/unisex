@@ -65,7 +65,7 @@ export function DeliveryAddressForm({
             <Input
               id="address-city"
               autoComplete="address-level2"
-              placeholder="Victoria Island"
+              placeholder="Ajah"
               invalid={Boolean(addressErrors?.city)}
               {...register('address.city')}
             />

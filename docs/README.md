@@ -15,16 +15,17 @@ callout rather than describing it as done.
 | Document | What it covers |
 | --- | --- |
 | [01 · System architecture](./01-system-architecture.md) | Context and container diagrams, the four application surfaces, the SPA + Supabase split, request lifecycle, trust boundaries, deployment topology, and a table of every Supabase feature in use. |
-| [02 · Database schema](./02-database-schema.md) | All 47 tables organised by domain, ER diagrams, the invariants the schema enforces, the complete enum list, generated columns, exclusion constraints, and the column-guard triggers. |
+| [02 · Database schema](./02-database-schema.md) | All 48 tables organised by domain, ER diagrams, the invariants the schema enforces, the complete enum list, generated columns, exclusion constraints, and the column-guard triggers. |
 | [03 · User flows](./03-user-flows.md) | Sequence diagrams for browsing, signup, booking with requirements, reschedule/cancel, shopping and paying, job applications, the staff diary, and running the salon — with the permission decision at each step. |
 | [04 · API specification](./04-api-specification.md) | The complete RPC catalogue (42 `public.fn_*` functions plus 20 `app_private` helpers) with signatures, return shapes, callers and errors; the client-side TypeScript wrapper for each; the PostgREST table surface; and the Edge Function contracts. |
 | [05 · Authentication model](./05-authentication-model.md) | Signup, session handling, token refresh, the `fn_handle_new_user` trigger, the profile/role model, password reset, OAuth, why roles are a table and not an enum, and why route guards are UX rather than security. |
-| [06 · RLS and permissions](./06-rls-and-permissions.md) | The full permission matrix (customer / staff / supervisor / admin across all 47 tables), the `app_private` schema pattern, `has_role()` / `is_admin()`, why `FORCE ROW LEVEL SECURITY` is deliberately off, the public catalogue views, and the anti-patterns the schema avoids. |
+| [06 · RLS and permissions](./06-rls-and-permissions.md) | The full permission matrix (customer / staff / supervisor / admin across all 48 tables), the `app_private` schema pattern, `has_role()` / `is_admin()`, why `FORCE ROW LEVEL SECURITY` is deliberately off, the public catalogue views, and the anti-patterns the schema avoids. |
 | [07 · Availability and booking engine](./07-availability-and-booking-engine.md) | The full logic of `fn_service_slots`, timezone handling, buffers, holds, daily caps, the `business_settings` gates, the three-layer double-booking defence, the legal status-transition graph, and the late-cancellation rule. |
 | [08 · Commerce and payments](./08-commerce-and-payments.md) | The product/variant model, the append-only inventory ledger, guest cart merging, coupon evaluation, server-authoritative pricing, tax-inclusive totals, the checkout transaction and its `FOR UPDATE` locking, offline payments, refunds, and the Paystack integration architecture. |
 | [09 · Notifications and integrations](./09-notifications-and-integrations.md) | The `fn_notify` dispatch model, channel fan-out, opt-in resolution, `notification_deliveries`, the durable `scheduled_jobs` queue with `FOR UPDATE SKIP LOCKED` claiming, reminder scheduling, message templates, and the planned WhatsApp Cloud API integration. |
 | [10 · SEO and analytics](./10-seo-and-analytics.md) | The `useSeo` head manager and its tag-leakage protection, every JSON-LD builder with worked examples, the `scripts/generate-seo.mjs` prerendering step, why it matters for a JS-rendered SPA, the SSR/ISR migration path, and the consent-gated analytics architecture. |
 | [11 · Design system](./11-design-system.md) | The editorial-luxe language: colour tokens, the Fraunces/Inter type scale, spacing rhythm, radii, elevation, motion and reduced-motion handling, the Tailwind v4 `@theme` block, the component inventory, accessibility rules, and the placeholder-media strategy. |
+  | [12 — Photography](./12-photography.md) | The image manifest and shot list, how to publish a photograph by dropping a file in, the build-time and Storage pipelines, placeholder artwork, the `studio_media` registry and its alt-text constraint, attribution obligations, and photography standards. |
 | [13 · Operations runbook](./13-operations-runbook.md) | Local development, connecting a real project, migrations, type generation, seeding, promoting the first administrator, Auth provider setup, storage, Paystack and WhatsApp secrets, cron registration, backups, and the pre-launch checklist. |
 | [FRONTEND_CONTRACT.md](./FRONTEND_CONTRACT.md) | The implementation contract every page module in `src/` follows: module shape, imports, data fetching, the three visual states, accessibility, SEO, money formatting. |
 
@@ -32,8 +33,8 @@ callout rather than describing it as done.
 
 ## Sixty-second orientation
 
-1. **The whole backend is one Postgres database.** Seventeen SQL migrations in `supabase/migrations/`
-   define 47 tables, 42 public RPCs, 91 RLS policies, 22 enums and 28 triggers. There is no
+1. **The whole backend is one Postgres database.** Nineteen SQL migrations in `supabase/migrations/`
+   define 48 tables, 44 public RPCs, 94 RLS policies, 22 enums and 29 triggers. There is no
    application server.
 2. **The browser talks to Postgres directly.** `src/lib/supabase/client.ts` creates a
    `@supabase/supabase-js` client with the anonymous key. The key is public by design; every
@@ -58,7 +59,7 @@ callout rather than describing it as done.
 
 ### Verified schema inventory
 
-Produced by `npm run validate:sql`, which executes all seventeen migrations against a real PostgreSQL 16
+Produced by `npm run validate:sql`, which executes all nineteen migrations against a real PostgreSQL 16
 engine (PGlite/WASM) and then counts the catalogue:
 
 ```

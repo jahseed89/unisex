@@ -553,7 +553,7 @@ export default function CareersPage() {
         <SectionHeading
           eyebrow="Life at the studio"
           title="A working salon, not a photo shoot."
-          description="Adeola Odeku, nine till seven, tea constantly on. Show up, do good work, look after each other's chairs. That is most of it."
+          description={`${site.address.street}, nine till seven, tea constantly on. Show up, do good work, look after each other's chairs. That is most of it.`}
         />
 
         {galleryQuery.isError ? (
@@ -808,7 +808,7 @@ function StudioCollage({
         <div className="overflow-hidden rounded-xl border border-line bg-sand">
           <MediaFrame
             src={null}
-            alt="The Black Chery Unisex Studio floor on Adeola Odeku Street"
+            alt={`The ${site.name} floor at ${site.address.street}`}
             seed="careers-hero"
             aspect="4/5"
           />

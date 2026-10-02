@@ -148,7 +148,7 @@ export default function CheckoutSuccessPage() {
         ? `${order.location.name}, ${order.location.address_line1}, ${order.location.city}.${
             order.location.phone ? ` Call ${order.location.phone} on arrival.` : ''
           }`
-        : 'Come to the studio on Adeola Odeku Street, Victoria Island.',
+        : 'Come to the studio at Ogombo Roundabout, Ajah.',
     },
     {
       icon: <MessageCircle className="size-4" aria-hidden />,
@@ -382,7 +382,7 @@ export default function CheckoutSuccessPage() {
                   </p>
                 ) : (
                   <p className="mt-2 text-sm leading-relaxed text-muted">
-                    Our studio on Adeola Odeku Street, Victoria Island. We will confirm the collection
+                    Our studio at Ogombo Roundabout, Ajah. We will confirm the collection
                     point when we message you.
                   </p>
                 )

@@ -19,7 +19,7 @@ import { breadcrumbSchema, organizationSchema, useSeo } from '@/components/seo/S
 
 const STORY = [
   'Black Chery Unisex Studio was founded by Wisdom Ocran in 2014 with two chairs, one braids artist and a stubborn belief: that the same quality of work should be available to everyone, not split into a "men\'s" and a "women\'s" side of the salon.',
-  'We grew into a full studio on Adeola Odeku because our clients kept asking for two things at once — a braids artist who understood their texture, and a colourist who could read a formula. Nobody else in the neighbourhood was doing both, so Wisdom built the team from scratch, starting with apprentices and keeping the ones who took the craft seriously.',
+  'We grew into a full studio at Ogombo Roundabout because our clients kept asking for two things at once — a braids artist who understood their texture, and a colourist who could read a formula. Nobody else in the neighbourhood was doing both, so Wisdom built the team from scratch, starting with apprentices and keeping the ones who took the craft seriously.',
   'Today we are a team of braids artists, loc specialists, colourists and cutters who work the same diary, share the same price list and eat lunch at the same table. What has not changed is the rule Wisdom started with: understand the hair before you touch it, and write down what you did so the next appointment is better than the last one.',
 ] as const
 
@@ -114,7 +114,7 @@ export default function AboutPage() {
     description:
       page?.meta_description ??
       page?.excerpt ??
-      'Black Chery Unisex Studio is a premium unisex salon on Adeola Odeku, Victoria Island. Meet the team behind our braids, locs, colour and cutting.',
+      'Black Chery Unisex Studio is a premium unisex salon at Ogombo Roundabout, Ajah. Meet the team behind our braids, locs, colour and cutting.',
     path: '/about',
     image: page?.hero_image_url ?? undefined,
     jsonLd,
@@ -125,7 +125,7 @@ export default function AboutPage() {
       <PageHeader
         eyebrow="About the studio"
         title="Two chairs, one stubborn idea, twelve years on"
-        description="We are a unisex salon in the heart of Victoria Island, built for people who want good hair work without the guessing, the upsell and the gender rules."
+        description="We are a unisex salon in Ajah, built for people who want good hair work without the guessing, the upsell and the gender rules."
         breadcrumb={[{ label: 'About', to: '/about' }]}
         action={
           <div className="flex flex-col gap-2.5 sm:flex-row">
@@ -226,7 +226,7 @@ export default function AboutPage() {
             <MediaFrame
               className="rounded-lg"
               src={page?.hero_image_url}
-              alt="The Black Chery Unisex Studio floor on Adeola Odeku, with styling chairs, mirrors and warm afternoon light"
+              alt="The Black Chery Unisex Studio floor at Ogombo Roundabout, with styling chairs, mirrors and warm afternoon light"
               seed="about-studio-floor"
               aspect="4/5"
               priority
@@ -255,7 +255,7 @@ export default function AboutPage() {
                   <p className="text-sm font-semibold text-ink">Come and see the space</p>
                   <p className="mt-1.5 text-sm leading-relaxed text-muted">
                     {site.address.street}, {site.address.locality}, {site.address.region}. Free
-                    parking is limited, so the BRT stop at Victoria Island is the easier option.
+                    parking is limited, so allow extra time on the Lekki-Epe Expressway at peak hours.
                   </p>
                   <Button asChild variant="link" size="sm" className="mt-2.5">
                     <a

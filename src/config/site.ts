@@ -37,11 +37,11 @@ export const site = {
   },
 
   address: {
-    street: '12 Adeola Odeku Street',
-    locality: 'Victoria Island',
+    street: 'Ogombo Roundabout',
+    locality: 'Ajah',
     region: 'Lagos',
     country: 'NG',
-    postalCode: '106104',
+    postalCode: '101245',
   },
 
   hours: {

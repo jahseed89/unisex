@@ -72,7 +72,7 @@ const STATIC_ROUTES = [
   { path: '/shop', priority: 0.9, changefreq: 'daily', title: `Shop Wigs, Extensions & Hair Care | ${SITE.name}`, description: 'Buy the exact hair we install. Human hair wigs, bundles, frontals, protein treatments, oils and accessories.' },
   { path: '/gallery', priority: 0.7, changefreq: 'weekly', title: `Hair Gallery | ${SITE.name}`, description: 'Real work from our chairs — braids, locs, colour, cuts and styling, photographed in the studio.' },
   { path: '/careers', priority: 0.8, changefreq: 'weekly', title: `Careers at ${SITE.name} — Join Our Team`, description: 'Open roles for stylists, colourists and front desk. Apply online with your CV and portfolio.' },
-  { path: '/contact', priority: 0.7, changefreq: 'monthly', title: `Contact & Directions | ${SITE.name}`, description: 'Visit us in Victoria Island, Lagos. Opening hours, phone, WhatsApp and directions.' },
+  { path: '/contact', priority: 0.7, changefreq: 'monthly', title: `Contact & Directions | ${SITE.name}`, description: 'Visit us at Ogombo Roundabout, Ajah, Lagos. Opening hours, phone, WhatsApp and directions.' },
   { path: '/policies/privacy', priority: 0.3, changefreq: 'yearly', title: `Privacy Policy | ${SITE.name}`, description: 'How Black Chery Unisex Studio collects, uses and protects your personal data.' },
   { path: '/policies/terms', priority: 0.3, changefreq: 'yearly', title: `Terms of Service | ${SITE.name}`, description: 'The terms that apply when you book an appointment or buy from Black Chery Unisex Studio.' },
   { path: '/policies/bookings', priority: 0.4, changefreq: 'monthly', title: `Booking & Cancellation Policy | ${SITE.name}`, description: 'Booking windows, notice periods, deposits and our 24-hour cancellation policy.' },
@@ -121,10 +121,10 @@ function organizationNode() {
     currenciesAccepted: 'NGN',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: '12 Adeola Odeku Street',
-      addressLocality: 'Victoria Island',
+      streetAddress: 'Ogombo Roundabout',
+      addressLocality: 'Ajah',
       addressRegion: 'Lagos',
-      postalCode: '106104',
+      postalCode: '101245',
       addressCountry: 'NG',
     },
     openingHoursSpecification: [
@@ -299,7 +299,7 @@ async function fetchDynamicRoutes() {
             '@type': 'Place',
             address: {
               '@type': 'PostalAddress',
-              addressLocality: 'Victoria Island',
+              addressLocality: 'Ajah',
               addressRegion: 'Lagos',
               addressCountry: 'NG',
             },

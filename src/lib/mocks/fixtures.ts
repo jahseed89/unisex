@@ -6,7 +6,38 @@
  * copy written against mocks stay true against the real database.
  */
 
-const img = (seed: string) => `https://picsum.photos/seed/${encodeURIComponent(seed)}/1200/900`
+import {
+  GALLERY_SLOTS,
+  STUDIO_SHOTS,
+  productSlots,
+  resolvePhoto,
+  serviceSlots,
+  stylistSlot,
+  type GalleryCategory,
+  type MediaSlot,
+  type StudioShotKey,
+} from '@/config/media'
+
+/**
+ * Photograph URL for a manifest slot, or `null` when nothing is published yet.
+ *
+ * Previously this returned a picsum URL keyed on a seed string. That was worse
+ * than having no image at all: a truthy `src` makes MediaFrame skip its
+ * on-brand placeholder and render an arbitrary photograph of a landscape, so
+ * every tile looked broken rather than unphotographed. Returning `null` lets
+ * the placeholder show until real photography is dropped into public/images.
+ */
+const img = (slot: MediaSlot | null | undefined) => resolvePhoto(slot)
+
+/** Every published URL for a set of slots, dropping the ones not yet shot. */
+const imgs = (slots: readonly MediaSlot[]) =>
+  slots.map(resolvePhoto).filter((url): url is string => url !== null)
+
+/** Studio-wide shot by key. */
+const studioShot = (key: StudioShotKey): MediaSlot => STUDIO_SHOTS[key]
+
+/** Mirrors the slug rule used for `profiles`, so photo paths stay stable. */
+const slugify = (name: string) => name.toLowerCase().replace(/\s+/g, '-')
 
 // ---------------------------------------------------------------------------
 // Business configuration
@@ -43,16 +74,16 @@ export const business_settings = {
 export const salon_locations = [
   {
     id: 'a1000000-0000-4000-8000-000000000001',
-    name: 'Black Chery Unisex Studio — Victoria Island',
-    slug: 'victoria-island',
-    address_line1: '12 Adeola Odeku Street',
+    name: 'Black Chery Unisex Studio — Ajah',
+    slug: 'ogombo-ajah',
+    address_line1: 'Ogombo Roundabout',
     address_line2: null,
-    city: 'Victoria Island',
+    city: 'Ajah',
     state: 'Lagos',
     country: 'NG',
-    postal_code: '106104',
-    latitude: '6.4281',
-    longitude: '3.4219',
+    postal_code: '101245',
+    latitude: '6.450348',
+    longitude: '3.613736',
     phone: '+2348000000000',
     whatsapp: '2348000000000',
     email: 'hello@blackcheryunisexstudio.com',
@@ -288,8 +319,8 @@ export const services: Record<string, unknown>[] = SERVICE_SEEDS.map((seed, inde
   gender_restriction: null,
   min_age: null,
   max_concurrent: 1,
-  image_url: img(seed.slug),
-  gallery_urls: [img(`${seed.slug}-a`), img(`${seed.slug}-b`)],
+  image_url: img(serviceSlots(seed.slug, seed.name)[0]),
+  gallery_urls: imgs(serviceSlots(seed.slug, seed.name)),
   badge: seed.badge ?? null,
   is_featured: seed.is_featured ?? false,
   is_popular: seed.is_popular ?? false,
@@ -368,11 +399,21 @@ const STAFF_IDS = [
   'b0000000-0000-4000-8000-000000000004',
 ]
 
-const STAFF_SEEDS = [
-  { full_name: 'Adaeze Okonkwo', title: 'Senior Braids Artist', headline: 'Knotless braids specialist with nine years on the chair.' },
-  { full_name: 'Tunde Bakare', title: 'Master Colourist', headline: 'Balayage, correction and colour that grows out beautifully.' },
-  { full_name: 'Ngozi Eze', title: 'Loc Specialist', headline: 'Starter locs, sculpting and colour for locked hair.' },
-  { full_name: 'Wisdom Ocran', title: 'Stylist', headline: 'Precision cuts, silk presses and event styling.' },
+/**
+ * `speciality` drives which gallery photographs appear in a stylist's
+ * portfolio, so it is data on the seed rather than an index expression at the
+ * point of use — otherwise adding a stylist silently reshuffles everyone's.
+ */
+const STAFF_SEEDS: {
+  full_name: string
+  title: string
+  headline: string
+  speciality: GalleryCategory
+}[] = [
+  { full_name: 'Adaeze Okonkwo', title: 'Senior Braids Artist', headline: 'Knotless braids specialist with nine years on the chair.', speciality: 'braids' },
+  { full_name: 'Tunde Bakare', title: 'Master Colourist', headline: 'Balayage, correction and colour that grows out beautifully.', speciality: 'colour' },
+  { full_name: 'Ngozi Eze', title: 'Loc Specialist', headline: 'Starter locs, sculpting and colour for locked hair.', speciality: 'locs' },
+  { full_name: 'Wisdom Ocran', title: 'Stylist', headline: 'Precision cuts, silk presses and event styling.', speciality: 'hair' },
 ]
 
 export const profiles: Record<string, unknown>[] = [
@@ -380,10 +421,12 @@ export const profiles: Record<string, unknown>[] = [
     id: STAFF_IDS[i],
     email: `${s.full_name.toLowerCase().split(' ')[0]}@blackcheryunisexstudio.com`,
     full_name: s.full_name,
-    slug: s.full_name.toLowerCase().replace(/\s+/g, '-'),
+    slug: slugify(s.full_name),
     phone_e164: `+23480000000${i + 1}`,
     phone_verified_at: null,
-    avatar_url: img(`staff-${s.full_name}`),
+    // Shares the stylist photograph slot so a headshot and its profile image
+    // are the same file rather than two near-identical ones.
+    avatar_url: img(stylistSlot(slugify(s.full_name), s.full_name)),
     cover_url: null,
     gender: i === 1 ? 'male' : 'female',
     date_of_birth: null,
@@ -435,28 +478,33 @@ export const profiles: Record<string, unknown>[] = [
   },
 ]
 
-export const staff_profiles = STAFF_SEEDS.map((s, i) => ({
-  user_id: STAFF_IDS[i],
-  slug: s.full_name.toLowerCase().replace(/\s+/g, '-'),
-  title: s.title,
-  headline: s.headline,
-  bio: `${s.headline} ${s.full_name.split(' ')[0]} has been with Black Chery Unisex Studio since 2021 and specialises in ${s.title.toLowerCase()}.`,
-  photo_url: img(`staff-${s.full_name}`),
-  portfolio_urls: [img(`portfolio-${s.full_name}-1`)],
-  specialities: i === 0 ? ['braids'] : i === 1 ? ['colour'] : i === 2 ? ['locs'] : ['styling'],
-  employment_type: 'full_time',
-  commission_pct: null,
-  hourly_rate: null,
-  is_bookable: true,
-  accepts_walk_ins: true,
-  max_daily_bookings: 8,
-  hired_on: '2021-06-01',
-  employment_end_on: null,
-  rating_avg: [4.9, 4.9, 4.8, 4.7][i],
-  rating_count: [148, 96, 74, 61][i],
-  created_at: '2025-01-05T09:00:00Z',
-  updated_at: '2025-01-05T09:00:00Z',
-}))
+export const staff_profiles = STAFF_SEEDS.map((s, i) => {
+  const slug = slugify(s.full_name)
+  return {
+    user_id: STAFF_IDS[i],
+    slug,
+    title: s.title,
+    headline: s.headline,
+    bio: `${s.headline} ${s.full_name.split(' ')[0]} has been with Black Chery Unisex Studio since 2021 and specialises in ${s.title.toLowerCase()}.`,
+    photo_url: img(stylistSlot(slug, s.full_name)),
+    // Portfolios are work samples rather than headshots, so they point at the
+    // team-in-action photography rather than duplicating the profile image.
+    portfolio_urls: imgs([studioShot('careersTeam'), ...GALLERY_SLOTS[s.speciality].slice(0, 2)]),
+    specialities: [s.speciality],
+    employment_type: 'full_time',
+    commission_pct: null,
+    hourly_rate: null,
+    is_bookable: true,
+    accepts_walk_ins: true,
+    max_daily_bookings: 8,
+    hired_on: '2021-06-01',
+    employment_end_on: null,
+    rating_avg: [4.9, 4.9, 4.8, 4.7][i],
+    rating_count: [148, 96, 74, 61][i],
+    created_at: '2025-01-05T09:00:00Z',
+    updated_at: '2025-01-05T09:00:00Z',
+  }
+})
 
 export const staff_public = STAFF_SEEDS.map((s, i) => ({
   user_id: STAFF_IDS[i],
@@ -465,7 +513,7 @@ export const staff_public = STAFF_SEEDS.map((s, i) => ({
   title: s.title,
   headline: s.headline,
   bio: staff_profiles[i]!.bio,
-  photo_url: img(`staff-${s.full_name}`),
+  photo_url: staff_profiles[i]!.photo_url,
   portfolio_urls: [],
   specialities: staff_profiles[i]!.specialities,
   employment_type: 'full_time',
@@ -575,8 +623,8 @@ export const products: Record<string, unknown>[] = PRODUCT_SEEDS.map((seed, inde
   cap_construction: seed.cap_construction,
   is_pre_stretched: false,
   is_glueless: seed.slug.includes('glueless'),
-  image_url: img(seed.slug),
-  gallery_urls: [img(seed.slug), img(`${seed.slug}-2`), img(`${seed.slug}-3`)],
+  image_url: img(productSlots(seed.slug, seed.name)[0]),
+  gallery_urls: imgs(productSlots(seed.slug, seed.name)),
   video_url: null,
   status: 'active',
   is_featured: seed.is_featured ?? false,
@@ -686,30 +734,65 @@ export const reviews = REVIEW_COPY.map((review, index) => ({
   moderated_by: null,
 }))
 
-const GALLERY_CATEGORIES = ['braids', 'locs', 'hair', 'colour', 'styling', 'before_after', 'interior', 'team']
+/**
+ * Gallery tiles.
+ *
+ * Three tiles per category across the eight categories. Each tile takes its
+ * photograph and alt text from `GALLERY_SLOTS`, which is where the studio's
+ * shot list lives — so the gallery, the stylist portfolios and the category
+ * filter all draw from one source.
+ *
+ * `before_after` tiles are the exception: they reference a *pair* of slots
+ * rather than one, because a before/after comparison is meaningless with a
+ * single image. Both are null until the pair has been photographed.
+ */
+const GALLERY_TITLES: Record<GalleryCategory, readonly string[]> = {
+  braids: ['Knotless braids', 'Feed-in braids', 'Braided bun', 'Cornrow set'],
+  locs: ['Loc sculpt', 'Starter locs', 'Loc updo', 'Retwist and shape'],
+  hair: ['Signature cut', 'Fringe trim', 'Cropped cut', 'Blunt cut'],
+  colour: ['Balayage', 'Toner refresh', 'Highlights', 'Colour correction'],
+  styling: ['Silk press', 'Curl definition', 'Bridal updo', 'Sleek blowout'],
+  before_after: ['Colour refresh', 'Length change', 'Cut and restyle', 'Blonde transformation'],
+  interior: ['The studio floor', 'Reception', 'Styling station', 'Waiting area'],
+  team: ['Braiding at the chair', 'A busy afternoon', 'Mixing formula', 'Sectioning and pinning'],
+}
 
-export const gallery_items: Record<string, unknown>[] = Array.from({ length: 24 }, (_, index) => {
-  const category = GALLERY_CATEGORIES[index % GALLERY_CATEGORIES.length]!
-  const isBeforeAfter = category === 'before_after'
-  const slug = `gallery-${index + 1}`
-  return {
-    id: `8${String(index).padStart(7, '0')}-0000-4000-8000-000000000000`,
-    title: `${['Knotless braids', 'Loc sculpt', 'Signature cut', 'Balayage', 'Silk press', 'Bridal look'][index % 6]} #${index + 1}`,
-    slug,
-    category,
-    image_url: img(slug),
-    before_image_url: isBeforeAfter ? img(`${slug}-before`) : null,
-    after_image_url: isBeforeAfter ? img(`${slug}-after`) : null,
-    alt_text: `Our ${category} work, gallery image ${index + 1}`,
-    stylist_id: STAFF_IDS[index % 4],
-    service_id: serviceId(index % 17),
-    tags: [GALLERY_CATEGORIES[index % 3]!],
-    is_featured: index < 6,
-    display_order: index,
-    is_published: true,
-    created_at: '2025-01-12T09:00:00Z',
-  }
-})
+const GALLERY_CATEGORIES = Object.keys(GALLERY_TITLES) as GalleryCategory[]
+
+export const gallery_items: Record<string, unknown>[] = GALLERY_CATEGORIES.flatMap((category, categoryIndex) =>
+  [0, 1, 2].map((n) => {
+    const slots = GALLERY_SLOTS[category]
+    const slot = slots[n % slots.length]!
+    const index = categoryIndex * 3 + n
+    const slug = `${category}-${n + 1}`
+    const isBeforeAfter = category === 'before_after'
+
+    // The pair is slots 0/1 for tile 1 and 2/3 for tile 2; tile 3 reuses the
+    // "after" of tile 2 as a plain single image rather than inventing a pair.
+    const beforeSlot = isBeforeAfter ? slots[n * 2] : undefined
+    const afterSlot = isBeforeAfter ? slots[n * 2 + 1] : undefined
+
+    return {
+      id: `8${String(index).padStart(7, '0')}-0000-4000-8000-000000000000`,
+      title: GALLERY_TITLES[category][n]!,
+      slug,
+      category,
+      image_url: isBeforeAfter ? img(afterSlot!) : img(slot),
+      before_image_url: isBeforeAfter ? img(beforeSlot) : null,
+      after_image_url: isBeforeAfter ? img(afterSlot) : null,
+      alt_text: slot.alt,
+      stylist_id: STAFF_IDS[index % 4],
+      service_id: serviceId(index % 17),
+      tags: [category],
+      is_featured: index < 6,
+      display_order: index,
+      is_published: true,
+      created_at: '2025-01-12T09:00:00Z',
+      moderated_at: null,
+      moderated_by: null,
+    }
+  }),
+)
 
 // ---------------------------------------------------------------------------
 // Careers
@@ -903,7 +986,7 @@ export const job_applications: Record<string, unknown>[] = [
     full_name: 'Blessing Etim',
     email: 'blessing@example.com',
     phone_e164: '+2348010000003',
-    location: 'Victoria Island, Lagos',
+    location: 'Ajah, Lagos',
     cover_letter: 'I worked front desk at a spa for three years and I am very calm under pressure.',
     portfolio_url: null,
     portfolio_urls: [],
@@ -954,6 +1037,11 @@ export const application_events = job_applications.flatMap((application, index) 
 // Tables that start empty
 // ---------------------------------------------------------------------------
 export const emptyTables = {
+  // Empty because no photography is published: the build-time manifest
+  // (public/images) is what serves images in mock mode, and it is empty until
+  // real files are dropped in. Seeding fake rows here would make the gallery
+  // look populated in preview while the database stayed empty.
+  studio_media: [] as Record<string, unknown>[],
   appointments: [] as Record<string, unknown>[],
   appointment_status_history: [] as Record<string, unknown>[],
   requirements: [] as Record<string, unknown>[],
@@ -1004,6 +1092,7 @@ export function buildDatabase(): Record<string, Record<string, unknown>[]> {
     job_applications,
     application_events,
     appointments: emptyTables.appointments,
+  studio_media: emptyTables.studio_media,
     appointment_status_history: emptyTables.appointment_status_history,
     requirements: emptyTables.requirements,
     requirement_media: emptyTables.requirement_media,

@@ -28,17 +28,36 @@ on conflict (key) do update
 -- ---------------------------------------------------------------------------
 -- Location + opening hours (Mon–Sat 09:00–19:00, Sunday closed)
 -- ---------------------------------------------------------------------------
+-- The primary studio. Coordinates are the geocoded centroid for Ogombo
+-- (Nominatim: Ogombo, Sangotedo, Eti Osa, Lagos), used for the directions
+-- link and local SEO. `on conflict do update` rather than `do nothing` so that
+-- re-running the seed converges on one row instead of inserting a second
+-- location when the address or slug changes.
 insert into public.salon_locations (
-  name, slug, address_line1, city, state, country, phone, whatsapp,
+  name, slug, address_line1, city, state, country, postal_code,
+  latitude, longitude, phone, whatsapp,
   email, timezone, is_primary, display_order
 )
 values (
-  'Black Chery Unisex Studio — Victoria Island', 'victoria-island',
-  '12 Adeola Odeku Street', 'Victoria Island', 'Lagos', 'NG',
+  'Black Chery Unisex Studio — Ajah', 'ogombo-ajah',
+  'Ogombo Roundabout', 'Ajah', 'Lagos', 'NG', '101245',
+  6.450348, 3.613736,
   '+2348000000000', '2348000000000', 'hello@blackcheryunisexstudio.com',
   'Africa/Lagos', true, 1
 )
-on conflict (slug) do nothing;
+on conflict (slug) do update
+  set name         = excluded.name,
+      address_line1= excluded.address_line1,
+      city         = excluded.city,
+      state        = excluded.state,
+      country      = excluded.country,
+      postal_code  = excluded.postal_code,
+      latitude     = excluded.latitude,
+      longitude    = excluded.longitude,
+      phone        = excluded.phone,
+      whatsapp     = excluded.whatsapp,
+      email        = excluded.email,
+      timezone     = excluded.timezone;
 
 insert into public.location_hours (location_id, weekday, opens_at, closes_at, is_closed)
 select
@@ -57,7 +76,7 @@ cross join (values
   (5, time '09:00', time '20:00'),
   (6, time '10:00', time '20:00')
 ) as d(weekday, opens_at, closes_at)
-where l.slug = 'victoria-island'
+where l.slug = 'ogombo-ajah'
 on conflict (location_id, weekday) do nothing;
 
 update public.business_settings

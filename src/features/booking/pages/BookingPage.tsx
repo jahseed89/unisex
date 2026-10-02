@@ -712,7 +712,7 @@ function ServiceStep({
           />
           <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted">
             <MapPin className="size-3.5 text-bronze" aria-hidden />
-            Most appointments are at our Victoria Island studio.
+            Most appointments are at our Ajah studio.
           </p>
         </div>
       )}

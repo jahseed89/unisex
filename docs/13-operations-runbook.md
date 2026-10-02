@@ -101,7 +101,7 @@ npm run validate:sql
 ```
 
 `scripts/validate-sql.mjs` stubs `auth`, `storage` and the `anon` / `authenticated` / `service_role`
-roles, then executes all seventeen migrations verbatim against PGlite (PostgreSQL 16 compiled to
+roles, then executes all nineteen migrations verbatim against PGlite (PostgreSQL 16 compiled to
 WebAssembly) and reports:
 
 ```
@@ -191,7 +191,7 @@ Migration `20250101000015_seed.sql` is idempotent and runs with the migrations. 
 | Content | Detail |
 | --- | --- |
 | Roles | `customer`, `staff`, `supervisor`, `admin` with capabilities and ranks |
-| Location | Black Chery Unisex Studio — Victoria Island, `12 Adeola Odeku Street`, `Africa/Lagos`, primary |
+| Location | Black Chery Unisex Studio — Ajah, `Ogombo Roundabout`, `Africa/Lagos`, primary |
 | Opening hours | Mon–Thu 09:00–19:00, Fri 09:00–20:00, Sat 10:00–20:00, Sunday closed |
 | Business settings | Naira, 7.5% tax (inclusive), 4h lead time, 60-day horizon, 24h cancellation, 2.5k delivery fee over a 75k free threshold |
 | 7 service categories | braids, locs, haircuts, colour, styling, treatments, wig services |
@@ -419,7 +419,7 @@ housekeeping function every ten minutes.
 | Migrations | This repository | The schema's source of truth. Never edit an applied migration; add a new one, as migration 0016 does. |
 
 A quarterly rehearsal is worth the hour: restore last night's backup into a scratch project, run
-`npm run supabase:types` against it, and confirm the counts (`47` tables, `91` policies) and the three
+`npm run supabase:types` against it, and confirm the counts (`48` tables, `94` policies) and the three
 trigram indexes and the exclusion constraint exist.
 
 ---
@@ -459,8 +459,8 @@ node scripts/generate-seo.mjs            # subsequent runs consume it
 
 **Blocking — the product does not work without these**
 
-- [ ] All seventeen migrations applied to production; `47` tables, `91` policies, `22` enums,
-      `42` public functions, `20` private.
+- [ ] All nineteen migrations applied to production; `48` tables, `94` policies, `22` enums,
+      `44` public functions, `20` private.
 - [ ] The exclusion constraint and the three trigram GIN indexes exist (PGlite cannot prove them).
 - [ ] `salon_locations`, `location_hours`, `staff_availability_rules`, `staff_time_off`,
       `blackout_dates` and `business_settings` reflect the real studio: real hours, real tax

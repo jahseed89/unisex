@@ -12,7 +12,8 @@ import { Alert, Badge, Button, Card, Checkbox, Divider } from '@/components/ui'
 import { formatDuration } from '@/components/shared/Cards'
 import { Avatar, MediaFrame } from '@/components/shared/MediaFrame'
 import { formatDateTime, formatNaira } from '@/lib/utils/format'
-import { downloadAppointmentIcs } from './calendar'
+import { downloadAppointmentIcs, siteAddressLine } from './calendar'
+import { site } from '@/config/site'
 import {
   COLOUR_OPTIONS,
   GOAL_OPTIONS,
@@ -89,7 +90,7 @@ export function ReviewStep({
       stylistName,
       locationLine: location
         ? `${location.name}, ${location.address_line1}, ${location.city}`
-        : 'Black Chery Unisex Studio, 12 Adeola Odeku Street, Victoria Island, Lagos',
+        : `${site.name}, ${siteAddressLine()}`,
     })
 
   return (

@@ -13,7 +13,7 @@ React 18 + TypeScript + Vite 6 + Tailwind v4 + TanStack Query
                     │
                     │  PostgREST / Auth / Storage  (JWT in the header)
                     ▼
-Supabase: Postgres (47 tables, 91 RLS policies, 42 RPCs) · GoTrue · Storage
+Supabase: Postgres (48 tables, 94 RLS policies, 44 RPCs) · GoTrue · Storage
 ```
 
 ---
@@ -67,7 +67,7 @@ crawlers that do not execute JavaScript.
 | **Tailwind v4** | Tokens live in a CSS `@theme` block, so the design system is CSS-first and a restyle is a one-file change. No `tailwind.config.js`. |
 | **TanStack Query 5** | Every screen is a server read. Cache keys come from one factory (`qk`) so invalidation cannot drift. `staleTime` is non-zero because a salon catalogue changes hourly, not per focus. |
 | **React Router 6** | `createBrowserRouter` with per-route `React.lazy`, so an anonymous visitor never downloads an admin chunk. |
-| **Supabase (Postgres + Auth + Storage + RLS)** | One database is the whole authorisation model. 91 policies, 42 RPCs and four column guards in SQL is a reviewable security posture; the same logic in an API server would be thousands of untested lines. |
+| **Supabase (Postgres + Auth + Storage + RLS)** | One database is the whole authorisation model. 94 policies, 42 RPCs and four column guards in SQL is a reviewable security posture; the same logic in an API server would be thousands of untested lines. |
 | **`SECURITY DEFINER` functions as the write path** | Money, stock and state transitions re-authorise inside the function and can be reasoned about transactionally. |
 | **PGlite (`@electric-sql/pglite`)** | The migrations execute against a real PostgreSQL 16 engine in-process, so a schema error fails `npm run validate:sql` rather than production. |
 | **Zod + react-hook-form** | One validation story for booking requirements, checkout and the application form. |
@@ -111,7 +111,7 @@ Full setup, cron registration, secrets and the pre-launch checklist:
 ```
 supabase/
   config.toml                  local stack: api, db, auth, storage, edge runtime
-  migrations/                  17 files, 5,930 lines — the entire backend
+  migrations/                  19 files, 6,706 lines — the entire backend
     20250101000001_extensions_and_enums.sql    pg_trgm, 22 enums, app_private
     20250101000002_identity.sql                profiles, roles, staff, settings, audit
     20250101000003_content.sql                 services, gallery, reviews, pages, FAQs
@@ -123,7 +123,7 @@ supabase/
     20250101000009_availability.sql            fn_service_slots + the booking engine
     20250101000010_commerce_engine.sql         inventory, cart, coupon, checkout
     20250101000011_notifications.sql           fn_notify, job queue, dashboard stats
-    20250101000012_rls.sql                     views, 91 policies, all grants
+    20250101000012_rls.sql                     views, 94 policies, all grants
     20250101000013_public_rpcs.sql             guest cart, applications, admin transitions
     20250101000014_triggers_storage.sql        triggers, column guards, buckets
     20250101000015_seed.sql                    idempotent reference content
@@ -222,7 +222,7 @@ inventory, and the first-administrator bootstrap.
 | Document | Covers |
 | --- | --- |
 | [01 · System architecture](./docs/01-system-architecture.md) | Context and container diagrams, the four surfaces, request lifecycle, trust boundaries, deployment, and every Supabase feature in use. |
-| [02 · Database schema](./docs/02-database-schema.md) | All 47 tables by domain, ER diagrams, invariants, the 22 enums, column guards, index strategy, storage buckets. |
+| [02 · Database schema](./docs/02-database-schema.md) | All 48 tables by domain, ER diagrams, invariants, the 22 enums, column guards, index strategy, storage buckets. |
 | [03 · User flows](./docs/03-user-flows.md) | Seven end-to-end sequences with the permission decision at each step. |
 | [04 · API specification](./docs/04-api-specification.md) | Every RPC with signature, return, callers and errors; the client wrapper for each; the PostgREST table surface; Edge Function contracts. |
 | [05 · Authentication model](./docs/05-authentication-model.md) | Signup, sessions, refresh, the provisioning trigger, roles as a table, why route guards are UX. |
@@ -260,7 +260,7 @@ page.
 
 | Area | Evidence |
 | --- | --- |
-| Schema and logic | 17 migrations, 5,930 lines, executing cleanly under `npm run validate:sql`: 47 tables (all RLS-enabled), 91 policies, 42 public functions, 20 private, 28 triggers, 22 enums, 152 indexes. |
+| Schema and logic | 19 migrations, 6,706 lines, executing cleanly under `npm run validate:sql`: 48 tables (all RLS-enabled), 94 policies, 44 public functions, 20 private, 29 triggers, 22 enums, 159 indexes. |
 | Availability and booking | `fn_service_slots`, `fn_hold_slot`, `fn_create_appointment`, `fn_set_appointment_status`, `fn_cancel_appointment`, `fn_reschedule_appointment`, the exclusion constraint, the transition graph. `BookingPage` (1,076 lines) and its `TimeGrid`, `DateStrip`, `RequirementStep` and `ReferenceUploader` components. |
 | Commerce | Cart, coupons, checkout (`CheckoutPage`, 832 lines), success page, offline payment capture, the inventory ledger. |
 | Discovery | Home, about, services, service detail, shop, product detail, gallery, contact, policies, search, 404, cart. |

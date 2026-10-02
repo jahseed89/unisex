@@ -42,6 +42,75 @@ function hash(value: string): number {
   return Math.abs(h)
 }
 
+/**
+ * Placeholder artwork for slots with no photograph yet.
+ *
+ * Three layers, all in the brand's warm neutral range: a tonal ground, an arch
+ * that reads as a salon mirror, and a fine strand texture. Deterministic on
+ * `seed` so a grid of unphotographed tiles stays visually stable rather than
+ * reshuffling between renders, with only a narrow hue range so the grid reads
+ * as one palette.
+ */
+function Placeholder({ seed, alt }: { seed: string; alt: string }) {
+  const value = hash(seed)
+  const hue = 26 + (value % 8)
+  const angle = 96 + (value % 24)
+  const archX = 58 + (value % 24)
+  const uid = `ph-${value}`
+
+  return (
+    <div
+      className="media-placeholder absolute inset-0"
+      role="img"
+      aria-label={alt}
+      style={{
+        backgroundImage: `linear-gradient(${angle}deg, hsl(${hue} 26% 93%) 0%, hsl(${hue + 4} 20% 88%) 48%, hsl(${hue - 3} 22% 83%) 100%)`,
+      }}
+    >
+      <svg className="size-full" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" aria-hidden>
+        <defs>
+          {/* Strand texture: fine, low contrast, reads as hair at any scale. */}
+          <pattern
+            id={`${uid}-strand`}
+            width="7"
+            height="7"
+            patternUnits="userSpaceOnUse"
+            patternTransform={`rotate(${(value % 24) - 12})`}
+          >
+            <path
+              d="M0 7 Q 1.75 1.5 3.5 7 T 7 7"
+              fill="none"
+              stroke={`hsl(${hue} 26% 38%)`}
+              strokeWidth="0.55"
+              opacity="0.5"
+            />
+          </pattern>
+
+          {/* Mirror arch: a vertical highlight, as if lit from a fitting room. */}
+          <linearGradient id={`${uid}-arch`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#FBF8F4" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#FBF8F4" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+
+        <rect width="200" height="200" fill={`url(#${uid}-strand)`} opacity="0.34" />
+
+        <path
+          d={`M ${archX} 200 L ${archX} ${70} Q 100 ${18} ${200 - archX} ${70} L ${200 - archX} 200 Z`}
+          fill={`url(#${uid}-arch)`}
+        />
+        <path
+          d={`M ${archX} 200 L ${archX} ${70} Q 100 ${18} ${200 - archX} ${70} L ${200 - archX} 200`}
+          fill="none"
+          stroke={`hsl(${hue} 30% 34%)`}
+          strokeWidth="0.7"
+          opacity="0.28"
+        />
+      </svg>
+    </div>
+  )
+}
+
 export function MediaFrame({
   src,
   alt,
@@ -55,11 +124,6 @@ export function MediaFrame({
 }: MediaFrameProps) {
   const [failed, setFailed] = useState(false)
   const showImage = Boolean(src) && !failed
-  const value = hash(seed)
-
-  // Three warm tones keep placeholders distinguishable but harmonious.
-  const hue = 24 + (value % 14)
-  const angle = (value % 90) + 10
 
   return (
     <div
@@ -81,33 +145,7 @@ export function MediaFrame({
           className={cn('size-full object-cover', imgClassName)}
         />
       ) : (
-        <div
-          className="media-placeholder absolute inset-0"
-          role="img"
-          aria-label={alt}
-          style={{
-            backgroundImage: `linear-gradient(${angle}deg, hsl(${hue} 28% 92%) 0%, hsl(${hue + 6} 22% 87%) 45%, hsl(${hue - 4} 25% 84%) 100%)`,
-          }}
-        >
-          <svg
-            className="size-full opacity-[0.22]"
-            viewBox="0 0 200 200"
-            preserveAspectRatio="none"
-            aria-hidden
-          >
-            <defs>
-              <pattern id={`hx-${value}`} width="18" height="18" patternUnits="userSpaceOnUse">
-                <path
-                  d="M0 9 Q 4.5 0 9 9 T 18 9"
-                  fill="none"
-                  stroke={`hsl(${hue} 30% 40%)`}
-                  strokeWidth="0.9"
-                />
-              </pattern>
-            </defs>
-            <rect width="200" height="200" fill={`url(#hx-${value})`} />
-          </svg>
-        </div>
+        <Placeholder seed={seed} alt={alt} />
       )}
 
       {children}

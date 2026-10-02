@@ -1,4 +1,16 @@
 import type { SalonLocation } from '@/types'
+import { site } from '@/config/site'
+
+/**
+ * One-line postal address, composed from config.
+ *
+ * Used as the fallback when no `salon_locations` row reached the client. Deriving
+ * it here rather than hardcoding a copy is deliberate: a hardcoded fallback is
+ * how an old address keeps shipping after the studio moves.
+ */
+export function siteAddressLine(): string {
+  return `${site.address.street}, ${site.address.locality}, ${site.address.region}`
+}
 
 /**
  * iCalendar export.
@@ -91,6 +103,6 @@ export function downloadAppointmentIcs(input: IcsEventInput): void {
 export function directionsUrl(location: Pick<SalonLocation, 'address_line1' | 'city' | 'state'> | null): string {
   const query = location
     ? `${location.address_line1}, ${location.city}, ${location.state}`
-    : 'Black Chery Unisex Studio, 12 Adeola Odeku Street, Victoria Island, Lagos'
+    : `${site.name}, ${siteAddressLine()}`
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
 }

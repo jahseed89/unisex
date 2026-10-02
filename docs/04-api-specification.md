@@ -2,7 +2,7 @@
 
 There is no REST API written by hand. The API surface is:
 
-1. **PostgREST** over 47 tables, three views and 42 `public.fn_*` RPCs (`/rest/v1/*`).
+1. **PostgREST** over 48 tables, three views and 44 `public.fn_*` RPCs (`/rest/v1/*`).
 2. **GoTrue** for identity (`/auth/v1/*`).
 3. **Storage** for objects (`/storage/v1/object/*`).
 4. **Edge Functions** (`/functions/v1/*`) — three are specified below and **none are implemented**.
@@ -423,7 +423,7 @@ cron jobs need back to `service_role` explicitly.
 ## PostgREST table surface
 
 Two independent gates. A query needs **a grant for the role** *and* **a passing policy** (RLS is
-enabled on all 47 tables, so no policy means no rows).
+enabled on all 48 tables, so no policy means no rows).
 
 ### Public views (anon + authenticated)
 

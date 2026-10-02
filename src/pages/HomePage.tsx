@@ -184,7 +184,7 @@ export default function HomePage() {
               </h1>
 
               <p className="lede mt-7 max-w-xl">
-                A studio on Adeola Odeku where the brief comes before the brush.
+                A studio at {site.address.street} where the brief comes before the brush.
                 Tell us about your hair, share a reference, pick a time — and the
                 stylist you booked walks in already knowing the look you want.
               </p>
@@ -231,9 +231,9 @@ export default function HomePage() {
           <h2 className="sr-only">Black Chery Unisex Studio at a glance</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Stat
-              label="Years on Adeola Odeku"
+              label="Years in Ajah"
               value={YEARS_OPEN}
-              hint={`Since ${2014}, Victoria Island`}
+              hint={`Since ${2014}, ${site.address.locality}`}
               icon={<Clock aria-hidden />}
             />
             <Stat
@@ -479,7 +479,7 @@ export default function HomePage() {
             <EmptyState
               icon={<Sparkles aria-hidden />}
               title="The boutique is restocking"
-              description="New stock lands every week. Pop into the studio on Adeola Odeku or ask your stylist to order what you need."
+              description={`New stock lands every week. Pop into the studio at ${site.address.street} or ask your stylist to order what you need.`}
               action={
                 <Button asChild size="lg">
                   <Link to="/contact">Ask us what is in stock</Link>
@@ -794,7 +794,7 @@ function HeroCollage() {
         <MediaFrame
           className="col-span-3 row-span-2 rounded-lg"
           src={null}
-          alt="The studio floor on Adeola Odeku with mirrors, plants and styling chairs"
+          alt={`The studio floor at ${site.address.street} with mirrors, plants and styling chairs`}
           seed="hero-quinary-studio"
           aspect="auto"
         />

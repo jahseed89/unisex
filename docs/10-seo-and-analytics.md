@@ -123,10 +123,10 @@ The local-business node every other builder references by `@id`.
   "paymentAccepted": "Credit Card, Bank Transfer, USSD, Mobile Money, Cash",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "12 Adeola Odeku Street",
-    "addressLocality": "Victoria Island",
+    "streetAddress": "Ogombo Roundabout",
+    "addressLocality": "Ajah",
     "addressRegion": "Lagos",
-    "postalCode": "106104",
+    "postalCode": "101245",
     "addressCountry": "NG"
   },
   "sameAs": ["https://instagram.com/blackcheryunisexstudio", "…/facebook", "…/tiktok", "…/x"]
@@ -218,7 +218,7 @@ review count is invalid and risks a manual action. Optional fields are `undefine
   "datePosted": "2026-09-28",
   "employmentType": "FULL TIME",
   "hiringOrganization": { "@type": "Organization", "name": "Black Chery Unisex Studio", "sameAs": "…" },
-  "jobLocation": { "@type": "Place", "address": { "@type": "PostalAddress", "addressLocality": "Victoria Island", "addressRegion": "Lagos", "addressCountry": "NG" } },
+  "jobLocation": { "@type": "Place", "address": { "@type": "PostalAddress", "addressLocality": "Ajah", "addressRegion": "Lagos", "addressCountry": "NG" } },
   "baseSalary": {
     "@type": "MonetaryAmount", "currency": "NGN",
     "value": { "@type": "QuantitativeValue", "minValue": 120000, "maxValue": 220000, "unitText": "MONTH" }

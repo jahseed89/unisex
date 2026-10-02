@@ -215,14 +215,26 @@
   }
   .skip-link:focus { top: 1rem; }
 
-  /* Placeholder block used while real photography is unavailable. */
+  /*
+   * Placeholder surface used while a photograph has not been published.
+   *
+   * The tonal ground lives here so it is available as a fallback, but
+   * MediaFrame sets `background-image` inline (the gradient angle is derived
+   * from the slot seed) and an inline declaration beats any stylesheet rule.
+   * Layout is deliberately not set here so the component controls how its
+   * artwork is positioned -- the previous `display: grid; place-items: center`
+   * fought the SVG and left it unsized.
+   */
   .media-placeholder {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
     background-color: var(--color-sand);
-    background-image:
-      radial-gradient(circle at 25% 20%, rgba(169, 132, 103, 0.14), transparent 55%),
-      radial-gradient(circle at 75% 80%, rgba(181, 113, 79, 0.1), transparent 55%);
-    display: grid;
-    place-items: center;
+  }
+  .media-placeholder > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
   .skeleton {

@@ -869,6 +869,27 @@ export interface DashboardStats {
 }
 
 // ---------------------------------------------------------------------------
+// Photography
+// ---------------------------------------------------------------------------
+
+/**
+ * What a photograph shows. Determines which surface embeds it.
+ *
+ * Mirrors the `studio_media.kind` check constraint in
+ * `supabase/migrations/20250101000019_media_pipeline.sql`; keep the two in step.
+ */
+export type MediaKind =
+  | 'hero'
+  | 'interior'
+  | 'team'
+  | 'stylist'
+  | 'service'
+  | 'product'
+  | 'gallery'
+  | 'before_after'
+  | 'other'
+
+// ---------------------------------------------------------------------------
 // Generic helpers
 // ---------------------------------------------------------------------------
 export type Nullable<T> = T | null

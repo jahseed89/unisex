@@ -1,7 +1,7 @@
 # 02 · Database schema
 
-Seventeen migrations, 5,930 lines, 47 tables, 22 enums, 152 indexes, 42 public functions, 20 private
-functions, 28 triggers and 91 public-schema RLS policies. This document organises the tables by
+Nineteen migrations, 6,706 lines, 48 tables, 22 enums, 159 indexes, 44 public functions, 20 private
+functions, 29 triggers and 94 public-schema RLS policies. This document organises the tables by
 domain, then explains the design decisions and the invariants each domain enforces.
 
 | Migration | File | Contents |
@@ -787,7 +787,7 @@ The remaining 24 triggers:
 
 ## Index strategy
 
-152 indexes on 47 tables. Four patterns carry most of the weight.
+159 indexes on 48 tables. Four patterns carry most of the weight.
 
 **Partial indexes for lifecycle state.** `services_active_order_idx … where status = 'active'`,
 `products_active_idx … where status = 'active'`, `variants_product_idx … where is_active`,

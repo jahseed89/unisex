@@ -52,7 +52,7 @@ flowchart TB
   subgraph Supabase["Supabase project (the whole backend)"]
     Auth["GoTrue / Auth<br/>email+password, magic link, Google"]
     PostgREST["PostgREST<br/>/rest/v1 tables and RPCs"]
-    PG["PostgreSQL 15+<br/>47 tables, RLS on all of them<br/>42 public + 20 private functions"]
+    PG["PostgreSQL 15+<br/>48 tables, RLS on all of them<br/>44 public + 20 private functions"]
     Storage["Storage<br/>6 buckets, 7 object policies"]
     Edge["Edge Functions (Deno)<br/>not implemented"]
     Cron["pg_cron<br/>not registered"]
@@ -149,7 +149,7 @@ The browser owns:
 
 Postgres owns:
 
-- every authorisation decision (91 policies plus the helpers they call);
+- every authorisation decision (94 policies plus the helpers they call);
 - every calculation that involves money, stock or a date window;
 - every state transition, with the legal graph enforced in plpgsql;
 - every derived value (`balance_due`, ratings, daily slot counts);
@@ -199,7 +199,7 @@ Three things are worth calling out in that diagram.
 bearer token. No policy ever accepts a caller-supplied user id, so "acting as someone else" is not
 expressible in a request.
 
-**Deny by default.** RLS is enabled on all 47 tables. A table with no matching policy returns zero
+**Deny by default.** RLS is enabled on all 48 tables. A table with no matching policy returns zero
 rows, so a forgotten grant fails closed rather than open.
 
 **Writes are functions, not row updates.** `fn_create_appointment`, `fn_checkout`,
@@ -263,8 +263,8 @@ bundle. Paystack secret keys and WhatsApp tokens belong in Edge Function environ
 | Feature | Used for | Status |
 | --- | --- | --- |
 | **Auth (GoTrue)** | Signup, sign in, magic-link OTP, Google OAuth, password reset, email confirmation, session persistence and refresh. Client: `src/features/auth/AuthProvider.tsx`. | Implemented. Local config in `supabase/config.toml`; Google is disabled there and must be enabled per project. |
-| **PostgreSQL** | The entire domain model and all business logic: 47 tables, 42 public functions, 20 private functions, 22 enums, 152 indexes. | Implemented. |
-| **Row Level Security** | The authorisation boundary. Enabled on all 47 tables; 91 public-schema policies plus 7 `storage.objects` policies. | Implemented. |
+| **PostgreSQL** | The entire domain model and all business logic: 48 tables, 44 public functions, 20 private functions, 22 enums, 159 indexes. | Implemented. |
+| **Row Level Security** | The authorisation boundary. Enabled on all 48 tables; 94 public-schema policies plus 7 `storage.objects` policies. | Implemented. |
 | **`SECURITY DEFINER` functions** | Every privileged write path and every cross-owner read. Locked `search_path` on each. | Implemented. |
 | **Public views** | `staff_public`, `service_catalog`, `product_catalog` — narrow, column-filtered reads for anonymous traffic. Created `security_invoker = false`. | Implemented. |
 | **Storage** | Six buckets: `service-images`, `gallery`, `products` (public, media); `requirements`, `applications` (private, personal data); `avatars` (public, self-service). Buckets are created in migration 0014 so local and hosted match. | Implemented. Only the three private/self-service buckets have client write policies. |

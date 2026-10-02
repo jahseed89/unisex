@@ -131,7 +131,7 @@ export default function ShopPage() {
         description={
           kind
             ? `${KIND_LABELS[kind]} we keep in stock at the studio — graded bundles, ready-to-wear units and the accessories that make them sit properly.`
-            : 'Wigs, extensions, treatments and tools — the same stock we use in the salon chairs on Adeola Odeku.'
+            : 'Wigs, extensions, treatments and tools — the same stock we use in the salon chairs at Ogombo.'
         }
         breadcrumb={[{ label: 'Shop', to: '/shop' }]}
       >
@@ -177,7 +177,7 @@ export default function ShopPage() {
             <Assurance
               icon={<Truck className="size-4" aria-hidden />}
               title="Same-day pickup in Lagos"
-              body="Order before 4pm on a working day and collect from Victoria Island that evening."
+              body="Order before 4pm on a working day and collect from Ajah that evening."
             />
             <Assurance
               icon={<PackageSearch className="size-4" aria-hidden />}

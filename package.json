@@ -8,10 +8,11 @@
     "node": ">=20.11.0"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b --noEmit && vite build && npm run seo:generate",
-    "build:fast": "tsc -b --noEmit && vite build",
+    "dev": "npm run media:sync && vite",
+    "build": "npm run media:sync && tsc -b --noEmit && vite build && npm run seo:generate",
+    "build:fast": "npm run media:sync && tsc -b --noEmit && vite build",
     "preview": "vite preview",
+    "media:sync": "node scripts/sync-media-manifest.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc -b --noEmit",

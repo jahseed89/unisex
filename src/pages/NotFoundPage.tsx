@@ -45,7 +45,7 @@ const DESTINATIONS = [
     to: '/about',
     icon: Users,
     title: 'About the studio',
-    body: 'Twelve years on Adeola Odeku, and the team behind the chairs.',
+    body: `Twelve years at ${site.address.street}, and the team behind the chairs.`,
   },
   {
     to: '/careers',

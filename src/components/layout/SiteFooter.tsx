@@ -1,12 +1,16 @@
 import { Link } from 'react-router-dom'
 import { Instagram, Facebook, Mail, MapPin, MessageCircle, Phone } from 'lucide-react'
 import { footerNav, site } from '@/config/site'
+import { publishedCredits } from '@/config/media'
 import { whatsappLink } from '@/lib/utils/format'
 import { Button } from '@/components/ui'
 
 /** Public site footer: sitemap, contact details and the WhatsApp channel. */
 export function SiteFooter() {
   const year = new Date().getFullYear()
+  // Empty unless a borrowed photograph has been published, so this costs
+  // nothing in the normal case.
+  const credits = publishedCredits()
 
   return (
     <footer className="border-t border-line bg-sand">
@@ -158,6 +162,39 @@ export function SiteFooter() {
             <Link to="/policies/bookings" className="transition-colors hover:text-ink">
               Bookings policy
             </Link>
+            {/* Attribution for borrowed photography. Hidden when there is
+                none, which is the normal case — the studio owns its own work.
+                CC BY and CC BY-SA require visible credit, so this must not be
+                dropped for layout reasons. */}
+            {credits.length > 0 && (
+              <details className="relative">
+                <summary className="cursor-pointer list-none transition-colors hover:text-ink">
+                  Photo credits
+                </summary>
+                <div className="absolute bottom-full right-0 z-10 mb-2 w-80 max-w-[80vw] rounded-lg border border-line bg-canvas p-4 text-left shadow-lg">
+                  <p className="mb-2 font-medium text-ink">Image credits</p>
+                  <ul className="space-y-1.5">
+                    {credits.map((credit) => (
+                      <li key={credit.file} className="leading-relaxed">
+                        {credit.source.startsWith('http') ? (
+                          <a
+                            href={credit.source}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline underline-offset-2 hover:text-ink"
+                          >
+                            {credit.author}
+                          </a>
+                        ) : (
+                          credit.author
+                        )}{' '}
+                        · {credit.license}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </details>
+            )}
           </div>
         </div>
       </div>

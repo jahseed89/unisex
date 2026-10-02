@@ -367,8 +367,9 @@ The contract, and the code, agree on these:
 
 ## Placeholder media
 
-Real photography is not in place, and the seed data references image URLs that do not resolve. Rather
-than ship broken image icons, `MediaFrame` renders a deterministic, on-brand surface.
+Real photography is not in place yet, and rather than ship broken image icons `MediaFrame` renders
+a deterministic, on-brand surface. Three layers: a tonal ground whose gradient angle is derived from
+the slot seed, an arch that reads as a salon mirror, and a fine strand texture.
 
 ```ts
 function hash(value: string): number {          // FNV-1a
@@ -378,32 +379,28 @@ function hash(value: string): number {          // FNV-1a
 }
 
 const value = hash(seed)                        // seed is usually the slug
-const hue   = 24 + (value % 14)                 // 24–37: a narrow warm band
-const angle = (value % 90) + 10
+const hue   = 26 + (value % 8)                  // 26–33: a narrow warm band
+const angle = 96 + (value % 24)
 ```
 
-The same slug always produces the same hue, angle and pattern, so a product grid looks composed rather
-than random, and re-rendering never causes a visual reshuffle. The palette is constrained to hues
-24–37 — ochre through terracotta — so a wall of placeholders is unmistakably on-brand.
+The same slug always produces the same composition, so a product grid looks composed rather than
+random and re-rendering never causes a visual reshuffle. The palette is constrained to hues 26–33
+so a wall of placeholders is unmistakably on-brand.
 
-The surface is a three-stop `hsl` gradient under a tiled SVG wave pattern at 0.22 opacity, layered over
-the `.media-placeholder` class:
+`.media-placeholder` sets only the base colour and the containing block. The gradient is applied
+inline because it is seed-derived and an inline declaration beats the stylesheet. Layout is
+deliberately not set in CSS: an earlier `display: grid; place-items: center` fought the SVG and left
+it unsized.
 
-```css
-.media-placeholder {
-  background-color: var(--color-sand);
-  background-image:
-    radial-gradient(circle at 25% 20%, rgba(169, 132, 103, 0.14), transparent 55%),
-    radial-gradient(circle at 75% 80%, rgba(181, 113, 79, 0.1), transparent 55%);
-  display: grid; place-items: center;
-}
-```
+Aspects are fixed by prop (`square | 4/3 | 3/2 | 16/9 | 4/5 | auto`, default `4/3`) so a grid of
+mixed media does not jitter while loading. `onError` flips the component to the placeholder, so a
+broken URL degrades rather than showing the browser's icon. Lazy loading is the default with
+`priority` opt-in for above-the-fold imagery (`loading="eager"`, `fetchPriority="high"`,
+`decoding="async"`).
 
-which puts the warm grain of the brand behind the gradient. Aspects are fixed by prop
-(`square | 4/3 | 3/2 | 16/9 | 4/5 | auto`, default `4/3`) so a grid of mixed media does not jitter
-while loading. `onError` flips the component to the placeholder, so a broken URL degrades rather than
-showing the browser's icon. Lazy loading is the default with `priority` opt-in for above-the-fold
-imagery (`loading="eager"`, `fetchPriority="high"`, `decoding="async"`).
+A slot with no photograph resolves to `null` rather than to a URL that would 404, which is what
+lets the fallback render. See [12 — Photography](./12-photography.md) for the manifest, the shot
+list and how to publish a photograph.
 
 `Avatar` uses the same hash for a hue, but falls back to initials on a filled circle
 (`initials()` from `src/lib/utils/format.ts` takes the first and last initial) with a

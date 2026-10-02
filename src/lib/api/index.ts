@@ -12,6 +12,7 @@ export * from './booking'
 export * from './commerce'
 export * from './recruitment'
 export * from './account'
+export * from './media'
 
 // The admin module deliberately reuses several function names from the
 // customer modules (listOrders, listProducts, listJobs). Exporting them

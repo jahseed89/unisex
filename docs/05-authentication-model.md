@@ -21,7 +21,7 @@ flowchart LR
     T["on_auth_user_created → fn_handle_new_user"]
     P1["profiles"]
     UR["user_roles + roles"]
-    P2["91 RLS policies"]
+    P2["94 RLS policies"]
   end
 
   U --> P

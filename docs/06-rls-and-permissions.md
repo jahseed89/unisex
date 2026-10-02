@@ -9,9 +9,9 @@ Migration 0012 states the four principles it implements:
    read `auth.uid()` or take a business key.
 4. Public catalogue reads go through narrow views so sensitive columns never reach the client.
 
-This document expands each one and gives the full matrix. The real numbers: **91 policies in
+This document expands each one and gives the full matrix. The real numbers: **94 policies in
 `public`** (all in migration 0012) plus **7 policies on `storage.objects`** in migration 0014;
-**45 of the 47 tables** have at least one policy.
+**45 of the 48 tables** have at least one policy.
 
 ---
 
@@ -95,7 +95,7 @@ policies that need "is this stylist mine", which the current policies express in
 
 ## Why `FORCE ROW LEVEL SECURITY` is deliberately not used
 
-Migration 0012 issues `alter table public.<t> enable row level security` for all 47 tables and never
+Migration 0012 issues `alter table public.<t> enable row level security` for all 48 tables and never
 issues `force row level security`. That is a decision, not an omission.
 
 `ENABLE ROW LEVEL SECURITY` makes policies apply to every role **except** roles with `BYPASSRLS` and
