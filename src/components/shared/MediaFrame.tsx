@@ -140,7 +140,10 @@ export function MediaFrame({
           alt={alt}
           loading={priority ? 'eager' : 'lazy'}
           decoding="async"
-          fetchPriority={priority ? 'high' : 'auto'}
+          // React 18 only forwards the lowercase DOM attribute; `fetchPriority`
+          // type-checks but warns on every image in the console. React 19 accepts
+          // the camelCase form, so this can go back to `fetchPriority` then.
+          {...{ fetchpriority: priority ? 'high' : 'auto' }}
           onError={() => setFailed(true)}
           className={cn('size-full object-cover', imgClassName)}
         />

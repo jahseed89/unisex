@@ -6,6 +6,7 @@ import { ArrowRight, CalendarDays, Heart, MapPin, MessageCircle, Scissors, Users
 import { getPage, getStylists, qk } from '@/lib/api'
 import { errorMessage } from '@/lib/supabase/errors'
 import { site } from '@/config/site'
+import { STUDIO_SHOTS, resolvePhoto } from '@/config/media'
 import { Alert, Badge, Button, Card, SectionHeading, Stat } from '@/components/ui'
 import { PageHeader, StylistCard } from '@/components/shared/Cards'
 import { ClosingCta, OpeningHoursCard, Section } from '@/components/shared/Blocks'
@@ -225,7 +226,7 @@ export default function AboutPage() {
           <div className="space-y-4">
             <MediaFrame
               className="rounded-lg"
-              src={page?.hero_image_url}
+              src={page?.hero_image_url ?? resolvePhoto(STUDIO_SHOTS.floor)}
               alt="The Black Chery Unisex Studio floor at Ogombo Roundabout, with styling chairs, mirrors and warm afternoon light"
               seed="about-studio-floor"
               aspect="4/5"
@@ -234,14 +235,14 @@ export default function AboutPage() {
             <div className="grid grid-cols-2 gap-4">
               <MediaFrame
                 className="rounded-lg"
-                src={null}
+                src={resolvePhoto(STUDIO_SHOTS.aboutStory)}
                 alt="A stylist parting a client's hair for a knotless braid install"
                 seed="about-braids-session"
                 aspect="1/1"
               />
               <MediaFrame
                 className="rounded-lg"
-                src={null}
+                src={resolvePhoto(STUDIO_SHOTS.productsShelf)}
                 alt="Shelves of hair care products and tools in the studio retail corner"
                 seed="about-retail-shelf"
                 aspect="1/1"

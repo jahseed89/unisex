@@ -19,6 +19,7 @@
  * photography the studio does not own; it renders in the footer credits.
  */
 import { PUBLISHED_PHOTOS } from './media.generated'
+import { PHOTO_CREDITS } from './media.credits'
 
 /** Attribution for a photo the studio does not own. Omit for studio photography. */
 export interface PhotoCredit {
@@ -297,11 +298,14 @@ export function resolvePhoto(slot: MediaSlot | null | undefined): string | null 
 /**
  * Every credited photograph currently published, for the footer credits link.
  *
- * Returns an empty list while the studio's own photography is in use, which is
- * the common case — attribution is only owed for borrowed work.
+ * Attribution lives in the generated `media.credits.ts` rather than inline on
+ * each slot: the studio's own photography needs none, so the overwhelmingly
+ * common case is a manifest with no `credit` keys at all. Credits are merged in
+ * here — the only consumer — which means `scripts/fetch-stock-photography.mjs`
+ * can write attribution without editing this file.
  *
- * Credit fields are flattened rather than nested under `credit` so a caller
- * rendering a list does not have to reach through two levels.
+ * Returns an empty list when nothing is borrowed, in which case the footer
+ * hides the disclosure entirely.
  */
 export function publishedCredits(): Array<PhotoCredit & { file: string; alt: string }> {
   const all: MediaSlot[] = [
@@ -309,7 +313,10 @@ export function publishedCredits(): Array<PhotoCredit & { file: string; alt: str
     ...Object.values(GALLERY_SLOTS).flat(),
   ]
   return all
-    .filter((s): s is MediaSlot & { credit: PhotoCredit } => Boolean(s.credit))
-    .filter((s) => Boolean(PUBLISHED_PHOTOS[s.file]))
-    .map((s) => ({ file: s.file, alt: s.alt, ...s.credit }))
+    .map((slot): (PhotoCredit & { file: string; alt: string }) | null => {
+      const credit = PHOTO_CREDITS[slot.file]
+      return credit ? { file: slot.file, alt: slot.alt, ...credit } : null
+    })
+    .filter((entry): entry is PhotoCredit & { file: string; alt: string } => entry !== null)
+    .filter((entry) => Boolean(PUBLISHED_PHOTOS[entry.file]))
 }

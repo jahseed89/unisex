@@ -26,6 +26,7 @@ import {
 import { errorMessage } from '@/lib/supabase/errors'
 import { analytics } from '@/lib/analytics'
 import { site } from '@/config/site'
+import { GALLERY_SLOTS, STUDIO_SHOTS, resolvePhoto } from '@/config/media'
 import { humanise } from '@/lib/utils/format'
 import { Alert, Badge, Button, Card, EmptyState, SectionHeading, Stat } from '@/components/ui'
 import { ProductCard, ServiceCard, StylistCard } from '@/components/shared/Cards'
@@ -763,7 +764,7 @@ function HeroCollage() {
       <div className="grid h-full grid-cols-5 grid-rows-6 gap-3 sm:gap-4">
         <MediaFrame
           className="col-span-3 row-span-4 rounded-lg"
-          src={null}
+          src={resolvePhoto(GALLERY_SLOTS.braids[0])}
           alt="Client braids finished at Black Chery Unisex Studio, mid-length knotless parting visible from the top"
           seed="hero-primary-knotless"
           aspect="auto"
@@ -771,7 +772,7 @@ function HeroCollage() {
         />
         <MediaFrame
           className="col-span-2 row-span-2 rounded-lg"
-          src={null}
+          src={resolvePhoto(GALLERY_SLOTS.locs[0])}
           alt="Two-tone locs sculpted and shaped in the studio's locs chair"
           seed="hero-secondary-locs"
           aspect="auto"
@@ -779,21 +780,21 @@ function HeroCollage() {
         />
         <MediaFrame
           className="col-span-2 row-span-2 rounded-lg"
-          src={null}
+          src={resolvePhoto(STUDIO_SHOTS.aboutStory)}
           alt="Braids artist working on a client's edges at a styling station"
           seed="hero-tertiary-braids"
           aspect="auto"
         />
         <MediaFrame
           className="col-span-2 row-span-2 rounded-lg"
-          src={null}
+          src={resolvePhoto(GALLERY_SLOTS.colour[0])}
           alt="Warm copper balayage colour finished on textured hair"
           seed="hero-quaternary-colour"
           aspect="auto"
         />
         <MediaFrame
           className="col-span-3 row-span-2 rounded-lg"
-          src={null}
+          src={resolvePhoto(STUDIO_SHOTS.floor)}
           alt={`The studio floor at ${site.address.street} with mirrors, plants and styling chairs`}
           seed="hero-quinary-studio"
           aspect="auto"
@@ -846,7 +847,7 @@ function RequirementMock() {
           <div className="relative">
             <MediaFrame
               className="rounded-lg"
-              src={null}
+              src={resolvePhoto(GALLERY_SLOTS.braids[3])}
               alt="Reference image a client uploaded of the knotless braids they want, with waist-length panels and a defined edge"
               seed="requirement-reference-upload"
               aspect="4/5"

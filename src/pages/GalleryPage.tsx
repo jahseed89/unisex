@@ -6,6 +6,7 @@ import { Camera, ImageOff, Images, Maximize2 } from 'lucide-react'
 import { getGallery, qk } from '@/lib/api'
 import { errorMessage } from '@/lib/supabase/errors'
 import { site } from '@/config/site'
+import { PHOTO_CREDITS } from '@/config/media.credits'
 import { cn } from '@/lib/utils/cn'
 import { humanise } from '@/lib/utils/format'
 import {
@@ -51,6 +52,17 @@ type CategoryValue = (typeof CATEGORIES)[number]['value']
 
 /** Stable empty array, so memoised derivations keep a constant dependency. */
 const NO_ITEMS: GalleryItem[] = []
+
+/**
+ * True while the gallery is running on borrowed photography.
+ *
+ * The page claims its images are the studio's own work, on a real client, with
+ * permission — and it also links before/after shots as evidence of a result.
+ * That claim has to follow whatever is actually published, or the site is
+ * asserting something untrue about a booking decision. Driven by the generated
+ * credits rather than a flag, so it flips the moment real photography lands.
+ */
+const usesBorrowedPhotography = Object.keys(PHOTO_CREDITS).length > 0
 
 function whatsappHref(message: string): string {
   return `https://wa.me/${site.contact.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`
@@ -121,7 +133,11 @@ export default function GalleryPage() {
       <PageHeader
         eyebrow="The gallery"
         title="Work from the floor, not from a mood board"
-        description="Every image here was taken in the studio on a real client, with their permission. Filter by what you are planning, then tap any shot to see it properly."
+        description={
+          usesBorrowedPhotography
+            ? 'Representative looks from our work, shown while our own studio photography is being shot. Filter by what you are planning, then tap any shot to see it properly.'
+            : 'Every image here was taken in the studio on a real client, with their permission. Filter by what you are planning, then tap any shot to see it properly.'
+        }
         breadcrumb={[{ label: 'Gallery', to: '/gallery' }]}
         action={
           <Button asChild size="xl">
@@ -428,7 +444,10 @@ function LightboxBody({ item }: { item: GalleryItem }) {
               </Badge>
             </div>
             <figcaption className="text-xs leading-relaxed text-muted">
-              {panel.label} — photographed in the studio with the client&rsquo;s permission.
+              {panel.label} —{' '}
+              {usesBorrowedPhotography
+                ? 'representative of the work we do.'
+                : 'photographed in the studio with the client’s permission.'}
             </figcaption>
           </figure>
         ))}

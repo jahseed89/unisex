@@ -13,6 +13,7 @@
     "build:fast": "npm run media:sync && tsc -b --noEmit && vite build",
     "preview": "vite preview",
     "media:sync": "node scripts/sync-media-manifest.mjs",
+    "media:fetch": "node scripts/fetch-stock-photography.mjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc -b --noEmit",

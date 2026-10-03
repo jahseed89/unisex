@@ -21,6 +21,7 @@ import {
 import { getGallery, getJobDepartments, listJobs, qk } from '@/lib/api'
 import { errorMessage } from '@/lib/supabase/errors'
 import { site } from '@/config/site'
+import { STUDIO_SHOTS, resolvePhoto } from '@/config/media'
 import { humanise } from '@/lib/utils/format'
 import { cn } from '@/lib/utils/cn'
 import {
@@ -807,7 +808,7 @@ function StudioCollage({
       <div className="grid gap-4">
         <div className="overflow-hidden rounded-xl border border-line bg-sand">
           <MediaFrame
-            src={null}
+            src={resolvePhoto(STUDIO_SHOTS.careersTeam)}
             alt={`The ${site.name} floor at ${site.address.street}`}
             seed="careers-hero"
             aspect="4/5"

@@ -14,6 +14,9 @@ No component, fixture, migration or database change. `src/config/media.ts` is th
 shot list; `public/images/README.md` is the same information laid out as a table
 for whoever is holding the camera.
 
+Until the studio has shot anything, `npm run media:fetch` fills those slots with
+stock photography instead — see [Borrowed photography](#borrowed-photography).
+
 ## Two pipelines, on purpose
 
 | | Build-time (`public/images`) | Runtime (Supabase Storage) |
@@ -129,6 +132,53 @@ Migration `20250101000019_media_pipeline.sql` adds:
 - `deleteStudioPhoto(media)` — registry row first, then the object. The reverse
   order would leave a row pointing at a deleted file, which renders as a broken
   image.
+
+## Borrowed photography
+
+`scripts/fetch-stock-photography.mjs` fills slots from Pexels or Unsplash so the
+site is not a wall of placeholders before the first shoot. It needs a free API
+key in the shell — nothing is written to disk and the key is never committed:
+
+```sh
+PEXELS_API_KEY=… npm run media:fetch -- --yes   # Pexels
+UNSPLASH_ACCESS_KEY=… npm run media:fetch -- --yes   # Unsplash
+```
+
+Omit `--yes` for a dry run that prints the plan without downloading. `--only=braids`
+restricts it to matching slots.
+
+How it works:
+
+- **The slot list is read, not retyped.** The script bundles `src/config/media.ts`
+  with the esbuild that ships with Vite, so adding a slot to the manifest is
+  enough to make it a target and the two can never drift.
+- **Size comes from the manifest.** Each slot's declared `width`/`height` become
+  the crop, capped at 1200px on the long edge.
+- **Resizing is done by the provider's CDN** (`?auto=compress&cs=tinysrgb&fit=crop`
+  on Pexels), which also converts to sRGB. Nothing in the repo needs an image
+  library, and files land well under the 300 KB standard.
+- **Each photograph is used once.** Results are de-duplicated by provider id, and
+  the candidate whose aspect ratio is closest to the slot wins, so a centre crop
+  does not cut a face in half.
+- **Attribution is written automatically** to `src/config/media.credits.ts`, which
+  `publishedCredits()` merges into the footer disclosure. Both licenses permit
+  commercial use without attribution; the credits file is written anyway because
+  the studio's own photography is the expected end state.
+
+### What it will not fetch
+
+`gallery/transformation-01..04` are two before/after **pairs of the same client**,
+and the gallery links 01→02 and 03→04. Stock photography cannot supply that. Two
+unrelated photos presented as one person's transformation is a false claim about a
+result, on the page a customer decides whether to book from — so these slots are
+skipped by design and keep drawing their placeholder until the studio shoots them.
+
+This is also why the script does not simply take the top search hit. A generic
+query for this niche returns photographs that are technically hair and useless as
+evidence of the work: a marble bust, a duck, a 1950s archival scan. Because the
+alt text in the manifest is written as a factual claim about the frame, a
+mismatched photograph makes the site assert something untrue. Review the gallery
+before shipping stock to production.
 
 ## Photography standards
 
