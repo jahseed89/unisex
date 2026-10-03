@@ -1034,6 +1034,226 @@ export const application_events = job_applications.flatMap((application, index) 
 ])
 
 // ---------------------------------------------------------------------------
+// Demo identities
+//
+// Declared here rather than at the foot of the file because the order history
+// below seeds against `DEMO_ACCOUNT.id` — `listOrders` filters on
+// `customer_id`, so a mismatched id renders the empty state.
+// ---------------------------------------------------------------------------
+
+export const DEMO_ACCOUNT = {
+  id: 'd0000000-0000-4000-8000-000000000001',
+  email: 'demo@example.com',
+  password: 'demo1234',
+  full_name: 'Demo Customer',
+}
+
+export const DEMO_ADMIN = {
+  id: STAFF_IDS[1],
+  email: 'tunde@blackcheryunisexstudio.com',
+  password: 'demo1234',
+  full_name: 'Tunde Bakare',
+  roles: ['staff', 'admin'],
+}
+
+export const DEMO_STAFF = {
+  id: STAFF_IDS[0],
+  email: 'adaeze@blackcheryunisexstudio.com',
+  password: 'demo1234',
+  full_name: 'Adaeze Okonkwo',
+  roles: ['staff'],
+}
+
+// ---------------------------------------------------------------------------
+// Order history
+//
+// Seeded for the demo customer so "sign in -> Orders" shows real rows. With
+// this table empty the page renders its empty state, which reads as *orders are
+// broken* rather than *this customer has never ordered* — and it made session
+// persistence impossible to verify, since there was nothing to come back to
+// after signing out and back in.
+//
+// The four orders deliberately cover every tab on `AccountOrdersPage` (all / in
+// progress / delivered / cancelled) so the client-side filtering is exercised
+// too, and the amounts are internally consistent: `subtotal` is the sum of the
+// line totals, and `total` adds shipping and subtracts the discount.
+// ---------------------------------------------------------------------------
+
+const orderId = (index: number) => `e${String(index).padStart(7, '0')}-0000-4000-8000-000000000000`
+const orderItemId = (index: number) =>
+  `f1${String(index).padStart(6, '0')}-0000-4000-8000-000000000000`
+const paymentId = (index: number) => `e1${String(index).padStart(6, '0')}-0000-4000-8000-000000000000`
+
+const DEMO_ADDRESS = {
+  line1: '14 Admiralty Way',
+  line2: 'Dolphin Estate',
+  city: 'Lekki Phase 1',
+  state: 'Lagos',
+  landmark: 'Opposite the blue gate, second compound',
+  phone: '+2348000000099',
+}
+
+interface OrderSeed {
+  number: string
+  status: Record<string, unknown>['status']
+  payment_status: Record<string, unknown>['payment_status']
+  fulfilment_type: 'pickup' | 'delivery'
+  placed_at: string
+  /** Product indices from `PRODUCT_SEEDS`, with quantities. */
+  lines: Array<[productIndex: number, quantity: number]>
+  discount_total?: number
+  coupon_code?: string
+  shipping_total?: number
+  tracking_number?: string
+  courier?: string
+}
+
+const ORDER_SEEDS: OrderSeed[] = [
+  {
+    number: 'BCU-2501-0417',
+    status: 'delivered',
+    payment_status: 'paid',
+    fulfilment_type: 'delivery',
+    placed_at: '2025-01-14T09:12:00Z',
+    lines: [
+      [0, 1], // Glueless Bob Wig
+      [5, 2], // Edge & Growth Oil
+    ],
+    shipping_total: 0,
+    tracking_number: 'GIG-4471-0092',
+    courier: 'GIG Logistics',
+  },
+  {
+    number: 'BCU-2502-0533',
+    status: 'out_for_delivery',
+    payment_status: 'paid',
+    fulfilment_type: 'delivery',
+    placed_at: '2025-02-06T14:41:00Z',
+    lines: [
+      [2, 2], // Bone Straight Bundle
+      [6, 1], // Bond Repair Protein Mask
+    ],
+    shipping_total: 2500,
+    tracking_number: 'GIG-5518-0231',
+    courier: 'GIG Logistics',
+  },
+  {
+    number: 'BCU-2503-0618',
+    status: 'confirmed',
+    payment_status: 'awaiting_payment',
+    fulfilment_type: 'pickup',
+    placed_at: '2025-03-18T08:05:00Z',
+    lines: [[9, 1]], // Mulberry Silk Bonnet
+    coupon_code: 'WELCOME10',
+    discount_total: 1500,
+  },
+  {
+    number: 'BCU-2503-0704',
+    status: 'cancelled',
+    payment_status: 'refunded',
+    fulfilment_type: 'delivery',
+    placed_at: '2025-03-24T16:28:00Z',
+    lines: [
+      [3, 1], // Deep Curly Bundle
+      [8, 1], // Heat Protectant Spray
+    ],
+    shipping_total: 2500,
+  },
+]
+
+/** Unit price for a product index, from the same seed list the shop renders. */
+function unitPrice(productIndex: number): number {
+  return PRODUCT_SEEDS[productIndex]!.base_price
+}
+
+function productName(productIndex: number): string {
+  return PRODUCT_SEEDS[productIndex]!.name
+}
+
+export const orders: Record<string, unknown>[] = ORDER_SEEDS.map((seed, index) => {
+  const subtotal = seed.lines.reduce((sum, [p, qty]) => sum + unitPrice(p) * qty, 0)
+  const discount = seed.discount_total ?? 0
+  const shipping = seed.shipping_total ?? 0
+  const total = subtotal - discount + shipping
+
+  const isCancelled = seed.status === 'cancelled'
+  const isAwaiting = seed.payment_status === 'awaiting_payment'
+
+  return {
+    id: orderId(index),
+    order_number: seed.number,
+    customer_id: DEMO_ACCOUNT.id,
+    status: seed.status,
+    fulfilment_type: seed.fulfilment_type,
+    location_id: LOCATION_ID,
+    subtotal,
+    discount_total: discount,
+    shipping_total: shipping,
+    tax_total: 0,
+    total,
+    paid_total: isAwaiting ? 0 : total,
+    refund_total: isCancelled ? total : 0,
+    currency: 'NGN',
+    payment_status: seed.payment_status,
+    coupon_code: seed.coupon_code ?? null,
+    contact_name: DEMO_ACCOUNT.full_name,
+    contact_email: DEMO_ACCOUNT.email,
+    contact_phone: '+2348000000099',
+    delivery_address: seed.fulfilment_type === 'delivery' ? DEMO_ADDRESS : null,
+    delivery_notes: null,
+    customer_notes: null,
+    internal_notes: null,
+    cancel_reason: isCancelled ? 'Customer changed their mind' : null,
+    tracking_number: seed.tracking_number ?? null,
+    courier: seed.courier ?? null,
+    placed_at: seed.placed_at,
+    confirmed_at: isAwaiting ? null : seed.placed_at,
+    fulfilled_at: seed.status === 'delivered' ? seed.placed_at : null,
+    cancelled_at: isCancelled ? seed.placed_at : null,
+  }
+})
+
+export const order_items: Record<string, unknown>[] = ORDER_SEEDS.flatMap((seed, orderIndex) =>
+  seed.lines.map(([productIndex, quantity], lineIndex) => {
+    const unit = unitPrice(productIndex)
+    return {
+      id: orderItemId(orderIndex * 10 + lineIndex),
+      order_id: orderId(orderIndex),
+      product_id: productId(productIndex),
+      variant_id: product_variants[productIndex]!.id,
+      name_snapshot: productName(productIndex),
+      variant_snapshot: 'Standard',
+      sku_snapshot: product_variants[productIndex]!.sku,
+      image_snapshot: null,
+      attributes: {},
+      unit_price: unit,
+      quantity,
+      line_total: unit * quantity,
+      fulfilled_qty: seed.status === 'delivered' ? quantity : 0,
+      refunded_qty: seed.status === 'cancelled' ? quantity : 0,
+    }
+  }),
+)
+
+export const payments: Record<string, unknown>[] = ORDER_SEEDS.map((seed, index) => ({
+  id: paymentId(index),
+  reference: `PAY-${seed.number}-01`,
+  customer_id: DEMO_ACCOUNT.id,
+  order_id: orderId(index),
+  appointment_id: null,
+  provider: 'bank_transfer',
+  provider_reference: `TRF-${seed.number.replace(/-/g, '')}`,
+  amount: orders[index]!.total as number,
+  refunded_amount: seed.status === 'cancelled' ? (orders[index]!.total as number) : 0,
+  currency: 'NGN',
+  status: seed.payment_status,
+  channel: 'bank_transfer',
+  purpose: 'order',
+  paid_at: seed.payment_status === 'awaiting_payment' ? null : seed.placed_at,
+  created_at: seed.placed_at,
+}))
+
+// ---------------------------------------------------------------------------
 // Tables that start empty
 // ---------------------------------------------------------------------------
 export const emptyTables = {
@@ -1048,9 +1268,10 @@ export const emptyTables = {
   requirement_media: [] as Record<string, unknown>[],
   carts: [] as Record<string, unknown>[],
   cart_items: [] as Record<string, unknown>[],
-  orders: [] as Record<string, unknown>[],
-  order_items: [] as Record<string, unknown>[],
-  payments: [] as Record<string, unknown>[],
+  // Seeded above — see "Order history".
+  orders: orders as Record<string, unknown>[],
+  order_items: order_items as Record<string, unknown>[],
+  payments: payments as Record<string, unknown>[],
   notifications: [] as Record<string, unknown>[],
   notification_deliveries: [] as Record<string, unknown>[],
   notification_preferences: [] as Record<string, unknown>[],
@@ -1098,9 +1319,9 @@ export function buildDatabase(): Record<string, Record<string, unknown>[]> {
     requirement_media: emptyTables.requirement_media,
     carts: emptyTables.carts,
     cart_items: emptyTables.cart_items,
-    orders: emptyTables.orders,
-    order_items: emptyTables.order_items,
-    payments: emptyTables.payments,
+    orders,
+    order_items,
+    payments,
     notifications: emptyTables.notifications,
     notification_deliveries: emptyTables.notification_deliveries,
     notification_preferences: emptyTables.notification_preferences,
@@ -1110,29 +1331,6 @@ export function buildDatabase(): Record<string, Record<string, unknown>[]> {
     pages: emptyTables.pages,
     booking_holds: emptyTables.booking_holds,
   }
-}
-
-export const DEMO_ACCOUNT = {
-  id: 'd0000000-0000-4000-8000-000000000001',
-  email: 'demo@example.com',
-  password: 'demo1234',
-  full_name: 'Demo Customer',
-}
-
-export const DEMO_ADMIN = {
-  id: STAFF_IDS[1],
-  email: 'tunde@blackcheryunisexstudio.com',
-  password: 'demo1234',
-  full_name: 'Tunde Bakare',
-  roles: ['staff', 'admin'],
-}
-
-export const DEMO_STAFF = {
-  id: STAFF_IDS[0],
-  email: 'adaeze@blackcheryunisexstudio.com',
-  password: 'demo1234',
-  full_name: 'Adaeze Okonkwo',
-  roles: ['staff'],
 }
 
 export { img as fixtureImage }

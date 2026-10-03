@@ -66,6 +66,25 @@ max_frequency = "1s"
 otp_length = 6
 otp_expiry = 3600
 
+# Mailgun SMTP, for real confirmation / password-reset mail on the local stack.
+#
+# Leave `enabled = false` to fall back to the bundled inbucket catcher, which
+# prints any mail GoTrue sends into the Supabase logs — handy while working, but
+# nothing arrives in a real inbox. Flip to true once the env vars below are set.
+#
+# Put the sending-domain password in SUPABASE_AUTH_SMTP_PASS, never in this
+# file. The hosted project takes the same values at
+# Project Settings -> Auth -> SMTP, which is where confirmation mail must be
+# configured for production — this block only affects `supabase start`.
+[auth.email.smtp]
+enabled = false
+host = "smtp.mailgun.org"
+port = 587
+user = "env(SUPABASE_AUTH_SMTP_USER)"
+pass = "env(SUPABASE_AUTH_SMTP_PASS)"
+admin_email = "env(SUPABASE_AUTH_SMTP_ADMIN_EMAIL)"
+sender_name = "Black Chery Unisex Studio"
+
 [auth.sms]
 enable_signup = false
 enable_confirmations = false

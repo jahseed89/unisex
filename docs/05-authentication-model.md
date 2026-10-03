@@ -207,12 +207,54 @@ client_id  = "env(SUPABASE_AUTH_GOOGLE_CLIENT_ID)"
 secret     = "env(SUPABASE_AUTH_GOOGLE_SECRET)"
 ```
 
-To enable it, set the client id and secret in the Supabase dashboard (Authentication → Providers →
-Google), and add the callback URL `https://<project-ref>.supabase.co/auth/v1/callback` plus
-`/auth/confirm` to the project's allowed redirect URLs. The redirect lands on `AuthConfirmPage`,
-which is also currently a placeholder — the `session` handling itself works because
-`detectSessionInUrl` runs in the client, but the confirmation screen does not yet tell the person
-what happened.
+To enable it, three places must agree, or the button fails at a different step each time:
+
+1. **Google Cloud Console** → APIs & Services → Credentials → *Create credentials → OAuth client
+   ID*, type **Web application**.
+   - Authorised JavaScript origin: the app URL, e.g. `https://blackcheryunisexstudio.com`
+   - Authorised redirect URI: `https://blackcheryunisexstudio.com/auth/callback`
+   - Take the Client ID and Client Secret from this screen.
+2. **Supabase dashboard** → Authentication → Providers → Google. Paste the client id and secret,
+   and add both the callback URL `https://<project-ref>.supabase.co/auth/v1/callback` and
+   `/auth/confirm` to the project's allowed redirect URLs. Turn on *Skip Non-Supabase URL
+   Confirmation* for local testing.
+3. **`.env.local`**: `VITE_GOOGLE_AUTH_ENABLED=true`.
+
+Step 3 is the one that is easy to miss, because `isGoogleAuthEnabled()` gates the button itself —
+with the provider fully configured in Supabase the button still stays hidden, which reads as "Google
+sign-in is not implemented" rather than "a flag is off".
+
+The redirect lands on `AuthConfirmPage`, which is also currently a placeholder — the `session`
+handling itself works because `detectSessionInUrl` runs in the client, but the confirmation screen
+does not yet tell the person what happened.
+
+### Confirmation email — Mailgun over SMTP
+
+GoTrue sends confirmation, password-reset and invite mail through SMTP, and the free plan has a
+rate limit low enough to be unusable in production. Mailgun is the sending side:
+
+| Setting | Value |
+|---|---|
+| Host | `smtp.mailgun.org` |
+| Port | `587` (`465` with SSL if the region requires it) |
+| Username | `postmaster@<mailgun-sending-domain>` |
+| Password | the Mailgun **sending-domain** password |
+| Sender | `Black Chery <no-reply@mailgun-sending-domain>` |
+
+Two separate places, on purpose:
+
+- **Hosted project** — Project Settings → Auth → SMTP. This is the one that matters for real
+  confirmation email, and it is not expressible in this repo.
+- **Local stack** — `[auth.email.smtp]` in `supabase/config.toml`, currently `enabled = false`. With
+  it off, `supabase start` uses the bundled inbucket catcher and simply logs the mail; flip it on and
+  set `SUPABASE_AUTH_SMTP_USER` / `SUPABASE_AUTH_SMTP_PASS` to get real mail locally.
+
+Note `enable_confirmations = false` locally, which skips confirmation entirely so the seeded accounts
+work immediately. Turning real Mailgun mail on locally means also setting that to `true`, or nothing
+will be sent because nobody is waiting for a click.
+
+Neither the Mailgun API key nor the SMTP password belongs in a `VITE_*` variable — those are inlined
+into the public bundle. They live in the Supabase dashboard and in the local env file.
 
 ## The profile and role model
 

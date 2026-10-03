@@ -264,6 +264,21 @@ notification and cart badges), `RouteGuards` (`RequireAuth`, `RequireRole`, `Req
 `AccessDenied`), `RouteLoader` (`RouteLoader`, `CardGridSkeleton`, `HeroSkeleton`,
 `ContentSkeleton`), `ErrorBoundary`.
 
+The header row is a grid, not a flex row: `grid-cols-[auto_1fr]` on small screens and
+`xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]` from `xl`, giving three zones — brand, primary nav,
+account actions. The outer columns are equal so the nav is optically centred. `justify-between` was the
+wrong tool: it parked the nav in whatever space was left over, so the nav shifted sideways whenever the
+right-hand zone changed width (an anonymous "Log in" button vs. a named account pill).
+
+The inline nav appears at `xl` (1280px), not `lg`. The eight-item bar needs roughly 1.15k px of row —
+brand ≈315px, links ≈680px, actions ≈160px. At `lg` (1024px) there was ~240px too little, and because
+`<body>` sets `overflow-x: hidden`, the shortfall could not scroll: flex-shrink broke "Book Appointment"
+and "About Us" onto two lines instead. Nav links therefore carry `whitespace-nowrap` and their `<li>`
+carries `shrink-0`, so that failure mode cannot recur. Two widths absorb the slack: link padding is
+`px-2.5`, and the wordmark's "STUDIO" suffix drops out across `sm`–`2xl` and returns at `2xl`.
+Below `xl` the drawer takes over, so its container is `xl:hidden` and it anchors to the header at
+`top-16 lg:top-[4.5rem]` to match the stepped header height.
+
 ### Feature-local
 
 `features/auth/components` (`AuthLayout`, `FormField`, `PasswordField`, `GoogleMark`),
@@ -338,8 +353,9 @@ in `SiteHeader`.
 ### Touch targets
 
 Button `md` is `h-11` (44px) and `lg` is `h-12` (48px); `icon` is `size-11`. The comment in
-`Button.tsx` says the two most-used mobile sizes exist for the 44px minimum. Icon-only controls in the
-header are `p-2.5` around an 18px icon, which lands at 38px — under 44px, and worth widening.
+`Button.tsx` says the two most-used mobile sizes exist for the 44px minimum. The header's icon-only
+controls are `size-11`, so they meet it too — they were `p-2.5` around an 18px icon, which landed at
+38px.
 
 ### Keyboard and semantics
 
